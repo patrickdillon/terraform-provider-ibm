@@ -1351,7 +1351,7 @@ func (r Network_Backbone) GetBackbonesForLocationName(locationName *string) (res
 	return
 }
 
-// Retrieve a graph of a SoftLayer backbone's last 24 hours of activity. getGraphImage returns a PNG image measuring 827 pixels by 293 pixels.
+// [DEPRECATED] Retrieve a graph of a SoftLayer backbone's last 24 hours of activity. getGraphImage returns a PNG image measuring 827 pixels by 293 pixels.
 func (r Network_Backbone) GetGraphImage() (resp []byte, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Backbone", "getGraphImage", nil, &r.Options, &resp)
 	return
@@ -1536,7 +1536,7 @@ func (r Network_Bandwidth_Version1_Allotment) GetAverageDailyPublicBandwidthUsag
 	return
 }
 
-// This method recurses through all servers on a Bandwidth Pool for 24 hour time span starting at a given date/time. To get the private data set for all servers on a Bandwidth Pool from midnight Feb 1st, 2008 to 23:59 on Feb 1st, you would pass a parameter of '02/01/2008 0:00'.  The ending date / time is calculated for you to prevent requesting data from the server for periods larger than 24 hours as this method requires processing a lot of data records and can get slow at times.
+// [DEPRECATED] This method recurses through all servers on a Bandwidth Pool for 24 hour time span starting at a given date/time. To get the private data set for all servers on a Bandwidth Pool from midnight Feb 1st, 2008 to 23:59 on Feb 1st, you would pass a parameter of '02/01/2008 0:00'.  The ending date / time is calculated for you to prevent requesting data from the server for periods larger than 24 hours as this method requires processing a lot of data records and can get slow at times.
 func (r Network_Bandwidth_Version1_Allotment) GetBackendBandwidthByHour(date *datatypes.Time) (resp []datatypes.Container_Network_Bandwidth_Version1_Usage, err error) {
 	params := []interface{}{
 		date,
@@ -1641,7 +1641,7 @@ func (r Network_Bandwidth_Version1_Allotment) GetDetails() (resp []datatypes.Net
 	return
 }
 
-// This method recurses through all servers on a Bandwidth Pool for 24 hour time span starting at a given date/time. To get the public data set for all servers on a Bandwidth Pool from midnight Feb 1st, 2008 to 23:59 on Feb 1st, you would pass a parameter of '02/01/2008 0:00'.  The ending date / time is calculated for you to prevent requesting data from the server for periods larger than 24 hours as this method requires processing a lot of data records and can get slow at times.
+// [DEPRECATED] This method recurses through all servers on a Bandwidth Pool for 24 hour time span starting at a given date/time. To get the public data set for all servers on a Bandwidth Pool from midnight Feb 1st, 2008 to 23:59 on Feb 1st, you would pass a parameter of '02/01/2008 0:00'.  The ending date / time is calculated for you to prevent requesting data from the server for periods larger than 24 hours as this method requires processing a lot of data records and can get slow at times.
 func (r Network_Bandwidth_Version1_Allotment) GetFrontendBandwidthByHour(date *datatypes.Time) (resp []datatypes.Container_Network_Bandwidth_Version1_Usage, err error) {
 	params := []interface{}{
 		date,
@@ -2077,6 +2077,172 @@ func (r Network_CdnMarketplace_Configuration_Behavior_HotlinkProtection) UpdateH
 	return
 }
 
+// no documentation yet
+type Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader struct {
+	Session *session.Session
+	Options sl.Options
+}
+
+// GetNetworkCdnMarketplaceConfigurationBehaviorModifyResponseHeaderService returns an instance of the Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader SoftLayer service
+func GetNetworkCdnMarketplaceConfigurationBehaviorModifyResponseHeaderService(sess *session.Session) Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader {
+	return Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader{Session: sess}
+}
+
+func (r Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader) Id(id int) Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader {
+	r.Options.Id = &id
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader) Mask(mask string) Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader {
+	if !strings.HasPrefix(mask, "mask[") && (strings.Contains(mask, "[") || strings.Contains(mask, ",")) {
+		mask = fmt.Sprintf("mask[%s]", mask)
+	}
+
+	r.Options.Mask = mask
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader) Filter(filter string) Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader {
+	r.Options.Filter = filter
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader) Limit(limit int) Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader {
+	r.Options.Limit = &limit
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader) Offset(offset int) Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader {
+	r.Options.Offset = &offset
+	return r
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader) CreateModifyResponseHeader(input *datatypes.Container_Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader) (resp datatypes.Container_Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader, err error) {
+	params := []interface{}{
+		input,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader", "createModifyResponseHeader", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader) DeleteModifyResponseHeader(uniqueId *string, modResHeaderUniqueId *string) (resp string, err error) {
+	params := []interface{}{
+		uniqueId,
+		modResHeaderUniqueId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader", "deleteModifyResponseHeader", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader) GetObject() (resp datatypes.Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader", "getObject", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader) ListModifyResponseHeader(uniqueId *string) (resp []datatypes.Container_Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader, err error) {
+	params := []interface{}{
+		uniqueId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader", "listModifyResponseHeader", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader) UpdateModifyResponseHeader(input *datatypes.Container_Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader) (resp []datatypes.Container_Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader, err error) {
+	params := []interface{}{
+		input,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader", "updateModifyResponseHeader", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+type Network_CdnMarketplace_Configuration_Behavior_TokenAuth struct {
+	Session *session.Session
+	Options sl.Options
+}
+
+// GetNetworkCdnMarketplaceConfigurationBehaviorTokenAuthService returns an instance of the Network_CdnMarketplace_Configuration_Behavior_TokenAuth SoftLayer service
+func GetNetworkCdnMarketplaceConfigurationBehaviorTokenAuthService(sess *session.Session) Network_CdnMarketplace_Configuration_Behavior_TokenAuth {
+	return Network_CdnMarketplace_Configuration_Behavior_TokenAuth{Session: sess}
+}
+
+func (r Network_CdnMarketplace_Configuration_Behavior_TokenAuth) Id(id int) Network_CdnMarketplace_Configuration_Behavior_TokenAuth {
+	r.Options.Id = &id
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Behavior_TokenAuth) Mask(mask string) Network_CdnMarketplace_Configuration_Behavior_TokenAuth {
+	if !strings.HasPrefix(mask, "mask[") && (strings.Contains(mask, "[") || strings.Contains(mask, ",")) {
+		mask = fmt.Sprintf("mask[%s]", mask)
+	}
+
+	r.Options.Mask = mask
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Behavior_TokenAuth) Filter(filter string) Network_CdnMarketplace_Configuration_Behavior_TokenAuth {
+	r.Options.Filter = filter
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Behavior_TokenAuth) Limit(limit int) Network_CdnMarketplace_Configuration_Behavior_TokenAuth {
+	r.Options.Limit = &limit
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Behavior_TokenAuth) Offset(offset int) Network_CdnMarketplace_Configuration_Behavior_TokenAuth {
+	r.Options.Offset = &offset
+	return r
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Behavior_TokenAuth) CreateTokenAuthPath(input *datatypes.Container_Network_CdnMarketplace_Configuration_Behavior_TokenAuth) (resp []datatypes.Container_Network_CdnMarketplace_Configuration_Behavior_TokenAuth, err error) {
+	params := []interface{}{
+		input,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Behavior_TokenAuth", "createTokenAuthPath", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Behavior_TokenAuth) DeleteTokenAuthPath(uniqueId *string, path *string) (resp string, err error) {
+	params := []interface{}{
+		uniqueId,
+		path,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Behavior_TokenAuth", "deleteTokenAuthPath", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Behavior_TokenAuth) GetObject() (resp datatypes.Network_CdnMarketplace_Configuration_Behavior_TokenAuth, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Behavior_TokenAuth", "getObject", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Behavior_TokenAuth) ListTokenAuthPath(uniqueId *string) (resp []datatypes.Container_Network_CdnMarketplace_Configuration_Behavior_TokenAuth, err error) {
+	params := []interface{}{
+		uniqueId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Behavior_TokenAuth", "listTokenAuthPath", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Behavior_TokenAuth) UpdateTokenAuthPath(input *datatypes.Container_Network_CdnMarketplace_Configuration_Behavior_TokenAuth) (resp []datatypes.Container_Network_CdnMarketplace_Configuration_Behavior_TokenAuth, err error) {
+	params := []interface{}{
+		input,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Behavior_TokenAuth", "updateTokenAuthPath", params, &r.Options, &resp)
+	return
+}
+
 // This data type models a purge event that occurs in caching server. It contains a reference to a mapping configuration, the path to execute the purge on, the status of the purge, and flag that enables saving the purge information for future use.
 type Network_CdnMarketplace_Configuration_Cache_Purge struct {
 	Session *session.Session
@@ -2161,6 +2327,183 @@ func (r Network_CdnMarketplace_Configuration_Cache_Purge) SaveOrUnsavePurgePath(
 		saveOrUnsave,
 	}
 	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Cache_Purge", "saveOrUnsavePurgePath", params, &r.Options, &resp)
+	return
+}
+
+// This data type models a purge group event that occurs in caching server. It contains a reference to a mapping configuration and the path to execute the purge on.
+type Network_CdnMarketplace_Configuration_Cache_PurgeGroup struct {
+	Session *session.Session
+	Options sl.Options
+}
+
+// GetNetworkCdnMarketplaceConfigurationCachePurgeGroupService returns an instance of the Network_CdnMarketplace_Configuration_Cache_PurgeGroup SoftLayer service
+func GetNetworkCdnMarketplaceConfigurationCachePurgeGroupService(sess *session.Session) Network_CdnMarketplace_Configuration_Cache_PurgeGroup {
+	return Network_CdnMarketplace_Configuration_Cache_PurgeGroup{Session: sess}
+}
+
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeGroup) Id(id int) Network_CdnMarketplace_Configuration_Cache_PurgeGroup {
+	r.Options.Id = &id
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeGroup) Mask(mask string) Network_CdnMarketplace_Configuration_Cache_PurgeGroup {
+	if !strings.HasPrefix(mask, "mask[") && (strings.Contains(mask, "[") || strings.Contains(mask, ",")) {
+		mask = fmt.Sprintf("mask[%s]", mask)
+	}
+
+	r.Options.Mask = mask
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeGroup) Filter(filter string) Network_CdnMarketplace_Configuration_Cache_PurgeGroup {
+	r.Options.Filter = filter
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeGroup) Limit(limit int) Network_CdnMarketplace_Configuration_Cache_PurgeGroup {
+	r.Options.Limit = &limit
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeGroup) Offset(offset int) Network_CdnMarketplace_Configuration_Cache_PurgeGroup {
+	r.Options.Offset = &offset
+	return r
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeGroup) CreatePurgeGroup(uniqueId *string, groupName *string, paths []string, option *int) (resp datatypes.Container_Network_CdnMarketplace_Configuration_Cache_PurgeGroup, err error) {
+	params := []interface{}{
+		uniqueId,
+		groupName,
+		paths,
+		option,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Cache_PurgeGroup", "createPurgeGroup", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeGroup) GetObject() (resp datatypes.Network_CdnMarketplace_Configuration_Cache_PurgeGroup, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Cache_PurgeGroup", "getObject", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeGroup) GetPurgeGroupByGroupId(uniqueId *string, groupUniqueId *string) (resp datatypes.Container_Network_CdnMarketplace_Configuration_Cache_PurgeGroup, err error) {
+	params := []interface{}{
+		uniqueId,
+		groupUniqueId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Cache_PurgeGroup", "getPurgeGroupByGroupId", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeGroup) GetPurgeGroupQuota() (resp int, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Cache_PurgeGroup", "getPurgeGroupQuota", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeGroup) ListFavoriteGroup(uniqueId *string) (resp []datatypes.Container_Network_CdnMarketplace_Configuration_Cache_PurgeGroup, err error) {
+	params := []interface{}{
+		uniqueId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Cache_PurgeGroup", "listFavoriteGroup", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeGroup) ListUnfavoriteGroup(uniqueId *string) (resp []datatypes.Container_Network_CdnMarketplace_Configuration_Cache_PurgeGroup, err error) {
+	params := []interface{}{
+		uniqueId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Cache_PurgeGroup", "listUnfavoriteGroup", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeGroup) PurgeByGroupIds(uniqueId *string, groupUniqueIds []string) (resp []datatypes.Container_Network_CdnMarketplace_Configuration_Cache_PurgeGroupHistory, err error) {
+	params := []interface{}{
+		uniqueId,
+		groupUniqueIds,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Cache_PurgeGroup", "purgeByGroupIds", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeGroup) RemovePurgeGroupFromFavorite(uniqueId *string, groupUniqueId *string) (resp datatypes.Container_Network_CdnMarketplace_Configuration_Cache_PurgeGroup, err error) {
+	params := []interface{}{
+		uniqueId,
+		groupUniqueId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Cache_PurgeGroup", "removePurgeGroupFromFavorite", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeGroup) SavePurgeGroupAsFavorite(uniqueId *string, groupUniqueId *string) (resp datatypes.Container_Network_CdnMarketplace_Configuration_Cache_PurgeGroup, err error) {
+	params := []interface{}{
+		uniqueId,
+		groupUniqueId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Cache_PurgeGroup", "savePurgeGroupAsFavorite", params, &r.Options, &resp)
+	return
+}
+
+// This data type models a purge history event that occurs in caching server. The purge group history will be deleted after 15 days. The possible purge status of each history can be 'SUCCESS', "FAILED" or "IN_PROGRESS".
+type Network_CdnMarketplace_Configuration_Cache_PurgeHistory struct {
+	Session *session.Session
+	Options sl.Options
+}
+
+// GetNetworkCdnMarketplaceConfigurationCachePurgeHistoryService returns an instance of the Network_CdnMarketplace_Configuration_Cache_PurgeHistory SoftLayer service
+func GetNetworkCdnMarketplaceConfigurationCachePurgeHistoryService(sess *session.Session) Network_CdnMarketplace_Configuration_Cache_PurgeHistory {
+	return Network_CdnMarketplace_Configuration_Cache_PurgeHistory{Session: sess}
+}
+
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeHistory) Id(id int) Network_CdnMarketplace_Configuration_Cache_PurgeHistory {
+	r.Options.Id = &id
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeHistory) Mask(mask string) Network_CdnMarketplace_Configuration_Cache_PurgeHistory {
+	if !strings.HasPrefix(mask, "mask[") && (strings.Contains(mask, "[") || strings.Contains(mask, ",")) {
+		mask = fmt.Sprintf("mask[%s]", mask)
+	}
+
+	r.Options.Mask = mask
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeHistory) Filter(filter string) Network_CdnMarketplace_Configuration_Cache_PurgeHistory {
+	r.Options.Filter = filter
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeHistory) Limit(limit int) Network_CdnMarketplace_Configuration_Cache_PurgeHistory {
+	r.Options.Limit = &limit
+	return r
+}
+
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeHistory) Offset(offset int) Network_CdnMarketplace_Configuration_Cache_PurgeHistory {
+	r.Options.Offset = &offset
+	return r
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeHistory) GetObject() (resp datatypes.Network_CdnMarketplace_Configuration_Cache_PurgeHistory, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Cache_PurgeHistory", "getObject", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Configuration_Cache_PurgeHistory) ListPurgeGroupHistory(uniqueId *string) (resp []datatypes.Container_Network_CdnMarketplace_Configuration_Cache_PurgeGroupHistory, err error) {
+	params := []interface{}{
+		uniqueId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Configuration_Cache_PurgeHistory", "listPurgeGroupHistory", params, &r.Options, &resp)
 	return
 }
 
@@ -2510,6 +2853,30 @@ func (r Network_CdnMarketplace_Metrics) Offset(offset int) Network_CdnMarketplac
 }
 
 // no documentation yet
+func (r Network_CdnMarketplace_Metrics) GetCustomerInvoicingMetrics(vendorName *string, startDate *int, endDate *int, frequency *string) (resp []datatypes.Container_Network_CdnMarketplace_Metrics, err error) {
+	params := []interface{}{
+		vendorName,
+		startDate,
+		endDate,
+		frequency,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Metrics", "getCustomerInvoicingMetrics", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Metrics) GetCustomerRealTimeMetrics(vendorName *string, startTime *int, endTime *int, timeInterval *int) (resp []datatypes.Container_Network_CdnMarketplace_Metrics, err error) {
+	params := []interface{}{
+		vendorName,
+		startTime,
+		endTime,
+		timeInterval,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Metrics", "getCustomerRealTimeMetrics", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
 func (r Network_CdnMarketplace_Metrics) GetCustomerUsageMetrics(vendorName *string, startDate *int, endDate *int, frequency *string) (resp []datatypes.Container_Network_CdnMarketplace_Metrics, err error) {
 	params := []interface{}{
 		vendorName,
@@ -2566,6 +2933,30 @@ func (r Network_CdnMarketplace_Metrics) GetMappingHitsMetrics(mappingUniqueId *s
 		frequency,
 	}
 	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Metrics", "getMappingHitsMetrics", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Metrics) GetMappingIntegratedMetrics(mappingUniqueId *string, startTime *int, endTime *int, frequency *string) (resp []datatypes.Container_Network_CdnMarketplace_Metrics, err error) {
+	params := []interface{}{
+		mappingUniqueId,
+		startTime,
+		endTime,
+		frequency,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Metrics", "getMappingIntegratedMetrics", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_CdnMarketplace_Metrics) GetMappingRealTimeMetrics(mappingUniqueId *string, startTime *int, endTime *int, timeInterval *int) (resp []datatypes.Container_Network_CdnMarketplace_Metrics, err error) {
+	params := []interface{}{
+		mappingUniqueId,
+		startTime,
+		endTime,
+		timeInterval,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_CdnMarketplace_Metrics", "getMappingRealTimeMetrics", params, &r.Options, &resp)
 	return
 }
 
@@ -2731,7 +3122,7 @@ func (r Network_Component) GetHighAvailabilityFirewallFlag() (resp bool, err err
 	return
 }
 
-// Retrieve A hardware switch's interface to the bandwidth pod.
+// Retrieve [DEPRECATED] A hardware switch's interface to the bandwidth pod.
 func (r Network_Component) GetInterface() (resp datatypes.Network_Bandwidth_Version1_Interface, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Component", "getInterface", nil, &r.Options, &resp)
 	return
@@ -2862,7 +3253,7 @@ func (r Network_Component) GetRouter() (resp datatypes.Hardware, err error) {
 	return
 }
 
-// Retrieve Whether a network component's primary ip address is from a storage network subnet or not.
+// Retrieve Whether a network component's primary ip address is from a storage network subnet or not. [Deprecated]
 func (r Network_Component) GetStorageNetworkFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Component", "getStorageNetworkFlag", nil, &r.Options, &resp)
 	return
@@ -3693,17 +4084,6 @@ func (r Network_Gateway) BypassVlans(vlans []datatypes.Network_Gateway_Vlan) (er
 	return
 }
 
-// Returns true if rollback is allowed.
-//
-//
-func (r Network_Gateway) CanRollbackVersion(activeStatus *bool) (resp bool, err error) {
-	params := []interface{}{
-		activeStatus,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Gateway", "canRollbackVersion", params, &r.Options, &resp)
-	return
-}
-
 // Used to create a transaction to upgrade or rollback the vSRX version for Juniper gateway.
 //
 //
@@ -3713,6 +4093,16 @@ func (r Network_Gateway) ChangeGatewayVersion(versionId *int, rollbackVersion *b
 		rollbackVersion,
 	}
 	err = r.Session.DoRequest("SoftLayer_Network_Gateway", "changeGatewayVersion", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Gateway) CheckAccountWhiteList(accountId *int, category *string) (resp bool, err error) {
+	params := []interface{}{
+		accountId,
+		category,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway", "checkAccountWhiteList", params, &r.Options, &resp)
 	return
 }
 
@@ -3740,6 +4130,17 @@ func (r Network_Gateway) GetAccount() (resp datatypes.Account, err error) {
 	return
 }
 
+// Used to get a list of OS prices (ids) which are allowed for the Gateway.
+//
+//
+func (r Network_Gateway) GetAllowedOsPriceIds(memberId *int) (resp []int, err error) {
+	params := []interface{}{
+		memberId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway", "getAllowedOsPriceIds", params, &r.Options, &resp)
+	return
+}
+
 // Returns the Gbps capacity of the gateway object
 //
 //
@@ -3757,11 +4158,20 @@ func (r Network_Gateway) GetInsideVlans() (resp []datatypes.Network_Gateway_Vlan
 // Returns manufacturer name for a given gateway object.
 //
 //
-func (r Network_Gateway) GetManufacturer(checkSameOs *bool) (resp string, err error) {
+func (r Network_Gateway) GetManufacturer(checkSameOs *bool, checkOsReloadMember *bool) (resp string, err error) {
 	params := []interface{}{
 		checkSameOs,
+		checkOsReloadMember,
 	}
 	err = r.Session.DoRequest("SoftLayer_Network_Gateway", "getManufacturer", params, &r.Options, &resp)
+	return
+}
+
+// Returns true if no mismatch is found, gateway is not Juniper vSRX or SA gateway
+//
+//
+func (r Network_Gateway) GetMemberGatewayImagesMatch() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway", "getMemberGatewayImagesMatch", nil, &r.Options, &resp)
 	return
 }
 
@@ -3825,9 +4235,49 @@ func (r Network_Gateway) GetPublicVlan() (resp datatypes.Network_Vlan, err error
 	return
 }
 
+// Returns the following statuses SUPPORTED - rollback is supported and perform automatically UNSUPPORTED - rollback is not supported MANUAL - rollback can be performed but
+//
+//
+func (r Network_Gateway) GetRollbackSupport() (resp string, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway", "getRollbackSupport", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve The current status of the gateway.
 func (r Network_Gateway) GetStatus() (resp datatypes.Network_Gateway_Status, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Gateway", "getStatus", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve a list of upgradable items available for network gateways.
+func (r Network_Gateway) GetUpgradeItemPrices() (resp []datatypes.Product_Item_Price, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway", "getUpgradeItemPrices", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Gateway) IsAccountWhiteListed(category *string) (resp bool, err error) {
+	params := []interface{}{
+		category,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway", "isAccountWhiteListed", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Gateway) IsLicenseServerAllowed(licenseKeyName *string) (resp bool, err error) {
+	params := []interface{}{
+		licenseKeyName,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway", "isLicenseServerAllowed", params, &r.Options, &resp)
+	return
+}
+
+// Returns true if rollback is allowed.
+//
+//
+func (r Network_Gateway) IsRollbackAllowed() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway", "isRollbackAllowed", nil, &r.Options, &resp)
 	return
 }
 
@@ -3836,6 +4286,17 @@ func (r Network_Gateway) GetStatus() (resp datatypes.Network_Gateway_Status, err
 //
 func (r Network_Gateway) RebuildvSRXHACluster() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Gateway", "rebuildvSRXHACluster", nil, &r.Options, &resp)
+	return
+}
+
+// Returns true if password change is successful, false if not successful
+//
+//
+func (r Network_Gateway) SetGatewayPassword(password *string) (resp bool, err error) {
+	params := []interface{}{
+		password,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway", "setGatewayPassword", params, &r.Options, &resp)
 	return
 }
 
@@ -3997,6 +4458,113 @@ func (r Network_Gateway_Member_Attribute) GetSshKey() (resp datatypes.Security_S
 }
 
 // no documentation yet
+type Network_Gateway_Precheck struct {
+	Session *session.Session
+	Options sl.Options
+}
+
+// GetNetworkGatewayPrecheckService returns an instance of the Network_Gateway_Precheck SoftLayer service
+func GetNetworkGatewayPrecheckService(sess *session.Session) Network_Gateway_Precheck {
+	return Network_Gateway_Precheck{Session: sess}
+}
+
+func (r Network_Gateway_Precheck) Id(id int) Network_Gateway_Precheck {
+	r.Options.Id = &id
+	return r
+}
+
+func (r Network_Gateway_Precheck) Mask(mask string) Network_Gateway_Precheck {
+	if !strings.HasPrefix(mask, "mask[") && (strings.Contains(mask, "[") || strings.Contains(mask, ",")) {
+		mask = fmt.Sprintf("mask[%s]", mask)
+	}
+
+	r.Options.Mask = mask
+	return r
+}
+
+func (r Network_Gateway_Precheck) Filter(filter string) Network_Gateway_Precheck {
+	r.Options.Filter = filter
+	return r
+}
+
+func (r Network_Gateway_Precheck) Limit(limit int) Network_Gateway_Precheck {
+	r.Options.Limit = &limit
+	return r
+}
+
+func (r Network_Gateway_Precheck) Offset(offset int) Network_Gateway_Precheck {
+	r.Options.Offset = &offset
+	return r
+}
+
+// no documentation yet
+func (r Network_Gateway_Precheck) GetObject() (resp datatypes.Network_Gateway_Precheck, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway_Precheck", "getObject", nil, &r.Options, &resp)
+	return
+}
+
+// Get the precheck status for all Juniper Gateway Action categories which require a readiness check before executing. Reference cloud.ibm.com documentation for more details.
+//
+// Possible precheck readiness values include:
+//
+// Ready (0): The member or Gateway category is ready. The only state that will be allowed to execute the Action. Not Ready (1): The member or Gateway category is not ready. This could occur because of several reasons. Either a precheck error occur, or the precheck has not run within the precheck timeout window. Check the returnCode for details on the specific error. Reference the cloud.ibm.com documentation for recovery details. Running (2): The precheck is currently running with no errors. Incomplete (3): The other member in the Gateway failed, therefore the current member could not complete it's precheck. Unsupported (4): The category is unsupported for the given member or Gateway. Expired (5) : The precheck record has expired so will need to be run again. Unchecked (6) : The precheck for the category has never been run. Current (7) : The gateway state is current so running precheck is not required.  This commonly relates to version upgrade if gateway is in most update version.
+//
+// Return Values: Array of objects
+//
+// Object Definition:
+//
+// category : String : The precheck category which corresponds to one or more executeable actions.
+//
+// Current categories include: upgrade_precheck : Required for major and minor upgrade version actions. license_precheck : Required for license upgrade and downgrade actions. reload_precheck : Required for OS Reload action. rollback_precheck : Optional and related to upgrade_precheck.  Only returned if getRollbackPrecheck is provided and set to True (1).
+//
+//
+//
+// memberId : Integer : The softlayer member id. memberReadinessValue : String : The precheck readiness state for the member. See possible readiness values above. gatewayReadinessValue : String : The precheck readiness state for the gateway : See possible readiness values above. returnCode : Integer : The return code. 0 if no error. Reference cloud.ibm.com documentation for details.
+//
+//
+func (r Network_Gateway_Precheck) GetPrecheckStatus(gatewayId *int, getRollbackPrecheck *bool) (resp []datatypes.Network_Gateway_Precheck, err error) {
+	params := []interface{}{
+		gatewayId,
+		getRollbackPrecheck,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway_Precheck", "getPrecheckStatus", params, &r.Options, &resp)
+	return
+}
+
+// Used to create a License Management Network Gateway Precheck transaction.
+//
+//
+func (r Network_Gateway_Precheck) LicenseManagementPrecheck(gatewayId *int) (resp bool, err error) {
+	params := []interface{}{
+		gatewayId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway_Precheck", "licenseManagementPrecheck", params, &r.Options, &resp)
+	return
+}
+
+// Create an OS Reload Network Gateway Precheck transaction.
+//
+//
+func (r Network_Gateway_Precheck) OsReloadPrecheck(gatewayId *int) (resp bool, err error) {
+	params := []interface{}{
+		gatewayId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway_Precheck", "osReloadPrecheck", params, &r.Options, &resp)
+	return
+}
+
+// Create a Upgrade Network Gateway Precheck transaction.
+//
+//
+func (r Network_Gateway_Precheck) UpgradePrecheck(gatewayId *int) (resp bool, err error) {
+	params := []interface{}{
+		gatewayId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway_Precheck", "upgradePrecheck", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
 type Network_Gateway_Status struct {
 	Session *session.Session
 	Options sl.Options
@@ -4083,15 +4651,6 @@ func (r Network_Gateway_VersionUpgrade) Offset(offset int) Network_Gateway_Versi
 }
 
 // no documentation yet
-func (r Network_Gateway_VersionUpgrade) GetAllByFromVersion(fromVersion *string) (resp []datatypes.Network_Gateway_VersionUpgrade, err error) {
-	params := []interface{}{
-		fromVersion,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Gateway_VersionUpgrade", "getAllByFromVersion", params, &r.Options, &resp)
-	return
-}
-
-// no documentation yet
 func (r Network_Gateway_VersionUpgrade) GetAllByUpgradePkgUrlId(upgradePkgUrlId *int) (resp []datatypes.Network_Gateway_VersionUpgrade, err error) {
 	params := []interface{}{
 		upgradePkgUrlId,
@@ -4101,8 +4660,29 @@ func (r Network_Gateway_VersionUpgrade) GetAllByUpgradePkgUrlId(upgradePkgUrlId 
 }
 
 // no documentation yet
+func (r Network_Gateway_VersionUpgrade) GetAllUpgradesByGatewayId(gatewayId *int) (resp []datatypes.Network_Gateway_VersionUpgrade, err error) {
+	params := []interface{}{
+		gatewayId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway_VersionUpgrade", "getAllUpgradesByGatewayId", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
 func (r Network_Gateway_VersionUpgrade) GetObject() (resp datatypes.Network_Gateway_VersionUpgrade, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Gateway_VersionUpgrade", "getObject", nil, &r.Options, &resp)
+	return
+}
+
+// Used to get a list per package of prices ids for allowed vSRX OS-es for new orders.
+//
+//
+func (r Network_Gateway_VersionUpgrade) GetVsrxOrdersAllowedOS(accountId *int, validate *bool) (resp []datatypes.Product_Package_Item_Prices, err error) {
+	params := []interface{}{
+		accountId,
+		validate,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Gateway_VersionUpgrade", "getVsrxOrdersAllowedOS", params, &r.Options, &resp)
 	return
 }
 
@@ -5205,7 +5785,7 @@ func (r Network_LBaaS_SSLCipher) GetObject() (resp datatypes.Network_LBaaS_SSLCi
 	return
 }
 
-// The SoftLayer_Network_LoadBalancer_Global_Account data type contains the properties for a single global load balancer account.  The properties you are able to edit are fallbackIp, loadBalanceTypeId, and notes. The hosts relational property can be used for creating and editing hosts that belong to the global load balancer account.  The [[SoftLayer_Network_LoadBalancer_Global_Account::editObject|editObject]] method contains details on creating and edited hosts through the hosts relational property.
+// The global load balancer service has been deprecated and is no longer available.
 type Network_LoadBalancer_Global_Account struct {
 	Session *session.Session
 	Options sl.Options
@@ -5245,38 +5825,17 @@ func (r Network_LoadBalancer_Global_Account) Offset(offset int) Network_LoadBala
 	return r
 }
 
-// If your globally load balanced domain is hosted on the SoftLayer nameservers this method will add the required NS resource record to your DNS zone file and remove any A records that match the host portion of a global load balancer account hostname.  A NS resource record is required to be able to use your SoftLayer global load balancer account. Please make sure the zone file for the hostname listed on your SoftLayer global load balancer account is setup prior to using this method.  If your globally load balanced domain is hosted on any other nameservers this method will not be able to add the required NS record.
+// The global load balancer service has been deprecated and is no longer available.
+//
+// If your globally load balanced domain is hosted on the SoftLayer nameservers this method will add the required NS resource record to your DNS zone file and remove any A records that match the host portion of a global load balancer account hostname.
 func (r Network_LoadBalancer_Global_Account) AddNsRecord() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_LoadBalancer_Global_Account", "addNsRecord", nil, &r.Options, &resp)
 	return
 }
 
-// Edit the properties of a global load balancer account by passing in a modified instance of the object. The global load balancer account properties you are able to edit are: fallback ip, load balance type id, and notes. Hosts that belong to your SoftLayer global load balancer account are created and modified through this method. An example templateObject that updates global load balancer account properties, updates the properties of a host, and adds a new host is shown below:
+// The global load balancer service has been deprecated and is no longer available.
 //
-//
-// * id: 2
-// * loadBalanceTypeId: 2
-// * notes: Notes updated
-// * fallbackIp: 1.1.1.1
-// * hosts:
-// ** id: 19
-// ** destinationIp: 2.2.2.2
-// ** weight: 25
-// ** healthCheck: http
-// ** destinationPort: 80
-// ** enabled: 1<br /><br />
-// ** destinationIp: 3.3.3.3
-// ** weight: 25
-// ** healthCheck: http
-// ** destinationPort: 80
-// ** enabled: 1
-//
-//
-//
-//
-// The first section contains the properties of the global load balancer account that will be updated, while the second section contains the elements of the 'hosts' property of the global load balancer account.  The first host listed will have its properties updated because the 'id' property of the host is set, meaning the global load balancer host with an id of 19 will be updated. The second host listed will be created because it lacks the 'id' property.
-//
-// There is a limit to the maximum number of hosts that you are allowed to add, and is defined by the allowedNumberOfHosts property on the global load balancer account.  The destination IP address of a host must be an IP address that belongs to your SoftLayer Account, or a local load balancer virtual IP address that belongs to your account.  The destination IP address and destination port are required and must be provided when creating a host.
+// Edit the properties of a global load balancer account by passing in a modified instance of the object.
 func (r Network_LoadBalancer_Global_Account) EditObject(templateObject *datatypes.Network_LoadBalancer_Global_Account) (resp bool, err error) {
 	params := []interface{}{
 		templateObject,
@@ -5315,23 +5874,21 @@ func (r Network_LoadBalancer_Global_Account) GetManagedResourceFlag() (resp bool
 	return
 }
 
-// getObject retrieves the SoftLayer_Network_LoadBalancer_Global_Account object whose ID number corresponds to the ID number of the init paramater passed to the SoftLayer_Network_LoadBalancer_Global_Account service. You can only retrieve a global load balancer account that is assigned to your SoftLayer customer account.
+// The global load balancer service has been deprecated and is no longer available.
 func (r Network_LoadBalancer_Global_Account) GetObject() (resp datatypes.Network_LoadBalancer_Global_Account, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_LoadBalancer_Global_Account", "getObject", nil, &r.Options, &resp)
 	return
 }
 
-// If your globally load balanced domain is hosted on the SoftLayer nameservers this method will remove the NS resource record from your DNS zone file. Removing the NS resource record will basically disable your global load balancer account since no DNS requests will be forwarded to the global load balancers. Any A records that were removed when the NS resource record was added will not be created for you.  If your globally load balanced domain is hosted on any other nameservers this method will not be able to remove the required NS record.
+// The global load balancer service has been deprecated and is no longer available.
+//
+// If your globally load balanced domain is hosted on the SoftLayer nameservers this method will remove the NS resource record from your DNS zone file.
 func (r Network_LoadBalancer_Global_Account) RemoveNsRecord() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_LoadBalancer_Global_Account", "removeNsRecord", nil, &r.Options, &resp)
 	return
 }
 
-// The SoftLayer_Network_LoadBalancer_Global_Host data type represents a single host that belongs to a global load balancer account's load balancing pool.
-//
-// The destination IP address of a host must be one that belongs to your SoftLayer customer account, or to a datacenter load balancer virtual ip that belongs to your SoftLayer customer account.  The destination IP address and port of a global load balancer host is a required field and must exist during creation and can not be removed.  The acceptable values for the health check type are 'none', 'http', and 'tcp'. The status property is updated in 5 minute intervals and the hits property is updated in 10 minute intervals.
-//
-// The order of the host is only important if you are using the 'failover' load balance method, and the weight is only important if you are using the 'weighted round robin' load balance method.
+// The global load balancer service has been deprecated and is no longer available.
 type Network_LoadBalancer_Global_Host struct {
 	Session *session.Session
 	Options sl.Options
@@ -5371,6 +5928,8 @@ func (r Network_LoadBalancer_Global_Host) Offset(offset int) Network_LoadBalance
 	return r
 }
 
+// The global load balancer service has been deprecated and is no longer available.
+//
 // Remove a host from the load balancing pool of a global load balancer account.
 func (r Network_LoadBalancer_Global_Host) DeleteObject() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_LoadBalancer_Global_Host", "deleteObject", nil, &r.Options, &resp)
@@ -5383,7 +5942,7 @@ func (r Network_LoadBalancer_Global_Host) GetLoadBalancerAccount() (resp datatyp
 	return
 }
 
-// getObject retrieves the SoftLayer_Network_LoadBalancer_Global_Host object whose ID number corresponds to the ID number of the init paramater passed to the SoftLayer_Network_LoadBalancer_Global_Host service. You can only retrieve a global load balancer host that is assigned to your SoftLayer global load balancer account.
+// The global load balancer service has been deprecated and is no longer available.
 func (r Network_LoadBalancer_Global_Host) GetObject() (resp datatypes.Network_LoadBalancer_Global_Host, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_LoadBalancer_Global_Host", "getObject", nil, &r.Options, &resp)
 	return
@@ -7116,6 +7675,12 @@ func (r Network_Storage) CollectBytesUsed() (resp uint, err error) {
 }
 
 // no documentation yet
+func (r Network_Storage) ConvertCloneDependentToIndependent() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage", "convertCloneDependentToIndependent", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
 func (r Network_Storage) CreateFolder(folder *string) (resp bool, err error) {
 	params := []interface{}{
 		folder,
@@ -7203,6 +7768,15 @@ func (r Network_Storage) DisableSnapshots(scheduleType *string) (resp bool, err 
 		scheduleType,
 	}
 	err = r.Session.DoRequest("SoftLayer_Network_Storage", "disableSnapshots", params, &r.Options, &resp)
+	return
+}
+
+// If a volume (with replication) becomes inaccessible due to a disaster event, this method can be used to immediately failover to an available replica in another location. This method does not allow for fail back via the API. To fail back to the original volume after using this method, open a support ticket. To test failover, use [[SoftLayer_Network_Storage::failoverToReplicant]] instead.
+func (r Network_Storage) DisasterRecoveryFailoverToReplicant(replicantId *int) (resp bool, err error) {
+	params := []interface{}{
+		replicantId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage", "disasterRecoveryFailoverToReplicant", params, &r.Options, &resp)
 	return
 }
 
@@ -7446,9 +8020,27 @@ func (r Network_Storage) GetDailySchedule() (resp datatypes.Network_Storage_Sche
 	return
 }
 
+// Retrieve Whether or not a network storage volume is a dependent duplicate.
+func (r Network_Storage) GetDependentDuplicate() (resp string, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage", "getDependentDuplicate", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve The network storage volumes configured to be dependent duplicates of a volume.
+func (r Network_Storage) GetDependentDuplicates() (resp []datatypes.Network_Storage, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage", "getDependentDuplicates", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve The events which have taken place on a network storage volume.
 func (r Network_Storage) GetEvents() (resp []datatypes.Network_Storage_Event, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Storage", "getEvents", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve Determines whether the volume is allowed to failback
+func (r Network_Storage) GetFailbackNotAllowed() (resp string, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage", "getFailbackNotAllowed", nil, &r.Options, &resp)
 	return
 }
 
@@ -7549,6 +8141,18 @@ func (r Network_Storage) GetIntervalSchedule() (resp datatypes.Network_Storage_S
 // Retrieve The maximum number of IOPs selected for this volume.
 func (r Network_Storage) GetIops() (resp string, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Storage", "getIops", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve Determines whether dependent volume provision is completed on background.
+func (r Network_Storage) GetIsDependentDuplicateProvisionCompleted() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage", "getIsDependentDuplicateProvisionCompleted", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve
+func (r Network_Storage) GetIsInDedicatedServiceResource() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage", "getIsInDedicatedServiceResource", nil, &r.Options, &resp)
 	return
 }
 
@@ -7914,6 +8518,12 @@ func (r Network_Storage) GetVirtualGuest() (resp datatypes.Virtual_Guest, err er
 	return
 }
 
+// Retrieves an array of volume count limits per location and globally.
+func (r Network_Storage) GetVolumeCountLimits() (resp []datatypes.Container_Network_Storage_DataCenterLimits_VolumeCountLimitContainer, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage", "getVolumeCountLimits", nil, &r.Options, &resp)
+	return
+}
+
 // This method returns the parameters for cloning a volume
 func (r Network_Storage) GetVolumeDuplicateParameters() (resp datatypes.Container_Network_Storage_VolumeDuplicateParameters, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Storage", "getVolumeDuplicateParameters", nil, &r.Options, &resp)
@@ -7977,6 +8587,24 @@ func (r Network_Storage) IsDuplicateReadyToMount() (resp bool, err error) {
 // no documentation yet
 func (r Network_Storage) IsVolumeActive() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Storage", "isVolumeActive", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Storage) RefreshDependentDuplicate(snapshotId *int) (resp bool, err error) {
+	params := []interface{}{
+		snapshotId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage", "refreshDependentDuplicate", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Storage) RefreshDuplicate(snapshotId *int) (resp bool, err error) {
+	params := []interface{}{
+		snapshotId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage", "refreshDuplicate", params, &r.Options, &resp)
 	return
 }
 
@@ -8240,42 +8868,12 @@ func (r Network_Storage_Allowed_Host) Offset(offset int) Network_Storage_Allowed
 	return r
 }
 
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Hardware object's id.
-func (r Network_Storage_Allowed_Host) CreateFromHardware(hardwareId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
+// no documentation yet
+func (r Network_Storage_Allowed_Host) AssignSubnetsToAcl(subnetIds []int) (resp []int, err error) {
 	params := []interface{}{
-		hardwareId,
-		iqn,
+		subnetIds,
 	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host", "createFromHardware", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Network_Subnet_IpAddress object's id.
-func (r Network_Storage_Allowed_Host) CreateFromIpAddress(ipAddressId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		ipAddressId,
-		iqn,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host", "createFromIpAddress", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Network_Subnet object's id. Allowed_Host objects created for SoftLayer_Network_Subnet objects do not support IQNs.
-func (r Network_Storage_Allowed_Host) CreateFromSubnet(subnetId *int) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		subnetId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host", "createFromSubnet", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Virtual_Guest object's id.
-func (r Network_Storage_Allowed_Host) CreateFromVirtualGuest(virtualGuestId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		virtualGuestId,
-		iqn,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host", "createFromVirtualGuest", params, &r.Options, &resp)
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host", "assignSubnetsToAcl", params, &r.Options, &resp)
 	return
 }
 
@@ -8342,6 +8940,21 @@ func (r Network_Storage_Allowed_Host) GetSourceSubnet() (resp string, err error)
 	return
 }
 
+// Retrieve The SoftLayer_Network_Subnet records assigned to the ACL for this allowed host.
+func (r Network_Storage_Allowed_Host) GetSubnetsInAcl() (resp []datatypes.Network_Subnet, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host", "getSubnetsInAcl", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Storage_Allowed_Host) RemoveSubnetsFromAcl(subnetIds []int) (resp []int, err error) {
+	params := []interface{}{
+		subnetIds,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host", "removeSubnetsFromAcl", params, &r.Options, &resp)
+	return
+}
+
 // Use this method to modify the credential password for a SoftLayer_Network_Storage_Allowed_Host object.
 func (r Network_Storage_Allowed_Host) SetCredentialPassword(password *string) (resp bool, err error) {
 	params := []interface{}{
@@ -8391,42 +9004,12 @@ func (r Network_Storage_Allowed_Host_Hardware) Offset(offset int) Network_Storag
 	return r
 }
 
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Hardware object's id.
-func (r Network_Storage_Allowed_Host_Hardware) CreateFromHardware(hardwareId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
+// no documentation yet
+func (r Network_Storage_Allowed_Host_Hardware) AssignSubnetsToAcl(subnetIds []int) (resp []int, err error) {
 	params := []interface{}{
-		hardwareId,
-		iqn,
+		subnetIds,
 	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_Hardware", "createFromHardware", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Network_Subnet_IpAddress object's id.
-func (r Network_Storage_Allowed_Host_Hardware) CreateFromIpAddress(ipAddressId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		ipAddressId,
-		iqn,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_Hardware", "createFromIpAddress", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Network_Subnet object's id. Allowed_Host objects created for SoftLayer_Network_Subnet objects do not support IQNs.
-func (r Network_Storage_Allowed_Host_Hardware) CreateFromSubnet(subnetId *int) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		subnetId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_Hardware", "createFromSubnet", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Virtual_Guest object's id.
-func (r Network_Storage_Allowed_Host_Hardware) CreateFromVirtualGuest(virtualGuestId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		virtualGuestId,
-		iqn,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_Hardware", "createFromVirtualGuest", params, &r.Options, &resp)
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_Hardware", "assignSubnetsToAcl", params, &r.Options, &resp)
 	return
 }
 
@@ -8505,6 +9088,21 @@ func (r Network_Storage_Allowed_Host_Hardware) GetSourceSubnet() (resp string, e
 	return
 }
 
+// Retrieve The SoftLayer_Network_Subnet records assigned to the ACL for this allowed host.
+func (r Network_Storage_Allowed_Host_Hardware) GetSubnetsInAcl() (resp []datatypes.Network_Subnet, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_Hardware", "getSubnetsInAcl", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Storage_Allowed_Host_Hardware) RemoveSubnetsFromAcl(subnetIds []int) (resp []int, err error) {
+	params := []interface{}{
+		subnetIds,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_Hardware", "removeSubnetsFromAcl", params, &r.Options, &resp)
+	return
+}
+
 // Use this method to modify the credential password for a SoftLayer_Network_Storage_Allowed_Host object.
 func (r Network_Storage_Allowed_Host_Hardware) SetCredentialPassword(password *string) (resp bool, err error) {
 	params := []interface{}{
@@ -8554,42 +9152,12 @@ func (r Network_Storage_Allowed_Host_IpAddress) Offset(offset int) Network_Stora
 	return r
 }
 
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Hardware object's id.
-func (r Network_Storage_Allowed_Host_IpAddress) CreateFromHardware(hardwareId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
+// no documentation yet
+func (r Network_Storage_Allowed_Host_IpAddress) AssignSubnetsToAcl(subnetIds []int) (resp []int, err error) {
 	params := []interface{}{
-		hardwareId,
-		iqn,
+		subnetIds,
 	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_IpAddress", "createFromHardware", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Network_Subnet_IpAddress object's id.
-func (r Network_Storage_Allowed_Host_IpAddress) CreateFromIpAddress(ipAddressId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		ipAddressId,
-		iqn,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_IpAddress", "createFromIpAddress", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Network_Subnet object's id. Allowed_Host objects created for SoftLayer_Network_Subnet objects do not support IQNs.
-func (r Network_Storage_Allowed_Host_IpAddress) CreateFromSubnet(subnetId *int) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		subnetId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_IpAddress", "createFromSubnet", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Virtual_Guest object's id.
-func (r Network_Storage_Allowed_Host_IpAddress) CreateFromVirtualGuest(virtualGuestId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		virtualGuestId,
-		iqn,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_IpAddress", "createFromVirtualGuest", params, &r.Options, &resp)
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_IpAddress", "assignSubnetsToAcl", params, &r.Options, &resp)
 	return
 }
 
@@ -8668,6 +9236,21 @@ func (r Network_Storage_Allowed_Host_IpAddress) GetSourceSubnet() (resp string, 
 	return
 }
 
+// Retrieve The SoftLayer_Network_Subnet records assigned to the ACL for this allowed host.
+func (r Network_Storage_Allowed_Host_IpAddress) GetSubnetsInAcl() (resp []datatypes.Network_Subnet, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_IpAddress", "getSubnetsInAcl", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Storage_Allowed_Host_IpAddress) RemoveSubnetsFromAcl(subnetIds []int) (resp []int, err error) {
+	params := []interface{}{
+		subnetIds,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_IpAddress", "removeSubnetsFromAcl", params, &r.Options, &resp)
+	return
+}
+
 // Use this method to modify the credential password for a SoftLayer_Network_Storage_Allowed_Host object.
 func (r Network_Storage_Allowed_Host_IpAddress) SetCredentialPassword(password *string) (resp bool, err error) {
 	params := []interface{}{
@@ -8717,42 +9300,12 @@ func (r Network_Storage_Allowed_Host_Subnet) Offset(offset int) Network_Storage_
 	return r
 }
 
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Hardware object's id.
-func (r Network_Storage_Allowed_Host_Subnet) CreateFromHardware(hardwareId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
+// no documentation yet
+func (r Network_Storage_Allowed_Host_Subnet) AssignSubnetsToAcl(subnetIds []int) (resp []int, err error) {
 	params := []interface{}{
-		hardwareId,
-		iqn,
+		subnetIds,
 	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_Subnet", "createFromHardware", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Network_Subnet_IpAddress object's id.
-func (r Network_Storage_Allowed_Host_Subnet) CreateFromIpAddress(ipAddressId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		ipAddressId,
-		iqn,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_Subnet", "createFromIpAddress", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Network_Subnet object's id. Allowed_Host objects created for SoftLayer_Network_Subnet objects do not support IQNs.
-func (r Network_Storage_Allowed_Host_Subnet) CreateFromSubnet(subnetId *int) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		subnetId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_Subnet", "createFromSubnet", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Virtual_Guest object's id.
-func (r Network_Storage_Allowed_Host_Subnet) CreateFromVirtualGuest(virtualGuestId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		virtualGuestId,
-		iqn,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_Subnet", "createFromVirtualGuest", params, &r.Options, &resp)
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_Subnet", "assignSubnetsToAcl", params, &r.Options, &resp)
 	return
 }
 
@@ -8831,6 +9384,21 @@ func (r Network_Storage_Allowed_Host_Subnet) GetSourceSubnet() (resp string, err
 	return
 }
 
+// Retrieve The SoftLayer_Network_Subnet records assigned to the ACL for this allowed host.
+func (r Network_Storage_Allowed_Host_Subnet) GetSubnetsInAcl() (resp []datatypes.Network_Subnet, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_Subnet", "getSubnetsInAcl", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Storage_Allowed_Host_Subnet) RemoveSubnetsFromAcl(subnetIds []int) (resp []int, err error) {
+	params := []interface{}{
+		subnetIds,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_Subnet", "removeSubnetsFromAcl", params, &r.Options, &resp)
+	return
+}
+
 // Use this method to modify the credential password for a SoftLayer_Network_Storage_Allowed_Host object.
 func (r Network_Storage_Allowed_Host_Subnet) SetCredentialPassword(password *string) (resp bool, err error) {
 	params := []interface{}{
@@ -8880,42 +9448,12 @@ func (r Network_Storage_Allowed_Host_VirtualGuest) Offset(offset int) Network_St
 	return r
 }
 
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Hardware object's id.
-func (r Network_Storage_Allowed_Host_VirtualGuest) CreateFromHardware(hardwareId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
+// no documentation yet
+func (r Network_Storage_Allowed_Host_VirtualGuest) AssignSubnetsToAcl(subnetIds []int) (resp []int, err error) {
 	params := []interface{}{
-		hardwareId,
-		iqn,
+		subnetIds,
 	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_VirtualGuest", "createFromHardware", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Network_Subnet_IpAddress object's id.
-func (r Network_Storage_Allowed_Host_VirtualGuest) CreateFromIpAddress(ipAddressId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		ipAddressId,
-		iqn,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_VirtualGuest", "createFromIpAddress", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Network_Subnet object's id. Allowed_Host objects created for SoftLayer_Network_Subnet objects do not support IQNs.
-func (r Network_Storage_Allowed_Host_VirtualGuest) CreateFromSubnet(subnetId *int) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		subnetId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_VirtualGuest", "createFromSubnet", params, &r.Options, &resp)
-	return
-}
-
-// This method is used to create a new SoftLayer_Network_Storage_Allowed_Host using an existing SoftLayer_Virtual_Guest object's id.
-func (r Network_Storage_Allowed_Host_VirtualGuest) CreateFromVirtualGuest(virtualGuestId *int, iqn *string) (resp datatypes.Network_Storage_Allowed_Host, err error) {
-	params := []interface{}{
-		virtualGuestId,
-		iqn,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_VirtualGuest", "createFromVirtualGuest", params, &r.Options, &resp)
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_VirtualGuest", "assignSubnetsToAcl", params, &r.Options, &resp)
 	return
 }
 
@@ -8991,6 +9529,21 @@ func (r Network_Storage_Allowed_Host_VirtualGuest) GetResource() (resp datatypes
 // Retrieve Connections to a target with a source IP in this subnet prefix are allowed.
 func (r Network_Storage_Allowed_Host_VirtualGuest) GetSourceSubnet() (resp string, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_VirtualGuest", "getSourceSubnet", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve The SoftLayer_Network_Subnet records assigned to the ACL for this allowed host.
+func (r Network_Storage_Allowed_Host_VirtualGuest) GetSubnetsInAcl() (resp []datatypes.Network_Subnet, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_VirtualGuest", "getSubnetsInAcl", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Storage_Allowed_Host_VirtualGuest) RemoveSubnetsFromAcl(subnetIds []int) (resp []int, err error) {
+	params := []interface{}{
+		subnetIds,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Allowed_Host_VirtualGuest", "removeSubnetsFromAcl", params, &r.Options, &resp)
 	return
 }
 
@@ -9257,6 +9810,12 @@ func (r Network_Storage_Backup_Evault) CollectBytesUsed() (resp uint, err error)
 }
 
 // no documentation yet
+func (r Network_Storage_Backup_Evault) ConvertCloneDependentToIndependent() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "convertCloneDependentToIndependent", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
 func (r Network_Storage_Backup_Evault) CreateFolder(folder *string) (resp bool, err error) {
 	params := []interface{}{
 		folder,
@@ -9357,6 +9916,15 @@ func (r Network_Storage_Backup_Evault) DisableSnapshots(scheduleType *string) (r
 		scheduleType,
 	}
 	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "disableSnapshots", params, &r.Options, &resp)
+	return
+}
+
+// If a volume (with replication) becomes inaccessible due to a disaster event, this method can be used to immediately failover to an available replica in another location. This method does not allow for fail back via the API. To fail back to the original volume after using this method, open a support ticket. To test failover, use [[SoftLayer_Network_Storage::failoverToReplicant]] instead.
+func (r Network_Storage_Backup_Evault) DisasterRecoveryFailoverToReplicant(replicantId *int) (resp bool, err error) {
+	params := []interface{}{
+		replicantId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "disasterRecoveryFailoverToReplicant", params, &r.Options, &resp)
 	return
 }
 
@@ -9600,9 +10168,27 @@ func (r Network_Storage_Backup_Evault) GetDailySchedule() (resp datatypes.Networ
 	return
 }
 
+// Retrieve Whether or not a network storage volume is a dependent duplicate.
+func (r Network_Storage_Backup_Evault) GetDependentDuplicate() (resp string, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "getDependentDuplicate", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve The network storage volumes configured to be dependent duplicates of a volume.
+func (r Network_Storage_Backup_Evault) GetDependentDuplicates() (resp []datatypes.Network_Storage, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "getDependentDuplicates", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve The events which have taken place on a network storage volume.
 func (r Network_Storage_Backup_Evault) GetEvents() (resp []datatypes.Network_Storage_Event, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "getEvents", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve Determines whether the volume is allowed to failback
+func (r Network_Storage_Backup_Evault) GetFailbackNotAllowed() (resp string, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "getFailbackNotAllowed", nil, &r.Options, &resp)
 	return
 }
 
@@ -9723,6 +10309,18 @@ func (r Network_Storage_Backup_Evault) GetIntervalSchedule() (resp datatypes.Net
 // Retrieve The maximum number of IOPs selected for this volume.
 func (r Network_Storage_Backup_Evault) GetIops() (resp string, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "getIops", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve Determines whether dependent volume provision is completed on background.
+func (r Network_Storage_Backup_Evault) GetIsDependentDuplicateProvisionCompleted() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "getIsDependentDuplicateProvisionCompleted", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve
+func (r Network_Storage_Backup_Evault) GetIsInDedicatedServiceResource() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "getIsInDedicatedServiceResource", nil, &r.Options, &resp)
 	return
 }
 
@@ -10086,6 +10684,12 @@ func (r Network_Storage_Backup_Evault) GetVirtualGuest() (resp datatypes.Virtual
 	return
 }
 
+// Retrieves an array of volume count limits per location and globally.
+func (r Network_Storage_Backup_Evault) GetVolumeCountLimits() (resp []datatypes.Container_Network_Storage_DataCenterLimits_VolumeCountLimitContainer, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "getVolumeCountLimits", nil, &r.Options, &resp)
+	return
+}
+
 // This method returns the parameters for cloning a volume
 func (r Network_Storage_Backup_Evault) GetVolumeDuplicateParameters() (resp datatypes.Container_Network_Storage_VolumeDuplicateParameters, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "getVolumeDuplicateParameters", nil, &r.Options, &resp)
@@ -10170,6 +10774,24 @@ func (r Network_Storage_Backup_Evault) IsDuplicateReadyToMount() (resp bool, err
 // no documentation yet
 func (r Network_Storage_Backup_Evault) IsVolumeActive() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "isVolumeActive", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Storage_Backup_Evault) RefreshDependentDuplicate(snapshotId *int) (resp bool, err error) {
+	params := []interface{}{
+		snapshotId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "refreshDependentDuplicate", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Storage_Backup_Evault) RefreshDuplicate(snapshotId *int) (resp bool, err error) {
+	params := []interface{}{
+		snapshotId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "refreshDuplicate", params, &r.Options, &resp)
 	return
 }
 
@@ -10390,6 +11012,70 @@ func (r Network_Storage_Backup_Evault) UploadFile(file *datatypes.Container_Util
 		file,
 	}
 	err = r.Session.DoRequest("SoftLayer_Network_Storage_Backup_Evault", "uploadFile", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+type Network_Storage_DedicatedCluster struct {
+	Session *session.Session
+	Options sl.Options
+}
+
+// GetNetworkStorageDedicatedClusterService returns an instance of the Network_Storage_DedicatedCluster SoftLayer service
+func GetNetworkStorageDedicatedClusterService(sess *session.Session) Network_Storage_DedicatedCluster {
+	return Network_Storage_DedicatedCluster{Session: sess}
+}
+
+func (r Network_Storage_DedicatedCluster) Id(id int) Network_Storage_DedicatedCluster {
+	r.Options.Id = &id
+	return r
+}
+
+func (r Network_Storage_DedicatedCluster) Mask(mask string) Network_Storage_DedicatedCluster {
+	if !strings.HasPrefix(mask, "mask[") && (strings.Contains(mask, "[") || strings.Contains(mask, ",")) {
+		mask = fmt.Sprintf("mask[%s]", mask)
+	}
+
+	r.Options.Mask = mask
+	return r
+}
+
+func (r Network_Storage_DedicatedCluster) Filter(filter string) Network_Storage_DedicatedCluster {
+	r.Options.Filter = filter
+	return r
+}
+
+func (r Network_Storage_DedicatedCluster) Limit(limit int) Network_Storage_DedicatedCluster {
+	r.Options.Limit = &limit
+	return r
+}
+
+func (r Network_Storage_DedicatedCluster) Offset(offset int) Network_Storage_DedicatedCluster {
+	r.Options.Offset = &offset
+	return r
+}
+
+// Retrieve
+func (r Network_Storage_DedicatedCluster) GetAccount() (resp datatypes.Account, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_DedicatedCluster", "getAccount", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Storage_DedicatedCluster) GetDedicatedClusterList() (resp []int, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_DedicatedCluster", "getDedicatedClusterList", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Storage_DedicatedCluster) GetObject() (resp datatypes.Network_Storage_DedicatedCluster, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_DedicatedCluster", "getObject", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve
+func (r Network_Storage_DedicatedCluster) GetServiceResource() (resp datatypes.Network_Service_Resource, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_DedicatedCluster", "getServiceResource", nil, &r.Options, &resp)
 	return
 }
 
@@ -11048,6 +11734,16 @@ func (r Network_Storage_Hub_Cleversafe_Account) GetEndpoints(accountId *int) (re
 	return
 }
 
+// Returns a collection of endpoint URLs available to this IBM Cloud Object Storage account.
+func (r Network_Storage_Hub_Cleversafe_Account) GetEndpointsWithRefetch(accountId *int, refetch *bool) (resp []datatypes.Container_Network_Storage_Hub_ObjectStorage_Endpoint, err error) {
+	params := []interface{}{
+		accountId,
+		refetch,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Hub_Cleversafe_Account", "getEndpointsWithRefetch", params, &r.Options, &resp)
+	return
+}
+
 // Retrieve Provides an interface to various metrics relating to the usage of an IBM Cloud Object Storage account.
 func (r Network_Storage_Hub_Cleversafe_Account) GetMetricTrackingObject() (resp datatypes.Metric_Tracking_Object, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Storage_Hub_Cleversafe_Account", "getMetricTrackingObject", nil, &r.Options, &resp)
@@ -11450,6 +12146,12 @@ func (r Network_Storage_Iscsi) CollectBytesUsed() (resp uint, err error) {
 }
 
 // no documentation yet
+func (r Network_Storage_Iscsi) ConvertCloneDependentToIndependent() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "convertCloneDependentToIndependent", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
 func (r Network_Storage_Iscsi) CreateFolder(folder *string) (resp bool, err error) {
 	params := []interface{}{
 		folder,
@@ -11537,6 +12239,15 @@ func (r Network_Storage_Iscsi) DisableSnapshots(scheduleType *string) (resp bool
 		scheduleType,
 	}
 	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "disableSnapshots", params, &r.Options, &resp)
+	return
+}
+
+// If a volume (with replication) becomes inaccessible due to a disaster event, this method can be used to immediately failover to an available replica in another location. This method does not allow for fail back via the API. To fail back to the original volume after using this method, open a support ticket. To test failover, use [[SoftLayer_Network_Storage::failoverToReplicant]] instead.
+func (r Network_Storage_Iscsi) DisasterRecoveryFailoverToReplicant(replicantId *int) (resp bool, err error) {
+	params := []interface{}{
+		replicantId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "disasterRecoveryFailoverToReplicant", params, &r.Options, &resp)
 	return
 }
 
@@ -11780,9 +12491,27 @@ func (r Network_Storage_Iscsi) GetDailySchedule() (resp datatypes.Network_Storag
 	return
 }
 
+// Retrieve Whether or not a network storage volume is a dependent duplicate.
+func (r Network_Storage_Iscsi) GetDependentDuplicate() (resp string, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "getDependentDuplicate", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve The network storage volumes configured to be dependent duplicates of a volume.
+func (r Network_Storage_Iscsi) GetDependentDuplicates() (resp []datatypes.Network_Storage, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "getDependentDuplicates", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve The events which have taken place on a network storage volume.
 func (r Network_Storage_Iscsi) GetEvents() (resp []datatypes.Network_Storage_Event, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "getEvents", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve Determines whether the volume is allowed to failback
+func (r Network_Storage_Iscsi) GetFailbackNotAllowed() (resp string, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "getFailbackNotAllowed", nil, &r.Options, &resp)
 	return
 }
 
@@ -11883,6 +12612,18 @@ func (r Network_Storage_Iscsi) GetIntervalSchedule() (resp datatypes.Network_Sto
 // Retrieve The maximum number of IOPs selected for this volume.
 func (r Network_Storage_Iscsi) GetIops() (resp string, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "getIops", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve Determines whether dependent volume provision is completed on background.
+func (r Network_Storage_Iscsi) GetIsDependentDuplicateProvisionCompleted() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "getIsDependentDuplicateProvisionCompleted", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve
+func (r Network_Storage_Iscsi) GetIsInDedicatedServiceResource() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "getIsInDedicatedServiceResource", nil, &r.Options, &resp)
 	return
 }
 
@@ -12246,6 +12987,12 @@ func (r Network_Storage_Iscsi) GetVirtualGuest() (resp datatypes.Virtual_Guest, 
 	return
 }
 
+// Retrieves an array of volume count limits per location and globally.
+func (r Network_Storage_Iscsi) GetVolumeCountLimits() (resp []datatypes.Container_Network_Storage_DataCenterLimits_VolumeCountLimitContainer, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "getVolumeCountLimits", nil, &r.Options, &resp)
+	return
+}
+
 // This method returns the parameters for cloning a volume
 func (r Network_Storage_Iscsi) GetVolumeDuplicateParameters() (resp datatypes.Container_Network_Storage_VolumeDuplicateParameters, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "getVolumeDuplicateParameters", nil, &r.Options, &resp)
@@ -12309,6 +13056,24 @@ func (r Network_Storage_Iscsi) IsDuplicateReadyToMount() (resp bool, err error) 
 // no documentation yet
 func (r Network_Storage_Iscsi) IsVolumeActive() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "isVolumeActive", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Storage_Iscsi) RefreshDependentDuplicate(snapshotId *int) (resp bool, err error) {
+	params := []interface{}{
+		snapshotId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "refreshDependentDuplicate", params, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Network_Storage_Iscsi) RefreshDuplicate(snapshotId *int) (resp bool, err error) {
+	params := []interface{}{
+		snapshotId,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Storage_Iscsi", "refreshDuplicate", params, &r.Options, &resp)
 	return
 }
 
@@ -13185,15 +13950,29 @@ func (r Network_Subnet) AllowAccessToNetworkStorageList(networkStorageTemplateOb
 	return
 }
 
+// This interface allows you to remove the route of your Account Owned subnets. The result will be a subnet that is no longer routed on the network. Remove the route of subnets you are not actively using, as it will make it easier to identify available subnets later.
+//
+// '''Important:''' When removing the route of ''Portable'' subnets, know that any subnet depending on an IP address provided by the Portable subnet will also have their routes removed!
+//
+// To review what subnets are routed to IP addresses provided by a ''Portable'' subnet, you can utilize the following object mask: 'mask[ipAddresses[endpointSubnets]]'. Any subnet present in conjunction with ''endpointSubnets'' is a subnet which depends on the respective IP address.
+//
+// The behavior of this interface is such that either true or false is returned. A result of false can be interpreted as the clear route request having already been completed. In contrast, a result of true means the subnet is currently routed and will be transitioned. This route change is asynchronous to the request. A response of true does not mean the subnet's route has changed, but simply that it will change. In order to monitor for the completion of the change, you may either attempt a clear route again until the result is false, or monitor one or more SoftLayer_Network_Subnet properties: subnetType, networkVlanId, and or endPointIpAddress to determine if routing of the subnet has been removed.
+func (r Network_Subnet) ClearRoute() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Subnet", "clearRoute", nil, &r.Options, &resp)
+	return
+}
+
 // Create the default PTR records for this subnet
 func (r Network_Subnet) CreateReverseDomainRecords() (resp datatypes.Dns_Domain_Reverse, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Subnet", "createReverseDomainRecords", nil, &r.Options, &resp)
 	return
 }
 
-// This function is used to create a new transaction to modify a subnet route. Routes are updated in one to two minutes depending on the number of transactions that are pending for a router.
 //
-// Usage of this function is restricted and may only be called from authorized accounts. It is not available for general API users without justification and consent from a SoftLayer representative.
+// ***DEPRECATED***
+// This endpoint is deprecated in favor of the more expressive and capable SoftLayer_Network_Subnet::route, to which this endpoint now proxies. Refer to it for more information.
+//
+// Similarly, unroute requests are proxied to SoftLayer_Network_Subnet::clearRoute.
 func (r Network_Subnet) CreateSubnetRouteUpdateTransaction(newEndPointIpAddress *string) (resp bool, err error) {
 	params := []interface{}{
 		newEndPointIpAddress,
@@ -13202,6 +13981,8 @@ func (r Network_Subnet) CreateSubnetRouteUpdateTransaction(newEndPointIpAddress 
 	return
 }
 
+//
+// ***DEPRECATED***
 // This function is used to create a new SoftLayer SWIP transaction to register your RWHOIS data with ARIN. SWIP transactions can only be initiated on subnets that contain more than 8 IP addresses.
 func (r Network_Subnet) CreateSwipTransaction() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Subnet", "createSwipTransaction", nil, &r.Options, &resp)
@@ -13217,6 +13998,8 @@ func (r Network_Subnet) EditNote(note *string) (resp bool, err error) {
 	return
 }
 
+//
+// ***DEPRECATED***
 // Retrieve a list of a SoftLayer customer's subnets along with their SWIP transaction statuses. This is a shortcut method that combines the SoftLayer_Network_Subnet retrieval methods along with [[object masks]] to retrieve their subnets' associated SWIP transactions as well.
 //
 // This is a special function built for SoftLayer's use on the SWIP section of the customer portal, but may also be useful for API users looking for the same data.
@@ -13237,7 +14020,7 @@ func (r Network_Subnet) GetActiveRegistration() (resp datatypes.Network_Subnet_R
 	return
 }
 
-// Retrieve All the swip transactions associated with a subnet that are still active.
+// Retrieve DEPRECATED
 func (r Network_Subnet) GetActiveSwipTransaction() (resp datatypes.Network_Subnet_Swip_Transaction, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Subnet", "getActiveSwipTransaction", nil, &r.Options, &resp)
 	return
@@ -13249,7 +14032,7 @@ func (r Network_Subnet) GetActiveTransaction() (resp datatypes.Provisioning_Vers
 	return
 }
 
-// Retrieve Identifier which distinguishes whether the subnet is public or private address space.
+// Retrieve Identifier which distinguishes what classification of addresses the subnet represents.
 func (r Network_Subnet) GetAddressSpace() (resp string, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Subnet", "getAddressSpace", nil, &r.Options, &resp)
 	return
@@ -13441,7 +14224,7 @@ func (r Network_Subnet) GetRoleName() (resp string, err error) {
 	return
 }
 
-// getRoutableEndpointAddresses retrieves valid routable endpoint addresses for a subnet. You may use any IP address in a portable subnet, but may not use the network identifier, gateway, or broadcast address for primary and secondary on VLAN subnets.
+// Returns IP addresses which may be used as routing endpoints for a given subnet. IP address which are currently the network, gateway, or broadcast address of a Secondary Portable subnet, are an address in a Secondary Static subnet, or if the address is not assigned to a resource when part of a Primary Subnet will not be available as a routing endpoint.
 func (r Network_Subnet) GetRoutableEndpointIpAddresses() (resp []datatypes.Network_Subnet_IpAddress, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Subnet", "getRoutableEndpointIpAddresses", nil, &r.Options, &resp)
 	return
@@ -13468,9 +14251,15 @@ func (r Network_Subnet) GetSubnetForIpAddress(ipAddress *string) (resp datatypes
 	return
 }
 
-// Retrieve All the swip transactions associated with a subnet.
+// Retrieve DEPRECATED
 func (r Network_Subnet) GetSwipTransaction() (resp []datatypes.Network_Subnet_Swip_Transaction, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Subnet", "getSwipTransaction", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve References to all tags for this subnet.
+func (r Network_Subnet) GetTagReferences() (resp []datatypes.Tag_Reference, err error) {
+	err = r.Session.DoRequest("SoftLayer_Network_Subnet", "getTagReferences", nil, &r.Options, &resp)
 	return
 }
 
@@ -13498,6 +14287,55 @@ func (r Network_Subnet) RemoveAccessToNetworkStorageList(networkStorageTemplateO
 		networkStorageTemplateObjects,
 	}
 	err = r.Session.DoRequest("SoftLayer_Network_Subnet", "removeAccessToNetworkStorageList", params, &r.Options, &resp)
+	return
+}
+
+// This interface allows you to change the route of your Account Owned subnets. It accommodates a number of ways to identify your desired routing destination through the use of a 'type' and 'identifier'. Subnets may be routed as either Static or Portable, and that designation is dictated by the routing destination specified.
+//
+// Static subnets have an ultimate routing destination of a single IP address but may not be routed to an existing subnet's IP address whose subnet is routed as a Static. Portable subnets have an ultimate routing destination of a VLAN.
+//
+// A subnet can be routed to any resource within the same "routing region" as the subnet itself. A subnet's routing region can be diverse but is usually limited to a single data center.
+//
+// The following identifier 'type' values will result in Static routing: <ul> <li>SoftLayer_Network_Subnet_IpAddress</li> <li>SoftLayer_Hardware_Server</li> <li>SoftLayer_Virtual_Guest</li> </ul>
+//
+// The following identifier 'type' values will result in Portable routing: <ul> <li>SoftLayer_Network_Vlan</li> </ul>
+//
+// For each identifier type, one or more 'identifier' formats are possible.
+//
+// ''SoftLayer_Network_Subnet_IpAddress'' will accept the following identifier formats: <ul> <li>An entirely numeric value will be treated as a SoftLayer_Network_Subnet_IpAddress.id value of the desired IP address object.</li> <li>A dotted-quad IPv4 address.</li> <li>A full or compressed IPv6 address.</li> </ul>
+//
+// ''SoftLayer_Network_Vlan'' will accept the following identifier formats: <ul> <li>An entirely numeric value will be treated as a SoftLayer_Network_Vlan.id value of the desired VLAN object.</li> <li>A semantic VLAN identifier of the form <data center short name>.<router>.<vlan number>, eg. dal13.fcr01.1234 - the router name may optionally contain the 'a' or 'b' redundancy qualifier (which has no meaning in this context).</li> </ul>
+//
+// ''SoftLayer_Hardware_Server'' will accept the following identifier formats: <ul> <li>An entirely numeric value will be treated as a SoftLayer_Hardware_Server.id value of the desired server.</li> <li>A UUID corresponding to a server's SoftLayer_Hardware_Server.globalIdentifier.</li> <li>A value corresponding to a unique SoftLayer_Hardware_Server.hostname.</li> <li>A value corresponding to a unique fully-qualified domain name in the format 'hostname&lt;domain&gt;' where &lt; and &gt; are literal, hostname refers to SoftLayer_Hardware_Server.hostname and domain to SoftLayer_Hardware_Server.domain, respectively.</li> </ul>
+//
+// ''SoftLayer_Virtual_Guest'' will accept the following identifier formats: <ul> <li>An entirely numeric value will be treated as a SoftLayer_Virtual_Guest.id value of the desired server.</li> <li>A UUID corresponding to a server's SoftLayer_Virtual_Guest.globalIdentifier.</li> <li>A value corresponding to a unique SoftLayer_Virtual_Guest.hostname.</li> <li>A value corresponding to a unique fully-qualified domain name in the format 'hostname&lt;domain&gt;' where &lt; and &gt; are literal, hostname refers to SoftLayer_Virtual_Guest.hostname and domain to SoftLayer_Virtual_Guest.domain, respectively.</li> </ul>
+//
+// The routing destination result of specifying a SoftLayer_Hardware_Server or SoftLayer_Virtual_Guest type will be the primary IP address of the server for the same network segment the subnet is on. Thus, a public subnet will be routed to the server's public, primary IP address. Additionally, this IP address resolution will match the subnet's IP version; routing a IPv6 subnet to a server will result in selection of the primary IPv6 address of the respective network segment, if available.
+//
+// Subnets may only be routed to the IP version they themselves represent. That means an IPv4 subnet can only be routed to IPv4 addresses. Any type/identifier combination that resolves to an IP address must be able to locate an IP address of the same version as the subnet being routed.
+//
+// When routing to an IP address on a Primary subnet, only those addresses actively assigned to resources may be targeted. Additionally, the network, gateway, or broadcast address of any Portable subnet may not be a routing destination. For some VLANs utilizing the HSRP redundancy strategy, there are additional addresses which cannot be a route destination.
+//
+// When routing a subnet that is already routed, note that the subnet first has its route removed; this procedure is the same as what will occur when using SoftLayer_Network_Subnet::clearRoute. Special consideration should be made for subnets routed as Portable. Please refer to the documentation for SoftLayer_Network_Subnet::clearRoute for details.
+//
+// The behavior of this interface is such that either true or false is returned. A response of false indicates the route request would not result in the route of the subnet changing; attempts to route the subnet to the same destination, even if identified by differing means, will result in no changes. A result of false can be interpreted as the route request having already been completed. In contrast, a result of true means the requested destination is different from the current destination and the subnet's routing will be transitioned. This route change is asynchronous to the request. A response of true does not mean the subnet's route has changed, but simply that it will change. In order to monitor for the completion of the change, you may either attempt a route change again until the result is false, or monitor one or more SoftLayer_Network_Subnet properties: subnetType, networkVlanId, and or endPointIpAddress to determine if routing of the subnet has become the desired route destination.
+//
+// Use of this operation is limited to a single active request per subnet. If a previous route request is not yet complete, a "not ready" message will be returned upon subsequent requests.
+func (r Network_Subnet) Route(typ *string, identifier *string) (resp bool, err error) {
+	params := []interface{}{
+		typ,
+		identifier,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Subnet", "route", params, &r.Options, &resp)
+	return
+}
+
+// Tag a subnet by passing in one or more tags separated by a comma. Any existing tags you wish to keep should be included in the set of tags, as any missing tags will be removed. To remove all tags from the subnet, send an empty string.
+func (r Network_Subnet) SetTags(tags *string) (resp bool, err error) {
+	params := []interface{}{
+		tags,
+	}
+	err = r.Session.DoRequest("SoftLayer_Network_Subnet", "setTags", params, &r.Options, &resp)
 	return
 }
 
@@ -14232,6 +15070,8 @@ func (r Network_Subnet_Rwhois_Data) GetObject() (resp datatypes.Network_Subnet_R
 	return
 }
 
+//
+// **DEPRECATED**
 // The SoftLayer_Network_Subnet_Swip_Transaction data type contains basic information tracked at SoftLayer to allow automation of Swip creation, update, and removal requests.  A specific transaction is attached to an accountId and a subnetId. This also contains a "Status Name" which tells the customer what the transaction is doing:
 //
 //
@@ -14283,6 +15123,8 @@ func (r Network_Subnet_Swip_Transaction) Offset(offset int) Network_Subnet_Swip_
 	return r
 }
 
+//
+// **DEPRECATED**
 // This function will return an array of SoftLayer_Network_Subnet_Swip_Transaction objects, one for each SWIP that is currently in transaction with ARIN.  This includes all swip registrations, swip removal requests, and SWIP objects that are currently OK.
 func (r Network_Subnet_Swip_Transaction) FindMyTransactions() (resp []datatypes.Network_Subnet_Swip_Transaction, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Subnet_Swip_Transaction", "findMyTransactions", nil, &r.Options, &resp)
@@ -14295,6 +15137,8 @@ func (r Network_Subnet_Swip_Transaction) GetAccount() (resp datatypes.Account, e
 	return
 }
 
+//
+// **DEPRECATED**
 // getObject retrieves the SoftLayer_Network_Subnet_Swip_Transaction object whose ID number corresponds to the ID number of the init parameter passed to the SoftLayer_Network_Subnet_Swip_transaction service. You can only retrieve Swip transactions tied to the account.
 func (r Network_Subnet_Swip_Transaction) GetObject() (resp datatypes.Network_Subnet_Swip_Transaction, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Subnet_Swip_Transaction", "getObject", nil, &r.Options, &resp)
@@ -14307,140 +15151,43 @@ func (r Network_Subnet_Swip_Transaction) GetSubnet() (resp datatypes.Network_Sub
 	return
 }
 
+//
+// **DEPRECATED**
 // This method finds all subnets attached to your account that are in OK status and starts "DELETE" transactions with ARIN, allowing you to remove your SWIP registration information.
 func (r Network_Subnet_Swip_Transaction) RemoveAllSubnetSwips() (resp int, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Subnet_Swip_Transaction", "removeAllSubnetSwips", nil, &r.Options, &resp)
 	return
 }
 
+//
+// **DEPRECATED**
 // This function, when called on an instantiated SWIP transaction, will allow you to start a "DELETE" transaction with ARIN, allowing you to remove your SWIP registration information.
 func (r Network_Subnet_Swip_Transaction) RemoveSwipData() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Subnet_Swip_Transaction", "removeSwipData", nil, &r.Options, &resp)
 	return
 }
 
+//
+// **DEPRECATED**
 // This function will allow you to update ARIN's registration data for a subnet to your current RWHOIS data.
 func (r Network_Subnet_Swip_Transaction) ResendSwipData() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Subnet_Swip_Transaction", "resendSwipData", nil, &r.Options, &resp)
 	return
 }
 
+//
+// **DEPRECATED**
 // swipAllSubnets finds all subnets attached to your account and attempts to create a SWIP transaction for all subnets that do not already have a SWIP transaction in progress.
 func (r Network_Subnet_Swip_Transaction) SwipAllSubnets() (resp int, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Subnet_Swip_Transaction", "swipAllSubnets", nil, &r.Options, &resp)
 	return
 }
 
+//
+// **DEPRECATED**
 // This method finds all subnets attached to your account that are in "OK" status and updates their data with ARIN.  Use this function after you have updated your RWHOIS data if you want to keep SWIP up to date.
 func (r Network_Subnet_Swip_Transaction) UpdateAllSubnetSwips() (resp int, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Subnet_Swip_Transaction", "updateAllSubnetSwips", nil, &r.Options, &resp)
-	return
-}
-
-// no documentation yet
-type Network_TippingPointReporting struct {
-	Session *session.Session
-	Options sl.Options
-}
-
-// GetNetworkTippingPointReportingService returns an instance of the Network_TippingPointReporting SoftLayer service
-func GetNetworkTippingPointReportingService(sess *session.Session) Network_TippingPointReporting {
-	return Network_TippingPointReporting{Session: sess}
-}
-
-func (r Network_TippingPointReporting) Id(id int) Network_TippingPointReporting {
-	r.Options.Id = &id
-	return r
-}
-
-func (r Network_TippingPointReporting) Mask(mask string) Network_TippingPointReporting {
-	if !strings.HasPrefix(mask, "mask[") && (strings.Contains(mask, "[") || strings.Contains(mask, ",")) {
-		mask = fmt.Sprintf("mask[%s]", mask)
-	}
-
-	r.Options.Mask = mask
-	return r
-}
-
-func (r Network_TippingPointReporting) Filter(filter string) Network_TippingPointReporting {
-	r.Options.Filter = filter
-	return r
-}
-
-func (r Network_TippingPointReporting) Limit(limit int) Network_TippingPointReporting {
-	r.Options.Limit = &limit
-	return r
-}
-
-func (r Network_TippingPointReporting) Offset(offset int) Network_TippingPointReporting {
-	r.Options.Offset = &offset
-	return r
-}
-
-// This method, when given an attack signature ID (available in the return values of getReportForIpAddressOrSubnet and  getSubnetReportForEntireAccount) and an IP Address and subnet mask, returns all attacks for that subnet in the specified time frame and direction.  Once the results have been filtered, additional data is available, including starting and ending times for the attack, originating IP address and port, and destination IP address and port.
-//
-// CVE and Bugtraq information is not available at this level.
-func (r Network_TippingPointReporting) DrillDownAttack(signatureId *string, IpAddress *string, subnetMask *int, timeFrame *int, direction *string) (resp datatypes.Container_Network_IntrusionProtection_SubnetReport, err error) {
-	params := []interface{}{
-		signatureId,
-		IpAddress,
-		subnetMask,
-		timeFrame,
-		direction,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_TippingPointReporting", "drillDownAttack", params, &r.Options, &resp)
-	return
-}
-
-// This method returns the attack statistics for the current user's account and for the entire SoftLayer network.  These attacks are recorded and monitored at the entry point to the network, and represent attacks in both directions.
-//
-// The data returned is:
-// * Top attacks (by attack name) on datacenter Dal01 in the last hour (and last 24 hours)
-// * Top attacks (by attack name) on IPs you own in the last hour (and last 24 hours)
-// * Top IPs attacking IPs you own in the last hour (and last 24 hours)
-// Each one of these lists can contain any number of items, the default is 5.  The usable limit is less than 10, but setting the limit to an abnormally high value will effectively return all records.
-//
-// The data is returned as a collection of SoftLayer_Container_Network_IntrusionProtection_Statistics objects.
-func (r Network_TippingPointReporting) GetMainStatistics(numberOfAttacks *int) (resp []datatypes.Container_Network_IntrusionProtection_Statistics, err error) {
-	params := []interface{}{
-		numberOfAttacks,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_TippingPointReporting", "getMainStatistics", params, &r.Options, &resp)
-	return
-}
-
-// This method expands on the getSubnetReportForEntireAccount method by offering the ability to filter by subnet or IP address. This method is identical to getSubnetReportForEntireAccount, but allows filtering by subnet.  Like in the getSubnetReportForEntireAccount method, CVE and BugTraq IDs are provided, if available.
-//
-// This method should be called once an attack has been identified using getSubnetReportForEntireAccount (in which case "All Subnets" is the subnet) or getReportForIpAddressOrSubnet.
-func (r Network_TippingPointReporting) GetReportForIpAddressOrSubnet(IpAddress *string, subnetMask *int, timeFrame *int, orderBy *string, orderDirection *string) (resp []datatypes.Container_Network_IntrusionProtection_SubnetReport, err error) {
-	params := []interface{}{
-		IpAddress,
-		subnetMask,
-		timeFrame,
-		orderBy,
-		orderDirection,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_TippingPointReporting", "getReportForIpAddressOrSubnet", params, &r.Options, &resp)
-	return
-}
-
-// This method returns specific attacks by name for all subnets on the current user's account.
-//
-// The data returned is stored in SoftLayer_Container_Network_IntrusionProtection_SubnetReport objects, with the "subnet" value set to "All Subnets"
-//
-// The data is separated into "Inbound" and "Outbound" traffic.  A significant amount of outbound attack traffic could indicate that your servers have been compromised.
-//
-// The data returned includes Attack Count, attack name, extended attack description, and IDs that correspond with the BugTraq or CVE databases. BugTraq can be accessed at [http://www.securityfocus.com/vulnerabilities] The CVE database is located at [http://cve.mitre.org/find/index.html]
-//
-// For more detailed information, use the getReportForIpAddressOrSubnet method
-func (r Network_TippingPointReporting) GetSubnetReportForEntireAccount(timeFrame *int, orderBy *string, orderDirection *string, returnSubnetGroups *bool) (resp []datatypes.Container_Network_IntrusionProtection_SubnetReport, err error) {
-	params := []interface{}{
-		timeFrame,
-		orderBy,
-		orderDirection,
-		returnSubnetGroups,
-	}
-	err = r.Session.DoRequest("SoftLayer_Network_TippingPointReporting", "getSubnetReportForEntireAccount", params, &r.Options, &resp)
 	return
 }
 
@@ -14517,7 +15264,7 @@ func (r Network_Tunnel_Module_Context) AddServiceSubnetToNetworkTunnel(subnetId 
 	return
 }
 
-// A transaction will be created to apply the IPSec network tunnel's configuration to SoftLayer network devices.  During this time, an IPSec network tunnel cannot be modified in anyway.  Only one network tunnel configuration transaction can be created.  If a transaction has been created or is running, a new transaction cannot be created until the previous transaction completes.
+// An asynchronous task will be created to apply the IPSec network tunnel's configuration to network devices. During this time, an IPSec network tunnel cannot be modified in anyway. Only one network tunnel configuration task can be created at a time. If a task has already been created and has not completed, a new task cannot be created.
 func (r Network_Tunnel_Module_Context) ApplyConfigurationsToDevice() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Network_Tunnel_Module_Context", "applyConfigurationsToDevice", nil, &r.Options, &resp)
 	return
@@ -15084,6 +15831,8 @@ func (r Network_Vlan) GetPrivateVlan() (resp datatypes.Network_Vlan, err error) 
 	return
 }
 
+//
+// *** DEPRECATED ***
 // Retrieve the private network VLAN associated with an IP address.
 func (r Network_Vlan) GetPrivateVlanByIpAddress(ipAddress *string) (resp datatypes.Network_Vlan, err error) {
 	params := []interface{}{

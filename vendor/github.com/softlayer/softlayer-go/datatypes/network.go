@@ -645,29 +645,6 @@ type Network_Bandwidth_Usage struct {
 	Type *Network_Bandwidth_Version1_Usage_Detail_Type `json:"type,omitempty" xmlrpc:"type,omitempty"`
 }
 
-// The SoftLayer_Network_Bandwidth_Usage_Detail data type contains specific information relating to bandwidth utilization at a specific point in time on a given network interface.
-type Network_Bandwidth_Usage_Detail struct {
-	Entity
-
-	// The account tied to this tracking object
-	Account *Account `json:"account,omitempty" xmlrpc:"account,omitempty"`
-
-	// Incoming bandwidth utilization.
-	AmountIn *Float64 `json:"amountIn,omitempty" xmlrpc:"amountIn,omitempty"`
-
-	// Outgoing bandwidth utilization.
-	AmountOut *Float64 `json:"amountOut,omitempty" xmlrpc:"amountOut,omitempty"`
-
-	// ID of the bandwidth usage detail type for this record.
-	BandwidthUsageDetailTypeId *Float64 `json:"bandwidthUsageDetailTypeId,omitempty" xmlrpc:"bandwidthUsageDetailTypeId,omitempty"`
-
-	// The tracking object this bandwidth usage record describes.
-	TrackingObject *Metric_Tracking_Object `json:"trackingObject,omitempty" xmlrpc:"trackingObject,omitempty"`
-
-	// In and out bandwidth utilization for a specified time stamp.
-	Type *Network_Bandwidth_Version1_Usage_Detail_Type `json:"type,omitempty" xmlrpc:"type,omitempty"`
-}
-
 // The SoftLayer_Network_Bandwidth_Version1_Allocation data type contains general information relating to a single bandwidth allocation record.
 type Network_Bandwidth_Version1_Allocation struct {
 	Entity
@@ -886,7 +863,7 @@ type Network_Bandwidth_Version1_Allotment_Type struct {
 	ShortDescription *string `json:"shortDescription,omitempty" xmlrpc:"shortDescription,omitempty"`
 }
 
-// The SoftLayer_Network_Bandwidth_Version1_Host type contains general information used to the route a server to its pod.
+// [DEPRECATED] The SoftLayer_Network_Bandwidth_Version1_Host type contains general information used to the route a server to its pod.
 type Network_Bandwidth_Version1_Host struct {
 	Entity
 
@@ -894,17 +871,17 @@ type Network_Bandwidth_Version1_Host struct {
 	PodId *int `json:"podId,omitempty" xmlrpc:"podId,omitempty"`
 }
 
-// All bandwidth tracking is maintained through the switch that the bandwidth is used through.  All bandwidth is stored in a "pod" repository.  An interface links the hardware switch with the pod repository identification number. This is only relevant to bandwidth data.  It is not common to use this.
+// [DEPRECATED] All bandwidth tracking is maintained through the switch that the bandwidth is used through.  All bandwidth is stored in a "pod" repository.  An interface links the hardware switch with the pod repository identification number. This is only relevant to bandwidth data.  It is not common to use this.
 type Network_Bandwidth_Version1_Interface struct {
 	Entity
 
-	// The host for an interface. This is not to be confused with a SoftLayer hardware
+	// [DEPRECATED] The host for an interface. This is not to be confused with SoftLayer Hardware
 	Host *Network_Bandwidth_Version1_Host `json:"host,omitempty" xmlrpc:"host,omitempty"`
 
 	// A interface's host.  The host stores the pod number for the bandwidth data.
 	HostId *int `json:"hostId,omitempty" xmlrpc:"hostId,omitempty"`
 
-	// The switch for an interface.
+	// [DEPRECATED] The switch for an interface.
 	NetworkComponent *Network_Component `json:"networkComponent,omitempty" xmlrpc:"networkComponent,omitempty"`
 
 	// The network component for this interface.
@@ -943,29 +920,6 @@ type Network_Bandwidth_Version1_Usage_Detail struct {
 
 	// Day and time this bandwidth utilization event was recorded.
 	Day *Time `json:"day,omitempty" xmlrpc:"day,omitempty"`
-}
-
-// The SoftLayer_Network_Bandwidth_Usage_Detail data type contains specific information relating to bandwidth utilization at a specific point in time on a given network interface.
-type Network_Bandwidth_Version1_Usage_Detail_Total struct {
-	Entity
-
-	// The account tied to this tracking object
-	Account *Account `json:"account,omitempty" xmlrpc:"account,omitempty"`
-
-	// Incoming bandwidth utilization.
-	AmountIn *Float64 `json:"amountIn,omitempty" xmlrpc:"amountIn,omitempty"`
-
-	// Outgoing bandwidth utilization.
-	AmountOut *Float64 `json:"amountOut,omitempty" xmlrpc:"amountOut,omitempty"`
-
-	// ID of the bandwidth usage detail type for this record.
-	BandwidthUsageDetailTypeId *Float64 `json:"bandwidthUsageDetailTypeId,omitempty" xmlrpc:"bandwidthUsageDetailTypeId,omitempty"`
-
-	// The tracking object this bandwidth usage record describes.
-	TrackingObject *Metric_Tracking_Object `json:"trackingObject,omitempty" xmlrpc:"trackingObject,omitempty"`
-
-	// In and out bandwidth utilization for a specified time stamp.
-	Type *Network_Bandwidth_Version1_Usage_Detail_Type `json:"type,omitempty" xmlrpc:"type,omitempty"`
 }
 
 // The SoftLayer_Network_Bandwidth_Version1_Usage_Detail_Type data type contains generic information relating to the types of bandwidth records available, currently just public and private.
@@ -1032,8 +986,28 @@ type Network_CdnMarketplace_Configuration_Behavior_HotlinkProtection struct {
 	RefererValues *string `json:"refererValues,omitempty" xmlrpc:"refererValues,omitempty"`
 }
 
+// no documentation yet
+type Network_CdnMarketplace_Configuration_Behavior_ModifyResponseHeader struct {
+	Entity
+}
+
+// no documentation yet
+type Network_CdnMarketplace_Configuration_Behavior_TokenAuth struct {
+	Entity
+}
+
 // This data type models a purge event that occurs in caching server. It contains a reference to a mapping configuration, the path to execute the purge on, the status of the purge, and flag that enables saving the purge information for future use.
 type Network_CdnMarketplace_Configuration_Cache_Purge struct {
+	Entity
+}
+
+// This data type models a purge group event that occurs in caching server. It contains a reference to a mapping configuration and the path to execute the purge on.
+type Network_CdnMarketplace_Configuration_Cache_PurgeGroup struct {
+	Entity
+}
+
+// This data type models a purge history event that occurs in caching server. The purge group history will be deleted after 15 days. The possible purge status of each history can be 'SUCCESS', "FAILED" or "IN_PROGRESS".
+type Network_CdnMarketplace_Configuration_Cache_PurgeHistory struct {
 	Entity
 }
 
@@ -1110,7 +1084,7 @@ type Network_Component struct {
 	// A network component's internal identifier.
 	Id *int `json:"id,omitempty" xmlrpc:"id,omitempty"`
 
-	// A hardware switch's interface to the bandwidth pod.
+	// [DEPRECATED] A hardware switch's interface to the bandwidth pod.
 	Interface *Network_Bandwidth_Version1_Interface `json:"interface,omitempty" xmlrpc:"interface,omitempty"`
 
 	// A count of the records of all IP addresses bound to a network component.
@@ -1215,7 +1189,7 @@ type Network_Component struct {
 	// A network component's status. This can take one of four possible values: "ACTIVE", "DISABLE", "USER_OFF", or "MACWAIT". "ACTIVE" network components are enabled and in use on a servers. "DISABLE" status components have been administratively disabled by SoftLayer accounting or abuse. "USER_OFF" components have been administratively disabled by you, the user. "MACWAIT" components only exist on network components that have not been provisioned. You should never see a network interface in MACWAIT state. If you happen to see one please contact SoftLayer support.
 	Status *string `json:"status,omitempty" xmlrpc:"status,omitempty"`
 
-	// Whether a network component's primary ip address is from a storage network subnet or not.
+	// Whether a network component's primary ip address is from a storage network subnet or not. [Deprecated]
 	StorageNetworkFlag *bool `json:"storageNetworkFlag,omitempty" xmlrpc:"storageNetworkFlag,omitempty"`
 
 	// A count of a network component's subnets. A subnet is a group of IP addresses
@@ -1881,8 +1855,14 @@ type Network_Gateway_Member_Attribute struct {
 	// A gateway member's internal identifier.
 	Id *int `json:"id,omitempty" xmlrpc:"id,omitempty"`
 
+	// Indicates if the member has been upgraded.
+	IsUpgraded *int `json:"isUpgraded,omitempty" xmlrpc:"isUpgraded,omitempty"`
+
 	// The previous vSRX version of the gateway software
 	LastvSRXVersion *string `json:"lastvSRXVersion,omitempty" xmlrpc:"lastvSRXVersion,omitempty"`
+
+	// no documentation yet
+	LicenseKey *string `json:"licenseKey,omitempty" xmlrpc:"licenseKey,omitempty"`
 
 	// The gateway member for this attribute.
 	MemberId *int `json:"memberId,omitempty" xmlrpc:"memberId,omitempty"`
@@ -1899,11 +1879,34 @@ type Network_Gateway_Member_Attribute struct {
 	// The SSH key id of key assigned to Gateway.
 	SshKeyId *int `json:"sshKeyId,omitempty" xmlrpc:"sshKeyId,omitempty"`
 
+	// Timestamp when this gateway member was last upgraded
+	UpgradedDate *Time `json:"upgradedDate,omitempty" xmlrpc:"upgradedDate,omitempty"`
+
 	// Username associated with the gateway.
 	Username *string `json:"username,omitempty" xmlrpc:"username,omitempty"`
 
 	// The vSRX version of the gateway software
 	VSRXVersion *string `json:"vSRXVersion,omitempty" xmlrpc:"vSRXVersion,omitempty"`
+}
+
+// no documentation yet
+type Network_Gateway_Precheck struct {
+	Entity
+
+	// Category name
+	Category *string `json:"category,omitempty" xmlrpc:"category,omitempty"`
+
+	// Gateway precheck status
+	GatewayReadinessValue *string `json:"gatewayReadinessValue,omitempty" xmlrpc:"gatewayReadinessValue,omitempty"`
+
+	// The gateway member for this precheck.
+	MemberId *int `json:"memberId,omitempty" xmlrpc:"memberId,omitempty"`
+
+	// Gateway precheck status
+	MemberReadinessValue *string `json:"memberReadinessValue,omitempty" xmlrpc:"memberReadinessValue,omitempty"`
+
+	// The precheck error status of the member
+	ReturnCode *int `json:"returnCode,omitempty" xmlrpc:"returnCode,omitempty"`
 }
 
 // no documentation yet
@@ -1932,6 +1935,9 @@ type Network_Gateway_VersionUpgrade struct {
 
 	// A gateway status's internal identifier.
 	Id *int `json:"id,omitempty" xmlrpc:"id,omitempty"`
+
+	// Is OS Reload required after version upgrade?.
+	OsReloadRequired *int `json:"osReloadRequired,omitempty" xmlrpc:"osReloadRequired,omitempty"`
 
 	// Gateway version available for upgrade.
 	ToVersion *string `json:"toVersion,omitempty" xmlrpc:"toVersion,omitempty"`
@@ -2005,6 +2011,9 @@ type Network_Interconnect_Tenant struct {
 
 	// Specifies the Interconnect connection name.
 	Name *string `json:"name,omitempty" xmlrpc:"name,omitempty"`
+
+	// Direct Link provider can request change to existing routing, Customer can approve the change. newGlobalRoutingFlag = 1 gives connectivity to all IBM data centers, and if newGlobalRoutingFlag = 0, it gives local connectivity.
+	NewGlobalRoutingFlag *bool `json:"newGlobalRoutingFlag,omitempty" xmlrpc:"newGlobalRoutingFlag,omitempty"`
 
 	// Updated Link speed of a Direct Link connection.
 	NewLinkSpeed *int `json:"newLinkSpeed,omitempty" xmlrpc:"newLinkSpeed,omitempty"`
@@ -2136,7 +2145,7 @@ type Network_LBaaS_L7Member struct {
 	// The ID of a L7 pool member.
 	Id *int `json:"id,omitempty" xmlrpc:"id,omitempty"`
 
-	// <<<EOT Specifies when a L7 Pool
+	// <<< EOT Specifies when a L7 Pool
 	ModifyDate *Time `json:"modifyDate,omitempty" xmlrpc:"modifyDate,omitempty"`
 
 	// Backends protocol port
@@ -2156,7 +2165,7 @@ type Network_LBaaS_L7Member struct {
 type Network_LBaaS_L7Policy struct {
 	Entity
 
-	// The Action to take if the rules belonging to this policy match. It can be set to any of the following values: REDIRECT_URL, REDIRECT_POOL, REJECT.
+	// The Action to take if the rules belonging to this policy match. It can be set to any of the following values: REDIRECT_URL, REDIRECT_POOL, REDIRECT_HTTPS, REJECT.
 	Action *string `json:"action,omitempty" xmlrpc:"action,omitempty"`
 
 	// Specifies when a L7 Policy was created.
@@ -2186,7 +2195,7 @@ type Network_LBaaS_L7Policy struct {
 	// The UUID of the L7 pool object referenced by the policy when the policy action is set to REDIRECT_POOL
 	RedirectL7PoolUuid *string `json:"redirectL7PoolUuid,omitempty" xmlrpc:"redirectL7PoolUuid,omitempty"`
 
-	// The URL to which traffic is redirected when the action is set to REDIRECT_URL.
+	// The URL to which traffic is redirected when the action is set to REDIRECT_URL. Or the port to which listener traffic is redirected to when the action is set to REDIRECT_HTTPS.
 	RedirectUrl *string `json:"redirectUrl,omitempty" xmlrpc:"redirectUrl,omitempty"`
 
 	// The UUID of a Policy.
@@ -2298,6 +2307,9 @@ type Network_LBaaS_L7SessionAffinity struct {
 type Network_LBaaS_Listener struct {
 	Entity
 
+	// maximum idle time in seconds(Range: 1 to 7200), after which the load balancer brings down the
+	ClientTimeout *int `json:"clientTimeout,omitempty" xmlrpc:"clientTimeout,omitempty"`
+
 	// Limit of connections a listener can accept
 	ConnectionLimit *int `json:"connectionLimit,omitempty" xmlrpc:"connectionLimit,omitempty"`
 
@@ -2327,6 +2339,9 @@ type Network_LBaaS_Listener struct {
 
 	// The provisioning status of listener.
 	ProvisioningStatus *string `json:"provisioningStatus,omitempty" xmlrpc:"provisioningStatus,omitempty"`
+
+	// maximum idle time in seconds(Range: 1 to 7200), after which the load balancer brings down the
+	ServerTimeout *int `json:"serverTimeout,omitempty" xmlrpc:"serverTimeout,omitempty"`
 
 	// This references to SSL/TLS certificate (optional) for a listener
 	TlsCertificateId *int `json:"tlsCertificateId,omitempty" xmlrpc:"tlsCertificateId,omitempty"`
@@ -2362,6 +2377,9 @@ type Network_LBaaS_LoadBalancer struct {
 
 	// The unique identifier of a load balancer.
 	Id *int `json:"id,omitempty" xmlrpc:"id,omitempty"`
+
+	// Specifies whether the data log is enabled for the load balancer.
+	IsDataLogEnabled *int `json:"isDataLogEnabled,omitempty" xmlrpc:"isDataLogEnabled,omitempty"`
 
 	// Specifies whether the load balancer is a public or internal load balancer.
 	IsPublic *int `json:"isPublic,omitempty" xmlrpc:"isPublic,omitempty"`
@@ -2408,6 +2426,9 @@ type Network_LBaaS_LoadBalancer struct {
 	// list of preferred custom ciphers configured for the load balancer.
 	SslCiphers []Network_LBaaS_SSLCipher `json:"sslCiphers,omitempty" xmlrpc:"sslCiphers,omitempty"`
 
+	// Specifies the type of load balancer.
+	Type *int `json:"type,omitempty" xmlrpc:"type,omitempty"`
+
 	// Applicable for public load balancer only. It specifies whether the public IP addresses are allocated from system public IP pool (1, default) or public subnet (null | 0) from the account ordering the load balancer. For internal load balancer, useSystemPublicIpPool will be ignored, and it always defaults to 1.
 	UseSystemPublicIpPool *int `json:"useSystemPublicIpPool,omitempty" xmlrpc:"useSystemPublicIpPool,omitempty"`
 
@@ -2422,16 +2443,16 @@ type Network_LBaaS_LoadBalancerHealthMonitorConfiguration struct {
 	// Backends port
 	BackendPort *int `json:"backendPort,omitempty" xmlrpc:"backendPort,omitempty"`
 
-	// <<EOT
+	// Backends protocol. Valid values are "TCP", "HTTP"
 	BackendProtocol *string `json:"backendProtocol,omitempty" xmlrpc:"backendProtocol,omitempty"`
 
 	// Health Monitor UUID, required for update only
 	HealthMonitorUuid *string `json:"healthMonitorUuid,omitempty" xmlrpc:"healthMonitorUuid,omitempty"`
 
-	// Interval in seconds to perform
+	// <<< EOT Interval in seconds to perform
 	Interval *int `json:"interval,omitempty" xmlrpc:"interval,omitempty"`
 
-	// <<EOT
+	// Max number of retries until the member is considered as DOWN
 	MaxRetries *int `json:"maxRetries,omitempty" xmlrpc:"maxRetries,omitempty"`
 
 	// Health check methods timeout in
@@ -2459,28 +2480,34 @@ type Network_LBaaS_LoadBalancerProtocolConfiguration struct {
 	// Backends port
 	BackendPort *int `json:"backendPort,omitempty" xmlrpc:"backendPort,omitempty"`
 
-	// <<EOT
+	// Backends protocol. Valid values are "TCP", "HTTP"
 	BackendProtocol *string `json:"backendProtocol,omitempty" xmlrpc:"backendProtocol,omitempty"`
+
+	// maximum idle time in seconds(Range: 1 to 7200), after which the load balancer brings down the client-side connection
+	ClientTimeout *int `json:"clientTimeout,omitempty" xmlrpc:"clientTimeout,omitempty"`
 
 	// Frontends port
 	FrontendPort *int `json:"frontendPort,omitempty" xmlrpc:"frontendPort,omitempty"`
 
-	// <<EOT
+	// Frontends protocol. Valid values are "TCP", "HTTP" and "HTTPS"
 	FrontendProtocol *string `json:"frontendProtocol,omitempty" xmlrpc:"frontendProtocol,omitempty"`
 
 	// Listeners UUID, required for update only
 	ListenerUuid *string `json:"listenerUuid,omitempty" xmlrpc:"listenerUuid,omitempty"`
 
-	// <<EOT
+	// Load balancing method. Valid values are "ROUNDROBIN", "WEIGHTED_RR" and "LEASTCONNECTION"
 	LoadBalancingMethod *string `json:"loadBalancingMethod,omitempty" xmlrpc:"loadBalancingMethod,omitempty"`
 
 	// Maximum number of allowed connections
 	MaxConn *int `json:"maxConn,omitempty" xmlrpc:"maxConn,omitempty"`
 
+	// maximum idle time in seconds(Range: 1 to 7200), after which the load balancer brings down the server-side connection
+	ServerTimeout *int `json:"serverTimeout,omitempty" xmlrpc:"serverTimeout,omitempty"`
+
 	// Sessions cookie name
 	SessionCookieName *string `json:"sessionCookieName,omitempty" xmlrpc:"sessionCookieName,omitempty"`
 
-	// Session stickiness type. Valid values are "SOURCE_IP"
+	// Session stickiness type. Valid values are "SOURCE_IP" "HTTP_COOKIE"
 	SessionType *string `json:"sessionType,omitempty" xmlrpc:"sessionType,omitempty"`
 
 	// ssl/tls certificate id
@@ -2493,6 +2520,9 @@ type Network_LBaaS_LoadBalancerServerInstanceInfo struct {
 
 	// Servers private IP address
 	PrivateIpAddress *string `json:"privateIpAddress,omitempty" xmlrpc:"privateIpAddress,omitempty"`
+
+	// Servers public IP address
+	PublicIpAddress *string `json:"publicIpAddress,omitempty" xmlrpc:"publicIpAddress,omitempty"`
 
 	// Load balancing weight for a server
 	Weight *int `json:"weight,omitempty" xmlrpc:"weight,omitempty"`
@@ -2644,7 +2674,7 @@ type Network_LBaaS_SessionAffinity struct {
 	Type *string `json:"type,omitempty" xmlrpc:"type,omitempty"`
 }
 
-// The SoftLayer_Network_LoadBalancer_Global_Account data type contains the properties for a single global load balancer account.  The properties you are able to edit are fallbackIp, loadBalanceTypeId, and notes. The hosts relational property can be used for creating and editing hosts that belong to the global load balancer account.  The [[SoftLayer_Network_LoadBalancer_Global_Account::editObject|editObject]] method contains details on creating and edited hosts through the hosts relational property.
+// The global load balancer service has been deprecated and is no longer available.
 type Network_LoadBalancer_Global_Account struct {
 	Entity
 
@@ -2691,11 +2721,7 @@ type Network_LoadBalancer_Global_Account struct {
 	Notes *string `json:"notes,omitempty" xmlrpc:"notes,omitempty"`
 }
 
-// The SoftLayer_Network_LoadBalancer_Global_Host data type represents a single host that belongs to a global load balancer account's load balancing pool.
-//
-// The destination IP address of a host must be one that belongs to your SoftLayer customer account, or to a datacenter load balancer virtual ip that belongs to your SoftLayer customer account.  The destination IP address and port of a global load balancer host is a required field and must exist during creation and can not be removed.  The acceptable values for the health check type are 'none', 'http', and 'tcp'. The status property is updated in 5 minute intervals and the hits property is updated in 10 minute intervals.
-//
-// The order of the host is only important if you are using the 'failover' load balance method, and the weight is only important if you are using the 'weighted round robin' load balance method.
+// The global load balancer service has been deprecated and is no longer available.
 type Network_LoadBalancer_Global_Host struct {
 	Entity
 
@@ -2733,6 +2759,8 @@ type Network_LoadBalancer_Global_Host struct {
 	Weight *int `json:"weight,omitempty" xmlrpc:"weight,omitempty"`
 }
 
+// The global load balancer service has been deprecated and is no longer available.
+//
 // The SoftLayer_Network_LoadBalancer_Global_Type data type represents a single load balance method that can be assigned to a global load balancer account. The load balance method determines how hosts in a load balancing pool are chosen by the global load balancers.
 type Network_LoadBalancer_Global_Type struct {
 	Entity
@@ -3332,7 +3360,7 @@ type Network_Protection_Address struct {
 	// no documentation yet
 	PrimaryRouter *Hardware_Router `json:"primaryRouter,omitempty" xmlrpc:"primaryRouter,omitempty"`
 
-	// no documentation yet
+	// DEPRECATED
 	ServiceProvider *Service_Provider `json:"serviceProvider,omitempty" xmlrpc:"serviceProvider,omitempty"`
 
 	// no documentation yet
@@ -3652,6 +3680,9 @@ type Network_Service_Resource struct {
 	// The name associated with this resource
 	Name *string `json:"name,omitempty" xmlrpc:"name,omitempty"`
 
+	// no documentation yet
+	NetappVolumeName *string `json:"netappVolumeName,omitempty" xmlrpc:"netappVolumeName,omitempty"`
+
 	// The hardware information associated with this resource.
 	NetworkDevice *Hardware `json:"networkDevice,omitempty" xmlrpc:"networkDevice,omitempty"`
 
@@ -3684,6 +3715,11 @@ type Network_Service_Resource_Attribute_Type struct {
 	Keyname *string `json:"keyname,omitempty" xmlrpc:"keyname,omitempty"`
 }
 
+// The SoftLayer_Network_Service_Resource_CosStor is used to store information related to COS service.
+type Network_Service_Resource_CosStor struct {
+	Network_Service_Resource
+}
+
 // no documentation yet
 type Network_Service_Resource_Hub struct {
 	Network_Service_Resource
@@ -3692,31 +3728,6 @@ type Network_Service_Resource_Hub struct {
 // no documentation yet
 type Network_Service_Resource_Hub_Swift struct {
 	Network_Service_Resource_Hub
-}
-
-// no documentation yet
-type Network_Service_Resource_MonitoringHub struct {
-	Network_Service_Resource
-
-	// no documentation yet
-	AdnServicesIp *string `json:"adnServicesIp,omitempty" xmlrpc:"adnServicesIp,omitempty"`
-
-	// no documentation yet
-	HubAddress *string `json:"hubAddress,omitempty" xmlrpc:"hubAddress,omitempty"`
-
-	// no documentation yet
-	HubConnectionTimeout *string `json:"hubConnectionTimeout,omitempty" xmlrpc:"hubConnectionTimeout,omitempty"`
-
-	// no documentation yet
-	RobotsCount *string `json:"robotsCount,omitempty" xmlrpc:"robotsCount,omitempty"`
-
-	// no documentation yet
-	RobotsMax *string `json:"robotsMax,omitempty" xmlrpc:"robotsMax,omitempty"`
-}
-
-// no documentation yet
-type Network_Service_Resource_NimsoftLandingHub struct {
-	Network_Service_Resource_MonitoringHub
 }
 
 // no documentation yet
@@ -3847,11 +3858,23 @@ type Network_Storage struct {
 	// The Daily Schedule which is associated with this network storage volume.
 	DailySchedule *Network_Storage_Schedule `json:"dailySchedule,omitempty" xmlrpc:"dailySchedule,omitempty"`
 
+	// Whether or not a network storage volume is a dependent duplicate.
+	DependentDuplicate *string `json:"dependentDuplicate,omitempty" xmlrpc:"dependentDuplicate,omitempty"`
+
+	// A count of the network storage volumes configured to be dependent duplicates of a volume.
+	DependentDuplicateCount *uint `json:"dependentDuplicateCount,omitempty" xmlrpc:"dependentDuplicateCount,omitempty"`
+
+	// The network storage volumes configured to be dependent duplicates of a volume.
+	DependentDuplicates []Network_Storage `json:"dependentDuplicates,omitempty" xmlrpc:"dependentDuplicates,omitempty"`
+
 	// A count of the events which have taken place on a network storage volume.
 	EventCount *uint `json:"eventCount,omitempty" xmlrpc:"eventCount,omitempty"`
 
 	// The events which have taken place on a network storage volume.
 	Events []Network_Storage_Event `json:"events,omitempty" xmlrpc:"events,omitempty"`
+
+	// Determines whether the volume is allowed to failback
+	FailbackNotAllowed *string `json:"failbackNotAllowed,omitempty" xmlrpc:"failbackNotAllowed,omitempty"`
 
 	// Retrieves the NFS Network Mount Address Name for a given File Storage Volume.
 	FileNetworkMountAddress *string `json:"fileNetworkMountAddress,omitempty" xmlrpc:"fileNetworkMountAddress,omitempty"`
@@ -3882,6 +3905,12 @@ type Network_Storage struct {
 
 	// The maximum number of IOPs selected for this volume.
 	Iops *string `json:"iops,omitempty" xmlrpc:"iops,omitempty"`
+
+	// Determines whether dependent volume provision is completed on background.
+	IsDependentDuplicateProvisionCompleted *bool `json:"isDependentDuplicateProvisionCompleted,omitempty" xmlrpc:"isDependentDuplicateProvisionCompleted,omitempty"`
+
+	// no documentation yet
+	IsInDedicatedServiceResource *bool `json:"isInDedicatedServiceResource,omitempty" xmlrpc:"isInDedicatedServiceResource,omitempty"`
 
 	// Determines whether a volume is ready to order snapshot space, or, if snapshot space is already available, to assign a snapshot schedule, or to take a manual snapshot.
 	IsReadyForSnapshot *bool `json:"isReadyForSnapshot,omitempty" xmlrpc:"isReadyForSnapshot,omitempty"`
@@ -4157,6 +4186,12 @@ type Network_Storage_Allowed_Host struct {
 
 	// Connections to a target with a source IP in this subnet prefix are allowed.
 	SourceSubnet *string `json:"sourceSubnet,omitempty" xmlrpc:"sourceSubnet,omitempty"`
+
+	// The SoftLayer_Network_Subnet records assigned to the ACL for this allowed host.
+	SubnetsInAcl []Network_Subnet `json:"subnetsInAcl,omitempty" xmlrpc:"subnetsInAcl,omitempty"`
+
+	// A count of the SoftLayer_Network_Subnet records assigned to the ACL for this allowed host.
+	SubnetsInAclCount *uint `json:"subnetsInAclCount,omitempty" xmlrpc:"subnetsInAclCount,omitempty"`
 }
 
 // no documentation yet
@@ -4339,6 +4374,29 @@ type Network_Storage_Daily_Usage struct {
 
 	// no documentation yet
 	PublicBandwidthOut *uint `json:"publicBandwidthOut,omitempty" xmlrpc:"publicBandwidthOut,omitempty"`
+}
+
+// no documentation yet
+type Network_Storage_DedicatedCluster struct {
+	Entity
+
+	// no documentation yet
+	Account *Account `json:"account,omitempty" xmlrpc:"account,omitempty"`
+
+	// The SoftLayer_Account->id of the customer account
+	AccountId *int `json:"accountId,omitempty" xmlrpc:"accountId,omitempty"`
+
+	// The date when Dedicated service resource entry was created.
+	CreateDate *Time `json:"createDate,omitempty" xmlrpc:"createDate,omitempty"`
+
+	// The unique identifier for Dedicated service resource record.
+	Id *int `json:"id,omitempty" xmlrpc:"id,omitempty"`
+
+	// no documentation yet
+	ServiceResource *Network_Service_Resource `json:"serviceResource,omitempty" xmlrpc:"serviceResource,omitempty"`
+
+	// The cluster Id that is setup as dedicated for the customer.
+	ServiceResourceId *int `json:"serviceResourceId,omitempty" xmlrpc:"serviceResourceId,omitempty"`
 }
 
 // Storage volumes can create various events to keep track of what has occurred to the volume. Events provide an audit trail that can be used to verify that various tasks have occurred, such as snapshots to be created by a schedule or remote replication synchronization.
@@ -4840,17 +4898,6 @@ type Network_Storage_Nas struct {
 	RecentBytesUsed *Network_Storage_Daily_Usage `json:"recentBytesUsed,omitempty" xmlrpc:"recentBytesUsed,omitempty"`
 }
 
-// The SoftLayer_Network_Storage_OpenStack_Object data type models OpenStack specific object storage objects. These storages authenticate through Keystone to access Swift.
-type Network_Storage_OpenStack_Object struct {
-	Network_Storage
-
-	// A count of the billing item tied to an OpenStack Object Storage's bandwidth service.
-	BandwidthBillingItemCount *uint `json:"bandwidthBillingItemCount,omitempty" xmlrpc:"bandwidthBillingItemCount,omitempty"`
-
-	// The billing item tied to an OpenStack Object Storage's bandwidth service.
-	BandwidthBillingItems []Billing_Item `json:"bandwidthBillingItems,omitempty" xmlrpc:"bandwidthBillingItems,omitempty"`
-}
-
 // A network storage partnership is used to link multiple volumes to each other. These partnerships describe replication hierarchies or link volume snapshots to their associated storage volume.
 type Network_Storage_Partnership struct {
 	Entity
@@ -5126,13 +5173,13 @@ type Network_Subnet struct {
 	// If present, the active registration for this subnet.
 	ActiveRegistration *Network_Subnet_Registration `json:"activeRegistration,omitempty" xmlrpc:"activeRegistration,omitempty"`
 
-	// All the swip transactions associated with a subnet that are still active.
+	// DEPRECATED
 	ActiveSwipTransaction *Network_Subnet_Swip_Transaction `json:"activeSwipTransaction,omitempty" xmlrpc:"activeSwipTransaction,omitempty"`
 
 	// The billing item for a subnet.
 	ActiveTransaction *Provisioning_Version1_Transaction `json:"activeTransaction,omitempty" xmlrpc:"activeTransaction,omitempty"`
 
-	// Identifier which distinguishes whether the subnet is public or private address space.
+	// Identifier which distinguishes what classification of addresses the subnet represents.
 	AddressSpace *string `json:"addressSpace,omitempty" xmlrpc:"addressSpace,omitempty"`
 
 	// The SoftLayer_Network_Storage_Allowed_Host information to connect this Subnet to Network Storage supporting access control lists.
@@ -5288,17 +5335,32 @@ type Network_Subnet struct {
 	// The name for the type of route then subnet is currently configured for.
 	RoutingTypeName *string `json:"routingTypeName,omitempty" xmlrpc:"routingTypeName,omitempty"`
 
-	// A subnet can be one of several types. PRIMARY, ADDITIONAL_PRIMARY, SECONDARY, ROUTED_TO_VLAN, SECONDARY_ON_VLAN, and STATIC_IP_ROUTED. The type determines the order in which many subnets are sorted in the SoftLayer customer portal. This groups subnets of similar type together.
+	// Used to sort subnets and group subnets of similar type together for use on customer facing portals.
 	SortOrder *string `json:"sortOrder,omitempty" xmlrpc:"sortOrder,omitempty"`
 
-	// A subnet can be one of several types. PRIMARY, ADDITIONAL_PRIMARY, SECONDARY, ROUTED_TO_VLAN, SECONDARY_ON_VLAN, STORAGE_NETWORK, and STATIC_IP_ROUTED. A "PRIMARY" subnet is the primary network bound to a VLAN within the softlayer network. An "ADDITIONAL_PRIMARY" subnet is bound to a network VLAN to augment the pool of available primary IP addresses that may be assigned to a server. A "SECONDARY" subnet is any of the secondary subnet's bound to a VLAN interface. A "ROUTED_TO_VLAN" subnet is a portable subnet that can be routed to any server on a vlan. A "SECONDARY_ON_VLAN" subnet also doesn't exist as a VLAN interface, but is routed directly to a VLAN instead of a single IP address by SoftLayer's routers.
+	// A subnet type can be any of the following:
+	// * PRIMARY
+	// * ADDITIONAL_PRIMARY
+	// * SECONDARY_ON_VLAN
+	// * STATIC_IP_ROUTED
+	// * PRIMARY_6
+	// * SUBNET_ON_VLAN
+	// * STATIC_IP_ROUTED_6
+	// * GLOBAL_IP
+	// A "PRIMARY" subnet is the primary network bound to a VLAN within the softlayer network. An "ADDITIONAL_PRIMARY" subnet is bound to a network VLAN to augment the pool of available primary IP addresses that may be assigned to a server. A "SECONDARY_ON_VLAN" subnet is a secondary portable subnet whose IP addresses are managed by the end user. "STATIC_IP_ROUTED" subnets are subnets that are statically routed to a single endpoint IP address. A "PRIMARY_6" subnet is the primary IPv6 network bound to a VLAN. A "SUBNET_ON_VLAN" subnet is the secondary portable IPv6 subnet whose IP addresses are managed by the end user. A "STATIC_IP_ROUTED_6" subnet is statically routed to a single IPv6 endpoint IP address. A "GLOBAL_IP" subnet is a subnet that is routable to a single endpoint IP address. The "GLOBAL_IP" type is used for both IPv4 and IPv6 subnets.
 	SubnetType *string `json:"subnetType,omitempty" xmlrpc:"subnetType,omitempty"`
 
-	// All the swip transactions associated with a subnet.
+	// DEPRECATED
 	SwipTransaction []Network_Subnet_Swip_Transaction `json:"swipTransaction,omitempty" xmlrpc:"swipTransaction,omitempty"`
 
-	// A count of all the swip transactions associated with a subnet.
+	// A count of dEPRECATED
 	SwipTransactionCount *uint `json:"swipTransactionCount,omitempty" xmlrpc:"swipTransactionCount,omitempty"`
+
+	// A count of references to all tags for this subnet.
+	TagReferenceCount *uint `json:"tagReferenceCount,omitempty" xmlrpc:"tagReferenceCount,omitempty"`
+
+	// References to all tags for this subnet.
+	TagReferences []Tag_Reference `json:"tagReferences,omitempty" xmlrpc:"tagReferences,omitempty"`
 
 	// The number of IP addresses contained within this subnet.
 	TotalIpAddresses *Float64 `json:"totalIpAddresses,omitempty" xmlrpc:"totalIpAddresses,omitempty"`
@@ -5763,6 +5825,8 @@ type Network_Subnet_Rwhois_Data struct {
 	State *string `json:"state,omitempty" xmlrpc:"state,omitempty"`
 }
 
+//
+// **DEPRECATED**
 // The SoftLayer_Network_Subnet_Swip_Transaction data type contains basic information tracked at SoftLayer to allow automation of Swip creation, update, and removal requests.  A specific transaction is attached to an accountId and a subnetId. This also contains a "Status Name" which tells the customer what the transaction is doing:
 //
 //
@@ -5792,11 +5856,6 @@ type Network_Subnet_Swip_Transaction struct {
 
 	// ID Number of the Subnet for this SWIP transaction.
 	SubnetId *int `json:"subnetId,omitempty" xmlrpc:"subnetId,omitempty"`
-}
-
-// no documentation yet
-type Network_TippingPointReporting struct {
-	Entity
 }
 
 // The SoftLayer_Network_Tunnel_Module_Context data type contains general information relating to a single SoftLayer network tunnel.  The SoftLayer_Network_Tunnel_Module_Context is useful to gather information such as related customer subnets (remote) and internal subnets (local) associated with the network tunnel as well as other information needed to manage the network tunnel.  Account and billing information related to the network tunnel can also be retrieved.

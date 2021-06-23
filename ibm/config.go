@@ -1021,7 +1021,6 @@ func (c *Config) ClientSession() (interface{}, error) {
 
 	if sess.SoftLayerSession != nil && sess.SoftLayerSession.IAMToken != "" {
 		sess.SoftLayerSession.IAMToken = sess.BluemixSession.Config.IAMAccessToken
-		sess.SoftLayerSession.IAMRefreshToken = sess.BluemixSession.Config.IAMRefreshToken
 	}
 
 	session.functionClient, session.functionConfigErr = FunctionClient(sess.BluemixSession.Config)
@@ -2092,7 +2091,6 @@ func newSession(c *Config) (*Session, error) {
 	if c.IAMToken != "" {
 		log.Println("Configuring SoftLayer Session with token")
 		softlayerSession.IAMToken = c.IAMToken
-		softlayerSession.IAMRefreshToken = c.IAMRefreshToken
 	}
 	if c.SoftLayerAPIKey != "" && c.SoftLayerUserName != "" {
 		log.Println("Configuring SoftLayer Session with API key")

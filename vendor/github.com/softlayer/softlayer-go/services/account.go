@@ -150,7 +150,7 @@ func (r Account) DisableEuSupport() (err error) {
 	return
 }
 
-// This method will edit the account's information. Pass in a SoftLayer_Account template with the fields to be modified. Certain changes to the account will automatically create a ticket for manual review. This will be returned with the SoftLayer_Container_Account_Update_Response.<br> <br> The following fields are editable:<br> <br> <ul> <li>companyName</li> <li>firstName</li> <li>lastName</li> <li>address1</li> <li>address2</li> <li>city</li> <li>state</li> <li>country</li> <li>email</li> <li>officePhone</li> <li>alternatePhone</li> <li>faxPhone</li> <li>abuseEmails.email</li> <li>billingInfo.vatId</li> </ul>
+// This method will edit the account's information. Pass in a SoftLayer_Account template with the fields to be modified. Certain changes to the account will automatically create a ticket for manual review. This will be returned with the SoftLayer_Container_Account_Update_Response.<br> <br> The following fields are editable:<br> <br> <ul> <li>companyName</li> <li>firstName</li> <li>lastName</li> <li>address1</li> <li>address2</li> <li>city</li> <li>state</li> <li>country</li> <li>postalCode</li> <li>email</li> <li>officePhone</li> <li>alternatePhone</li> <li>faxPhone</li> <li>abuseEmails.email</li> <li>billingInfo.vatId</li> </ul>
 func (r Account) EditAccount(modifiedAccountInformation *datatypes.Account) (resp datatypes.Container_Account_Update_Response, err error) {
 	params := []interface{}{
 		modifiedAccountInformation,
@@ -250,12 +250,6 @@ func (r Account) GetActiveAgreements() (resp []datatypes.Account_Agreement, err 
 	return
 }
 
-// Return all currently active alarms on this account.  Only alarms on hardware and virtual servers accessible to the current user will be returned.
-func (r Account) GetActiveAlarms() (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	err = r.Session.DoRequest("SoftLayer_Account", "getActiveAlarms", nil, &r.Options, &resp)
-	return
-}
-
 // Retrieve All billing agreements for an account
 func (r Account) GetActiveBillingAgreements() (resp []datatypes.Account_Agreement, err error) {
 	err = r.Session.DoRequest("SoftLayer_Account", "getActiveBillingAgreements", nil, &r.Options, &resp)
@@ -274,9 +268,15 @@ func (r Account) GetActiveColocationContainers() (resp []datatypes.Billing_Item,
 	return
 }
 
-// Retrieve Account's currently active Flexible Credit enrollment.
+// Retrieve [Deprecated] Please use SoftLayer_Account::activeFlexibleCreditEnrollments.
 func (r Account) GetActiveFlexibleCreditEnrollment() (resp datatypes.FlexibleCredit_Enrollment, err error) {
 	err = r.Session.DoRequest("SoftLayer_Account", "getActiveFlexibleCreditEnrollment", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve
+func (r Account) GetActiveFlexibleCreditEnrollments() (resp []datatypes.FlexibleCredit_Enrollment, err error) {
+	err = r.Session.DoRequest("SoftLayer_Account", "getActiveFlexibleCreditEnrollments", nil, &r.Options, &resp)
 	return
 }
 
@@ -311,7 +311,7 @@ func (r Account) GetActivePackagesByAttribute(attributeKeyName *string) (resp []
 	return
 }
 
-// This method pulls all the active private hosted cloud packages. This will give you a basic description of the packages that are currently active and from which you can order private hosted cloud configurations.
+// [DEPRECATED] This method pulls all the active private hosted cloud packages. This will give you a basic description of the packages that are currently active and from which you can order private hosted cloud configurations.
 func (r Account) GetActivePrivateHostedCloudPackages() (resp []datatypes.Product_Package, err error) {
 	err = r.Session.DoRequest("SoftLayer_Account", "getActivePrivateHostedCloudPackages", nil, &r.Options, &resp)
 	return
@@ -497,6 +497,19 @@ func (r Account) GetBandwidthAllotmentsOverAllocation() (resp []datatypes.Networ
 // Retrieve The bandwidth allotments for an account projected to go over allocation.
 func (r Account) GetBandwidthAllotmentsProjectedOverAllocation() (resp []datatypes.Network_Bandwidth_Version1_Allotment, err error) {
 	err = r.Session.DoRequest("SoftLayer_Account", "getBandwidthAllotmentsProjectedOverAllocation", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Account) GetBandwidthList(networkType *string, direction *string, startDate *string, endDate *string, serverIds []int) (resp []datatypes.Container_Bandwidth_Usage, err error) {
+	params := []interface{}{
+		networkType,
+		direction,
+		startDate,
+		endDate,
+		serverIds,
+	}
+	err = r.Session.DoRequest("SoftLayer_Account", "getBandwidthList", params, &r.Options, &resp)
 	return
 }
 
@@ -759,12 +772,23 @@ func (r Account) GetFlexibleCreditEnrollments() (resp []datatypes.FlexibleCredit
 	return
 }
 
+// [DEPRECATED] Please use SoftLayer_Account::getFlexibleCreditProgramsInfo.
+//
 // This method will return a [[SoftLayer_Container_Account_Discount_Program]] object containing the Flexible Credit Program information for this account. To be considered an active participant, the account must have an enrollment record with a monthly credit amount set and the current date must be within the range defined by the enrollment and graduation date. The forNextBillCycle parameter can be set to true to return a SoftLayer_Container_Account_Discount_Program object with information with relation to the next bill cycle. The forNextBillCycle parameter defaults to false. Please note that all discount amount entries are reported as pre-tax amounts and the legacy tax fields in the [[SoftLayer_Container_Account_Discount_Program]] are deprecated.
 func (r Account) GetFlexibleCreditProgramInfo(forNextBillCycle *bool) (resp datatypes.Container_Account_Discount_Program, err error) {
 	params := []interface{}{
 		forNextBillCycle,
 	}
 	err = r.Session.DoRequest("SoftLayer_Account", "getFlexibleCreditProgramInfo", params, &r.Options, &resp)
+	return
+}
+
+// This method will return a [[SoftLayer_Container_Account_Discount_Program_Collection]] object containing information on all of the Flexible Credit Programs your account is enrolled in. To be considered an active participant, the account must have at least one enrollment record with a monthly credit amount set and the current date must be within the range defined by the enrollment and graduation date. The forNextBillCycle parameter can be set to true to return a SoftLayer_Container_Account_Discount_Program_Collection object with information with relation to the next bill cycle. The forNextBillCycle parameter defaults to false. Please note that all discount amount entries are reported as pre-tax amounts.
+func (r Account) GetFlexibleCreditProgramsInfo(nextBillingCycleFlag *bool) (resp datatypes.Container_Account_Discount_Program_Collection, err error) {
+	params := []interface{}{
+		nextBillingCycleFlag,
+	}
+	err = r.Session.DoRequest("SoftLayer_Account", "getFlexibleCreditProgramsInfo", params, &r.Options, &resp)
 	return
 }
 
@@ -792,7 +816,7 @@ func (r Account) GetGlobalIpv6Records() (resp []datatypes.Network_Subnet_IpAddre
 	return
 }
 
-// Retrieve The global load balancer accounts for a softlayer customer account.
+// Retrieve [Deprecated] The global load balancer accounts for a softlayer customer account.
 func (r Account) GetGlobalLoadBalancerAccounts() (resp []datatypes.Network_LoadBalancer_Global_Account, err error) {
 	err = r.Session.DoRequest("SoftLayer_Account", "getGlobalLoadBalancerAccounts", nil, &r.Options, &resp)
 	return
@@ -916,7 +940,7 @@ func (r Account) GetHistoricalBackupGraph(startDate *datatypes.Time, endDate *da
 	return
 }
 
-// This method will return a SoftLayer_Container_Account_Graph_Outputs object containing a base64 string PNG image of a line graph of bandwidth statistics given the start and end dates. The start and end dates should be valid ISO 8601 date formatted strings.
+// [DEPRECATED] This method will return a SoftLayer_Container_Account_Graph_Outputs object containing a base64 string PNG image of a line graph of bandwidth statistics given the start and end dates. The start and end dates should be valid ISO 8601 date formatted strings.
 func (r Account) GetHistoricalBandwidthGraph(startDate *datatypes.Time, endDate *datatypes.Time) (resp datatypes.Container_Account_Graph_Outputs, err error) {
 	params := []interface{}{
 		startDate,
@@ -1009,6 +1033,12 @@ func (r Account) GetInvoices() (resp []datatypes.Billing_Invoice, err error) {
 // Retrieve
 func (r Account) GetIpAddresses() (resp []datatypes.Network_Subnet_IpAddress, err error) {
 	err = r.Session.DoRequest("SoftLayer_Account", "getIpAddresses", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve
+func (r Account) GetIscsiIsolationDisabled() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Account", "getIscsiIsolationDisabled", nil, &r.Options, &resp)
 	return
 }
 
@@ -1142,6 +1172,12 @@ func (r Account) GetMediaDataTransferRequests() (resp []datatypes.Account_Media_
 	return
 }
 
+// Retrieve Flag indicating whether this account is restricted to the IBM Cloud portal.
+func (r Account) GetMigratedToIbmCloudPortalFlag() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Account", "getMigratedToIbmCloudPortalFlag", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve An account's associated monthly bare metal server objects.
 func (r Account) GetMonthlyBareMetalInstances() (resp []datatypes.Hardware, err error) {
 	err = r.Session.DoRequest("SoftLayer_Account", "getMonthlyBareMetalInstances", nil, &r.Options, &resp)
@@ -1166,7 +1202,7 @@ func (r Account) GetNetAppActiveAccountLicenseKeys() (resp []string, err error) 
 	return
 }
 
-// Retrieve Whether or not this account can define their own networks.
+// Retrieve [Deprecated] Whether or not this account can define their own networks.
 func (r Account) GetNetworkCreationFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Account", "getNetworkCreationFlag", nil, &r.Options, &resp)
 	return
@@ -1553,13 +1589,13 @@ func (r Account) GetPostProvisioningHooks() (resp []datatypes.Provisioning_Hook,
 	return
 }
 
-// Retrieve Boolean flag dictating whether or not this account supports PPTP VPN Access.
+// Retrieve (Deprecated) Boolean flag dictating whether or not this account supports PPTP VPN Access.
 func (r Account) GetPptpVpnAllowedFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Account", "getPptpVpnAllowedFlag", nil, &r.Options, &resp)
 	return
 }
 
-// Retrieve An account's associated portal users with PPTP VPN access.
+// Retrieve An account's associated portal users with PPTP VPN access. (Deprecated)
 func (r Account) GetPptpVpnUsers() (resp []datatypes.User_Customer, err error) {
 	err = r.Session.DoRequest("SoftLayer_Account", "getPptpVpnUsers", nil, &r.Options, &resp)
 	return
@@ -1733,8 +1769,8 @@ func (r Account) GetRouters() (resp []datatypes.Hardware, err error) {
 	return
 }
 
-// Retrieve An account's reverse WHOIS data. This data is used when making SWIP requests.
-func (r Account) GetRwhoisData() (resp datatypes.Network_Subnet_Rwhois_Data, err error) {
+// Retrieve DEPRECATED
+func (r Account) GetRwhoisData() (resp []datatypes.Network_Subnet_Rwhois_Data, err error) {
 	err = r.Session.DoRequest("SoftLayer_Account", "getRwhoisData", nil, &r.Options, &resp)
 	return
 }
@@ -2175,18 +2211,13 @@ func (r Account) SwapCreditCards() (resp bool, err error) {
 }
 
 // no documentation yet
-func (r Account) SyncCurrentUserPopulationWithPaas(skipIbmidLookupFlag *bool) (err error) {
+func (r Account) SyncCurrentUserPopulationWithPaas() (err error) {
 	var resp datatypes.Void
-	params := []interface{}{
-		skipIbmidLookupFlag,
-	}
-	err = r.Session.DoRequest("SoftLayer_Account", "syncCurrentUserPopulationWithPaas", params, &r.Options, &resp)
+	err = r.Session.DoRequest("SoftLayer_Account", "syncCurrentUserPopulationWithPaas", nil, &r.Options, &resp)
 	return
 }
 
-// Some larger SoftLayer customer accounts may have servers and virtual servers on more subnets than SoftLayer's private network VPN devices can assign routes for. In those cases routes for individual servers and virtual servers may be assigned individually to an account's servers via this method.
-//
-// Always call this method to enable changes when manually configuring VPN subnet access.
+// [DEPRECATED] This method has been deprecated and will simply return false.
 func (r Account) UpdateVpnUsersForResource(objectId *int, objectType *string) (resp bool, err error) {
 	params := []interface{}{
 		objectId,
@@ -2196,7 +2227,7 @@ func (r Account) UpdateVpnUsersForResource(objectId *int, objectType *string) (r
 	return
 }
 
-// This method will validate the following account fields. Included are the allowed characters for each field.<br> <strong>Company Name (required):</strong> alphabet, numbers, space, period, dash, octothorpe, forward slash, backward slash, comma, colon, at sign, ampersand, underscore, apostrophe, parenthesis, exclamation point. (Note: may not contain an email address)<br> <strong>First Name (required):</strong> alphabet, space, period, dash, comma, apostrophe.<br> <strong>Last Name (required):</strong> alphabet, space, period, dash, comma, apostrophe.<br> <strong>Email (required):</strong> Validates e-mail addresses against the syntax in RFC 822.<br> <strong>Address 1 (required):</strong> alphabet, numbers, space, period, dash, octothorpe, forward slash, backward slash, comma, colon, at sign, ampersand, underscore, apostrophe, parentheses.<br> <strong>Address 2 (required):</strong> alphabet, numbers, space, period, dash, octothorpe, forward slash, backward slash, comma, colon, at sign, ampersand, underscore, apostrophe, parentheses.<br> <strong>City (required):</strong> alphabet, space, period, dash, apostrophe, forward slash.<br> <strong>State (required):</strong> Required if country is US, Brazil, Canada or India. Must be valid Alpha-2 ISO 3166-1 state code for that country.<br> <strong>Postal Code (required):</strong> alphabet, numbers, dash, space.<br> <strong>Country (required):</strong> alphabet, numbers. Must be valid Alpha-2 ISO 3166-1 country code.<br> <strong>Office Phone (required):</strong> alphabet, numbers, space, period, dash, parenthesis, plus sign.<br> <strong>Alternate Phone:</strong> alphabet, numbers, space, period, dash, parenthesis, plus sign.<br> <strong>Fax Phone:</strong> alphabet, numbers, space, period, dash, parenthesis, plus sign.<br>
+// This method will validate the following account fields. Included are the allowed characters for each field.<br> <strong>Company Name (required):</strong> alphabet, numbers, space, period, dash, octothorpe, forward slash, comma, colon, at sign, ampersand, underscore, apostrophe, parenthesis, exclamation point. (Note: may not contain an email address)<br> <strong>First Name (required):</strong> alphabet, space, period, dash, comma, apostrophe.<br> <strong>Last Name (required):</strong> alphabet, space, period, dash, comma, apostrophe.<br> <strong>Email (required):</strong> Validates e-mail addresses against the syntax in RFC 822.<br> <strong>Address 1 (required):</strong> alphabet, numbers, space, period, dash, octothorpe, forward slash, comma, colon, at sign, ampersand, underscore, apostrophe, parentheses. (Note: may not contain an email address)<br> <strong>Address 2 (required):</strong> alphabet, numbers, space, period, dash, octothorpe, forward slash, comma, colon, at sign, ampersand, underscore, apostrophe, parentheses. (Note: may not contain an email address)<br> <strong>City (required):</strong> alphabet, numbers, space, period, dash, apostrophe, forward slash, comma.<br> <strong>State (required):</strong> Required if country is US, Brazil, Canada or India. Must be valid Alpha-2 ISO 3166-1 state code for that country.<br> <strong>Postal Code (required):</strong> alphabet, numbers, dash, space.<br> <strong>Country (required):</strong> alphabet, numbers. Must be valid Alpha-2 ISO 3166-1 country code.<br> <strong>Office Phone (required):</strong> alphabet, numbers, space, period, dash, parenthesis, plus sign.<br> <strong>Alternate Phone:</strong> alphabet, numbers, space, period, dash, parenthesis, plus sign.<br> <strong>Fax Phone:</strong> alphabet, numbers, space, period, dash, parenthesis, plus sign.<br>
 func (r Account) Validate(account *datatypes.Account) (resp []string, err error) {
 	params := []interface{}{
 		account,
@@ -3009,40 +3040,44 @@ func (r Account_Historical_Report) Offset(offset int) Account_Historical_Report 
 }
 
 // no documentation yet
-func (r Account_Historical_Report) GetAccountHostUptimeGraphData(startDate *string, endDate *string) (resp datatypes.Container_Graph, err error) {
+func (r Account_Historical_Report) GetAccountHostUptimeGraphData(startDate *string, endDate *string, accountId *int) (resp datatypes.Container_Graph, err error) {
 	params := []interface{}{
 		startDate,
 		endDate,
+		accountId,
 	}
 	err = r.Session.DoRequest("SoftLayer_Account_Historical_Report", "getAccountHostUptimeGraphData", params, &r.Options, &resp)
 	return
 }
 
 // no documentation yet
-func (r Account_Historical_Report) GetAccountHostUptimeSummary(startDateTime *string, endDateTime *string) (resp datatypes.Container_Account_Historical_Summary, err error) {
+func (r Account_Historical_Report) GetAccountHostUptimeSummary(startDateTime *string, endDateTime *string, accountId *int) (resp datatypes.Container_Account_Historical_Summary, err error) {
 	params := []interface{}{
 		startDateTime,
 		endDateTime,
+		accountId,
 	}
 	err = r.Session.DoRequest("SoftLayer_Account_Historical_Report", "getAccountHostUptimeSummary", params, &r.Options, &resp)
 	return
 }
 
 // no documentation yet
-func (r Account_Historical_Report) GetAccountUrlUptimeGraphData(startDate *string, endDate *string) (resp datatypes.Container_Graph, err error) {
+func (r Account_Historical_Report) GetAccountUrlUptimeGraphData(startDate *string, endDate *string, accountId *int) (resp datatypes.Container_Graph, err error) {
 	params := []interface{}{
 		startDate,
 		endDate,
+		accountId,
 	}
 	err = r.Session.DoRequest("SoftLayer_Account_Historical_Report", "getAccountUrlUptimeGraphData", params, &r.Options, &resp)
 	return
 }
 
 // no documentation yet
-func (r Account_Historical_Report) GetAccountUrlUptimeSummary(startDateTime *string, endDateTime *string) (resp datatypes.Container_Account_Historical_Summary, err error) {
+func (r Account_Historical_Report) GetAccountUrlUptimeSummary(startDateTime *string, endDateTime *string, accountId *int) (resp datatypes.Container_Account_Historical_Summary, err error) {
 	params := []interface{}{
 		startDateTime,
 		endDateTime,
+		accountId,
 	}
 	err = r.Session.DoRequest("SoftLayer_Account_Historical_Report", "getAccountUrlUptimeSummary", params, &r.Options, &resp)
 	return
@@ -4454,6 +4489,58 @@ func (r Account_ProofOfConcept_Approver_Type) GetObject() (resp datatypes.Accoun
 	return
 }
 
+// A [SoftLayer_Account_ProofOfConcept_Campaign_Code] provides a `code` and an optional `description`.
+type Account_ProofOfConcept_Campaign_Code struct {
+	Session *session.Session
+	Options sl.Options
+}
+
+// GetAccountProofOfConceptCampaignCodeService returns an instance of the Account_ProofOfConcept_Campaign_Code SoftLayer service
+func GetAccountProofOfConceptCampaignCodeService(sess *session.Session) Account_ProofOfConcept_Campaign_Code {
+	return Account_ProofOfConcept_Campaign_Code{Session: sess}
+}
+
+func (r Account_ProofOfConcept_Campaign_Code) Id(id int) Account_ProofOfConcept_Campaign_Code {
+	r.Options.Id = &id
+	return r
+}
+
+func (r Account_ProofOfConcept_Campaign_Code) Mask(mask string) Account_ProofOfConcept_Campaign_Code {
+	if !strings.HasPrefix(mask, "mask[") && (strings.Contains(mask, "[") || strings.Contains(mask, ",")) {
+		mask = fmt.Sprintf("mask[%s]", mask)
+	}
+
+	r.Options.Mask = mask
+	return r
+}
+
+func (r Account_ProofOfConcept_Campaign_Code) Filter(filter string) Account_ProofOfConcept_Campaign_Code {
+	r.Options.Filter = filter
+	return r
+}
+
+func (r Account_ProofOfConcept_Campaign_Code) Limit(limit int) Account_ProofOfConcept_Campaign_Code {
+	r.Options.Limit = &limit
+	return r
+}
+
+func (r Account_ProofOfConcept_Campaign_Code) Offset(offset int) Account_ProofOfConcept_Campaign_Code {
+	r.Options.Offset = &offset
+	return r
+}
+
+// This method will retrieve all SoftLayer_Account_ProofOfConcept_Campaign_Code objects. Use the `code` field when submitting a request on the [[SoftLayer_Container_Account_ProofOfConcept_Request_Opportunity]] container.
+func (r Account_ProofOfConcept_Campaign_Code) GetAllObjects() (resp []datatypes.Account_ProofOfConcept_Campaign_Code, err error) {
+	err = r.Session.DoRequest("SoftLayer_Account_ProofOfConcept_Campaign_Code", "getAllObjects", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Account_ProofOfConcept_Campaign_Code) GetObject() (resp datatypes.Account_ProofOfConcept_Campaign_Code, err error) {
+	err = r.Session.DoRequest("SoftLayer_Account_ProofOfConcept_Campaign_Code", "getObject", nil, &r.Options, &resp)
+	return
+}
+
 // no documentation yet
 type Account_ProofOfConcept_Funding_Type struct {
 	Session *session.Session
@@ -4627,6 +4714,18 @@ func (r Account_Regional_Registry_Detail) GetRegionalInternetRegistryHandle() (r
 // This method will create a bulk transaction to update any registrations that reference this detail object. It should only be called from a child class such as [[SoftLayer_Account_Regional_Registry_Detail_Person]] or [[SoftLayer_Account_Regional_Registry_Detail_Network]]. The registrations should be in the Open or Registration_Complete status.
 func (r Account_Regional_Registry_Detail) UpdateReferencedRegistrations() (resp datatypes.Container_Network_Subnet_Registration_TransactionDetails, err error) {
 	err = r.Session.DoRequest("SoftLayer_Account_Regional_Registry_Detail", "updateReferencedRegistrations", nil, &r.Options, &resp)
+	return
+}
+
+// Validates this person detail against all supported external registrars (APNIC/ARIN/RIPE). The validation uses the most restrictive rules ensuring that any person detail passing this validation would be acceptable to any supported registrar.
+//
+// The person detail properties are validated against - Non-emptiness - Minimum length - Maximum length - Maximum words - Supported characters - Format of data
+//
+// If the person detail validation succeeds, then an empty list is returned indicating no errors were found and that this person detail would work against all three registrars during a subnet registration.
+//
+// If the person detail validation fails, then an array of validation errors (SoftLayer_Container_Message[]) is returned. Each message container contains error messages grouped by property type and a message type indicating the person detail property type object which failed validation. It is possible to create a subnet registration using a person detail which does not pass this validation, but at least one registrar would reject it for being invalid.
+func (r Account_Regional_Registry_Detail) ValidatePersonForAllRegistrars() (resp []datatypes.Container_Message, err error) {
+	err = r.Session.DoRequest("SoftLayer_Account_Regional_Registry_Detail", "validatePersonForAllRegistrars", nil, &r.Options, &resp)
 	return
 }
 

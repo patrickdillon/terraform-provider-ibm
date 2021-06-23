@@ -315,23 +315,14 @@ type Hardware struct {
 	// no documentation yet
 	Modules []Hardware_Component `json:"modules,omitempty" xmlrpc:"modules,omitempty"`
 
-	// A count of information regarding the monitoring agents associated with a piece of hardware.
-	MonitoringAgentCount *uint `json:"monitoringAgentCount,omitempty" xmlrpc:"monitoringAgentCount,omitempty"`
-
-	// Information regarding the monitoring agents associated with a piece of hardware.
-	MonitoringAgents []Monitoring_Agent `json:"monitoringAgents,omitempty" xmlrpc:"monitoringAgents,omitempty"`
-
-	// Information regarding the hardware's monitoring robot.
+	// no documentation yet
 	MonitoringRobot *Monitoring_Robot `json:"monitoringRobot,omitempty" xmlrpc:"monitoringRobot,omitempty"`
 
 	// Information regarding a piece of hardware's network monitoring services.
 	MonitoringServiceComponent *Network_Monitor_Version1_Query_Host_Stratum `json:"monitoringServiceComponent,omitempty" xmlrpc:"monitoringServiceComponent,omitempty"`
 
-	// The monitoring service flag eligibility status for a piece of hardware.
+	// no documentation yet
 	MonitoringServiceEligibilityFlag *bool `json:"monitoringServiceEligibilityFlag,omitempty" xmlrpc:"monitoringServiceEligibilityFlag,omitempty"`
-
-	// The service flag status for a piece of hardware.
-	MonitoringServiceFlag *bool `json:"monitoringServiceFlag,omitempty" xmlrpc:"monitoringServiceFlag,omitempty"`
 
 	// Information regarding a piece of hardware's motherboard.
 	Motherboard *Hardware_Component `json:"motherboard,omitempty" xmlrpc:"motherboard,omitempty"`
@@ -583,9 +574,15 @@ type Hardware struct {
 	SshKeys []Security_Ssh_Key `json:"sshKeys,omitempty" xmlrpc:"sshKeys,omitempty"`
 
 	// A count of
-	StorageNetworkComponentCount *uint `json:"storageNetworkComponentCount,omitempty" xmlrpc:"storageNetworkComponentCount,omitempty"`
+	StorageGroupCount *uint `json:"storageGroupCount,omitempty" xmlrpc:"storageGroupCount,omitempty"`
 
 	// no documentation yet
+	StorageGroups []Configuration_Storage_Group `json:"storageGroups,omitempty" xmlrpc:"storageGroups,omitempty"`
+
+	// A count of a piece of hardware's private storage network components. [Deprecated]
+	StorageNetworkComponentCount *uint `json:"storageNetworkComponentCount,omitempty" xmlrpc:"storageNetworkComponentCount,omitempty"`
+
+	// A piece of hardware's private storage network components. [Deprecated]
 	StorageNetworkComponents []Network_Component `json:"storageNetworkComponents,omitempty" xmlrpc:"storageNetworkComponents,omitempty"`
 
 	// A count of
@@ -771,6 +768,9 @@ type Hardware_Chassis struct {
 	// no documentation yet
 	PowerCapacity *string `json:"powerCapacity,omitempty" xmlrpc:"powerCapacity,omitempty"`
 
+	// no documentation yet
+	U2Capacity *string `json:"u2Capacity,omitempty" xmlrpc:"u2Capacity,omitempty"`
+
 	// The physical size of a hardware chassis.  Currently this relates to the 'U' size of a chassis buy default.
 	UnitSize *int `json:"unitSize,omitempty" xmlrpc:"unitSize,omitempty"`
 
@@ -820,6 +820,12 @@ type Hardware_Component struct {
 
 	// no documentation yet
 	IsChildModule *bool `json:"isChildModule,omitempty" xmlrpc:"isChildModule,omitempty"`
+
+	// A count of returns the associated logic volume storage groups for the hardware component.
+	LogicalVolumeStorageGroupCount *uint `json:"logicalVolumeStorageGroupCount,omitempty" xmlrpc:"logicalVolumeStorageGroupCount,omitempty"`
+
+	// Returns the associated logic volume storage groups for the hardware component.
+	LogicalVolumeStorageGroups []Configuration_Storage_Group `json:"logicalVolumeStorageGroups,omitempty" xmlrpc:"logicalVolumeStorageGroups,omitempty"`
 
 	// A component's M.2 SATA capacity.
 	M2SataSlotCapacity *string `json:"m2SataSlotCapacity,omitempty" xmlrpc:"m2SataSlotCapacity,omitempty"`
@@ -1046,6 +1052,9 @@ type Hardware_Component_HardDrive struct {
 
 	// The attached component partitions.
 	Partitions []Hardware_Component_Partition `json:"partitions,omitempty" xmlrpc:"partitions,omitempty"`
+
+	// A hard drives physical security ID.
+	Psid *string `json:"psid,omitempty" xmlrpc:"psid,omitempty"`
 }
 
 // no documentation yet
@@ -1315,11 +1324,25 @@ type Hardware_Component_NetworkCard struct {
 	Hardware_Component
 }
 
+// The SoftLayer_Hardware_Component_PSID_Xref data type holds physical security ID information for hard drives
+type Hardware_Component_PSID_Xref struct {
+	Entity
+
+	// The hardware component the PSID belongs to.
+	Component *Hardware_Component `json:"component,omitempty" xmlrpc:"component,omitempty"`
+
+	// no documentation yet
+	ComponentId *int `json:"componentId,omitempty" xmlrpc:"componentId,omitempty"`
+
+	// no documentation yet
+	Psid *string `json:"psid,omitempty" xmlrpc:"psid,omitempty"`
+}
+
 // The SoftLayer_Hardware_Component_Partition data type contains general information relating to a single hard drive partition.
 type Hardware_Component_Partition struct {
 	Entity
 
-	// A hardware component partition's order in the [[SoftLayer_Hardware_Hardware|hardware]].
+	// A hardware component partition's order in the [[SoftLayer_Hardware_Server]].
 	DiskNumber *int `json:"diskNumber,omitempty" xmlrpc:"diskNumber,omitempty"`
 
 	// A flag indicating if a partition is the grow partition. The grow partition will grow to fill all remaining space on a disk.  There can only be one.
@@ -1883,6 +1906,9 @@ type Hardware_Server struct {
 	// Determine if BIOS password should be left as null.
 	BiosPasswordNullFlag *bool `json:"biosPasswordNullFlag,omitempty" xmlrpc:"biosPasswordNullFlag,omitempty"`
 
+	// Determine if the server is able to be image captured. If unable to image capture a reason will be provided.
+	CaptureEnabledFlag *Container_Hardware_CaptureEnabled `json:"captureEnabledFlag,omitempty" xmlrpc:"captureEnabledFlag,omitempty"`
+
 	// no documentation yet
 	ContainsSolidStateDrivesFlag *bool `json:"containsSolidStateDrivesFlag,omitempty" xmlrpc:"containsSolidStateDrivesFlag,omitempty"`
 
@@ -1919,6 +1945,12 @@ type Hardware_Server struct {
 	// The last transaction that a server's operating system was loaded.
 	LastOperatingSystemReload *Provisioning_Version1_Transaction `json:"lastOperatingSystemReload,omitempty" xmlrpc:"lastOperatingSystemReload,omitempty"`
 
+	// A count of returns a list of logical volumes on the physical machine.
+	LogicalVolumeStorageGroupCount *uint `json:"logicalVolumeStorageGroupCount,omitempty" xmlrpc:"logicalVolumeStorageGroupCount,omitempty"`
+
+	// Returns a list of logical volumes on the physical machine.
+	LogicalVolumeStorageGroups []Configuration_Storage_Group `json:"logicalVolumeStorageGroups,omitempty" xmlrpc:"logicalVolumeStorageGroups,omitempty"`
+
 	// The metric tracking object id for this server.
 	MetricTrackingObjectId *int `json:"metricTrackingObjectId,omitempty" xmlrpc:"metricTrackingObjectId,omitempty"`
 
@@ -1936,6 +1968,12 @@ type Hardware_Server struct {
 
 	// Whether the bandwidth usage for this hardware for the current billing cycle exceeds the allocation.
 	OverBandwidthAllocationFlag *int `json:"overBandwidthAllocationFlag,omitempty" xmlrpc:"overBandwidthAllocationFlag,omitempty"`
+
+	// A count of
+	PartitionCount *uint `json:"partitionCount,omitempty" xmlrpc:"partitionCount,omitempty"`
+
+	// no documentation yet
+	Partitions []Hardware_Server_Partition `json:"partitions,omitempty" xmlrpc:"partitions,omitempty"`
 
 	// A server's primary private IP address.
 	PrivateIpAddress *string `json:"privateIpAddress,omitempty" xmlrpc:"privateIpAddress,omitempty"`
@@ -1987,6 +2025,46 @@ type Hardware_Server struct {
 
 	// A hardware server's virtual servers.
 	VirtualGuests []Virtual_Guest `json:"virtualGuests,omitempty" xmlrpc:"virtualGuests,omitempty"`
+}
+
+// no documentation yet
+type Hardware_Server_Partition struct {
+	Entity
+
+	// no documentation yet
+	Hardware *Hardware `json:"hardware,omitempty" xmlrpc:"hardware,omitempty"`
+
+	// no documentation yet
+	HardwareId *int `json:"hardwareId,omitempty" xmlrpc:"hardwareId,omitempty"`
+
+	// no documentation yet
+	Hostname *string `json:"hostname,omitempty" xmlrpc:"hostname,omitempty"`
+
+	// no documentation yet
+	MacAddress *string `json:"macAddress,omitempty" xmlrpc:"macAddress,omitempty"`
+
+	// A count of
+	NetworkComponentAttributeCount *uint `json:"networkComponentAttributeCount,omitempty" xmlrpc:"networkComponentAttributeCount,omitempty"`
+
+	// no documentation yet
+	NetworkComponentAttributes []Hardware_Server_Partition_Network_Attribute `json:"networkComponentAttributes,omitempty" xmlrpc:"networkComponentAttributes,omitempty"`
+}
+
+// no documentation yet
+type Hardware_Server_Partition_Network_Attribute struct {
+	Entity
+
+	// no documentation yet
+	IpAddress *string `json:"ipAddress,omitempty" xmlrpc:"ipAddress,omitempty"`
+
+	// no documentation yet
+	MacAddress *string `json:"macAddress,omitempty" xmlrpc:"macAddress,omitempty"`
+
+	// no documentation yet
+	Name *string `json:"name,omitempty" xmlrpc:"name,omitempty"`
+
+	// no documentation yet
+	PartitionId *int `json:"partitionId,omitempty" xmlrpc:"partitionId,omitempty"`
 }
 
 // SoftLayer_Hardware_Status models the inventory state of any piece of hardware in SoftLayer's inventory. Most of these statuses are used by SoftLayer while a server is not provisioned or undergoing provisioning. SoftLayer uses the following status codes:

@@ -30,6 +30,9 @@ type Product_Catalog struct {
 	// Brands using this Catalog
 	Brands []Brand `json:"brands,omitempty" xmlrpc:"brands,omitempty"`
 
+	// The Key Name of the Catalog, used for direct references
+	KeyName *string `json:"keyName,omitempty" xmlrpc:"keyName,omitempty"`
+
 	// A count of packages available in this catalog
 	PackageCount *uint `json:"packageCount,omitempty" xmlrpc:"packageCount,omitempty"`
 
@@ -209,6 +212,12 @@ type Product_Item struct {
 
 	// Detailed product description
 	LongDescription *string `json:"longDescription,omitempty" xmlrpc:"longDescription,omitempty"`
+
+	// The minimum number of bays that support NVMe SSDs.
+	MinimumNvmeBays *int `json:"minimumNvmeBays,omitempty" xmlrpc:"minimumNvmeBays,omitempty"`
+
+	// Indicates whether an item is a NVMe SSD.
+	NvmeDiskFlag *bool `json:"nvmeDiskFlag,omitempty" xmlrpc:"nvmeDiskFlag,omitempty"`
 
 	// no documentation yet
 	ObjectStorageClusterGeolocationType *string `json:"objectStorageClusterGeolocationType,omitempty" xmlrpc:"objectStorageClusterGeolocationType,omitempty"`
@@ -532,17 +541,6 @@ type Product_Item_Category_Question_Xref struct {
 }
 
 // no documentation yet
-type Product_Item_Link_ThePlanet struct {
-	Entity
-
-	// no documentation yet
-	Item *Product_Item `json:"item,omitempty" xmlrpc:"item,omitempty"`
-
-	// no documentation yet
-	ServiceProvider *Service_Provider `json:"serviceProvider,omitempty" xmlrpc:"serviceProvider,omitempty"`
-}
-
-// no documentation yet
 type Product_Item_Overage_Price struct {
 	Entity
 
@@ -613,7 +611,7 @@ type Product_Item_Price struct {
 	// A count of all categories which this item is a member.
 	CategoryCount *uint `json:"categoryCount,omitempty" xmlrpc:"categoryCount,omitempty"`
 
-	// This flag is used by the [[SoftLayer_Hardware::getUpgradeItems|getUpgradeItems]] method to indicate if a product price is used for the current billing item.
+	// This flag is used by the getUpgradeItemPrices methods available on various resources to indicate if a product price is used for the current billing item.
 	CurrentPriceFlag *bool `json:"currentPriceFlag,omitempty" xmlrpc:"currentPriceFlag,omitempty"`
 
 	// Signifies pricing that is only available on a dedicated host virtual server order.
@@ -681,7 +679,7 @@ type Product_Item_Price struct {
 	// A list of preset configurations this price is used in.'
 	PresetConfigurations []Product_Package_Preset_Configuration `json:"presetConfigurations,omitempty" xmlrpc:"presetConfigurations,omitempty"`
 
-	// The type keyname of this price which can be STANDARD or TIERED.
+	// The type keyname of this price which can be STANDARD, TIERED, or TERM.
 	PriceType *string `json:"priceType,omitempty" xmlrpc:"priceType,omitempty"`
 
 	// The pricing location group that this price is applicable for. Prices that have a pricing location group will only be available for ordering with the locations specified on the location group.
@@ -713,6 +711,9 @@ type Product_Item_Price struct {
 
 	// Used for ordering items on sales orders.
 	Sort *int `json:"sort,omitempty" xmlrpc:"sort,omitempty"`
+
+	// The number of months a term lasts for a term-based price
+	TermLength *int `json:"termLength,omitempty" xmlrpc:"termLength,omitempty"`
 
 	// The minimum threshold for which this tiered usage price begins to apply.  The unit for the price is defined by the item to which this belongs, see [[SoftLayer_Product_Item::$units]].
 	TierMinimumThreshold *int `json:"tierMinimumThreshold,omitempty" xmlrpc:"tierMinimumThreshold,omitempty"`
@@ -1105,6 +1106,9 @@ type Product_Package struct {
 	// A count of the item categories associated with a package, including information detailing which item categories are required as part of a SoftLayer product order.
 	ConfigurationCount *uint `json:"configurationCount,omitempty" xmlrpc:"configurationCount,omitempty"`
 
+	// The default boot category code for the package.
+	DefaultBootCategoryCode *string `json:"defaultBootCategoryCode,omitempty" xmlrpc:"defaultBootCategoryCode,omitempty"`
+
 	// A count of a collection of valid RAM items available for purchase in this package.
 	DefaultRamItemCount *uint `json:"defaultRamItemCount,omitempty" xmlrpc:"defaultRamItemCount,omitempty"`
 
@@ -1206,6 +1210,9 @@ type Product_Package struct {
 
 	// The description of the package. For server packages, this is usually a detailed description of processor type and count.
 	Name *string `json:"name,omitempty" xmlrpc:"name,omitempty"`
+
+	// Services ordered from this package cannot have upgrades or downgrades performed.
+	NoUpgradesFlag *bool `json:"noUpgradesFlag,omitempty" xmlrpc:"noUpgradesFlag,omitempty"`
 
 	// Whether the package is not in compliance with EU support.
 	NonEuCompliantFlag *bool `json:"nonEuCompliantFlag,omitempty" xmlrpc:"nonEuCompliantFlag,omitempty"`
@@ -1428,6 +1435,9 @@ type Product_Package_Locations struct {
 type Product_Package_Order_Configuration struct {
 	Entity
 
+	// Signifies that selections associated with the configuration are automatically provided by being bundled to another configurations selection. The actual bundling is on the product.
+	BundledFlag *bool `json:"bundledFlag,omitempty" xmlrpc:"bundledFlag,omitempty"`
+
 	// The error message displayed if the submitted order does not contain this item category, if it is required.
 	ErrorMessage *string `json:"errorMessage,omitempty" xmlrpc:"errorMessage,omitempty"`
 
@@ -1457,6 +1467,9 @@ type Product_Package_Order_Configuration struct {
 
 	// The step to which this instance belongs.
 	Step *Product_Package_Order_Step `json:"step,omitempty" xmlrpc:"step,omitempty"`
+
+	// Whether or not the item category is term-based.
+	TermFlag *bool `json:"termFlag,omitempty" xmlrpc:"termFlag,omitempty"`
 }
 
 // Each package has at least 1 step to the ordering process. For server orders, there are many. Each step has certain item categories which are displayed. This type describes the steps for each package.
@@ -1770,6 +1783,9 @@ type Product_Package_Server struct {
 
 	// The monthly starting price for the server. This includes a sum of all the minimum required items, including RAM and hard drives.
 	StartingMonthlyPrice *Float64 `json:"startingMonthlyPrice,omitempty" xmlrpc:"startingMonthlyPrice,omitempty"`
+
+	// The length of a term if a server has a term-based price
+	TermLength *int `json:"termLength,omitempty" xmlrpc:"termLength,omitempty"`
 
 	// The total number of processor cores available for the server.
 	TotalCoreCount *int `json:"totalCoreCount,omitempty" xmlrpc:"totalCoreCount,omitempty"`

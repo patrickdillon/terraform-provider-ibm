@@ -110,6 +110,12 @@ func (r Security_Certificate) GetAssociatedServiceCount() (resp int, err error) 
 	return
 }
 
+// Retrieve Cloud Load Balancer [LBaaS] listeners currently associated with the certificate.
+func (r Security_Certificate) GetLbaasListeners() (resp []datatypes.Network_LBaaS_Listener, err error) {
+	err = r.Session.DoRequest("SoftLayer_Security_Certificate", "getLbaasListeners", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve The load balancers virtual IP addresses currently associated with the certificate.
 func (r Security_Certificate) GetLoadBalancerVirtualIpAddresses() (resp []datatypes.Network_Application_Delivery_Controller_LoadBalancer_VirtualIpAddress, err error) {
 	err = r.Session.DoRequest("SoftLayer_Security_Certificate", "getLoadBalancerVirtualIpAddresses", nil, &r.Options, &resp)
@@ -128,7 +134,7 @@ func (r Security_Certificate) GetPemFormat() (resp string, err error) {
 	return
 }
 
-// SoftLayer_Security_Certificate_Request data type is used to harness your SSL certificate order to a Certificate Authority. This contains data that is required by a Certificate Authority to place an SSL certificate order.
+// The SoftLayer_Security_Certificate_Request data type is used to view details about your SSL certificate order. This contains data that is required by a Certificate Authority to place an SSL certificate order.
 type Security_Certificate_Request struct {
 	Session *session.Session
 	Options sl.Options

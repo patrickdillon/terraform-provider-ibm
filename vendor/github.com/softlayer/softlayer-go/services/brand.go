@@ -31,7 +31,7 @@ import (
 
 // The SoftLayer_Brand data type contains brand information relating to the single SoftLayer customer account.
 //
-// SoftLayer customers are unable to change their brand information in the portal or the API.
+// IBM Cloud Infrastructure customers are unable to change their brand information in the portal or the API.
 type Brand struct {
 	Session *session.Session
 	Options sl.Options
@@ -71,7 +71,7 @@ func (r Brand) Offset(offset int) Brand {
 	return r
 }
 
-// Create a new customer account record.
+// Create a new customer account record. By default, the newly created account will be associated to a platform (PaaS) account. To skip the automatic creation and linking to a new platform account, set the <em>bluemixLinkedFlag</em> to <strong>false</strong> on the account template.
 func (r Brand) CreateCustomerAccount(account *datatypes.Account, bypassDuplicateAccountCheck *bool) (resp datatypes.Account, err error) {
 	params := []interface{}{
 		account,
@@ -81,7 +81,102 @@ func (r Brand) CreateCustomerAccount(account *datatypes.Account, bypassDuplicate
 	return
 }
 
-// Create a new brand record.
+//
+// createObject() allows the creation of a new brand. This will also create an `account`
+// to serve as the owner of the brand.
+//
+//
+// In order to create a brand, a template object must be sent in with several required values.
+//
+//
+// ### Input [[SoftLayer_Brand]]
+//
+//
+//
+// - `name`
+//     + Name of brand
+//     + Required
+//     + Type: string
+// - `keyName`
+//     + Reference key name
+//     + Required
+//     + Type: string
+// - `longName`
+//     + More descriptive name of brand
+//     + Required
+//     + Type: string
+// - `account.firstName`
+//     + First Name of account contact
+//     + Required
+//     + Type: string
+// - `account.lastName`
+//     + Last Name of account contact
+//     + Required
+//     + Type: string
+// - `account.address1`
+//     + Street Address of company
+//     + Required
+//     + Type: string
+// - `account.address2`
+//     + Street Address of company
+//     + Optional
+//     + Type: string
+// - `account.city`
+//     + City of company
+//     + Required
+//     + Type: string
+// - `account.state`
+//     + State of company (if applicable)
+//     + Conditionally Required
+//     + Type: string
+// - `account.postalCode`
+//     + Postal Code of company
+//     + Required
+//     + Type: string
+// - `account.country`
+//     + Country of company
+//     + Required
+//     + Type: string
+// - `account.officePhone`
+//     + Office Phone number of Company
+//     + Required
+//     + Type: string
+// - `account.alternatePhone`
+//     + Alternate Phone number of Company
+//     + Optional
+//     + Type: string
+// - `account.companyName`
+//     + Name of company
+//     + Required
+//     + Type: string
+// - `account.email`
+//     + Email address of account contact
+//     + Required
+//     + Type: string
+//
+//
+// REST Example:
+// ```
+// curl -X POST -d '{
+//     "parameters":[{
+//         "name": "Brand Corp",
+//         "keyName": "BRAND_CORP",
+//         "longName": "Brand Corporation",
+//         "account": {
+//             "firstName": "Gloria",
+//             "lastName": "Brand",
+//             "address1": "123 Drive",
+//             "city": "Boston",
+//             "state": "MA",
+//             "postalCode": "02107",
+//             "country": "US",
+//             "companyName": "Brand Corp",
+//             "officePhone": "857-111-1111",
+//             "email": "noreply@example.com"
+//         }
+//     }]
+// }' https://api.softlayer.com/rest/v3.1/SoftLayer_Brand/createObject.json
+// ```
 func (r Brand) CreateObject(templateObject *datatypes.Brand) (resp datatypes.Brand, err error) {
 	params := []interface{}{
 		templateObject,
@@ -184,6 +279,12 @@ func (r Brand) GetDistributorFlag() (resp string, err error) {
 // Retrieve An account's associated hardware objects.
 func (r Brand) GetHardware() (resp []datatypes.Hardware, err error) {
 	err = r.Session.DoRequest("SoftLayer_Brand", "getHardware", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve
+func (r Brand) GetHasAgentAdvancedSupportFlag() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Brand", "getHasAgentAdvancedSupportFlag", nil, &r.Options, &resp)
 	return
 }
 

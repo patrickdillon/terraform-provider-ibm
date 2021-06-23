@@ -243,6 +243,12 @@ func (r Virtual_Disk_Image) GetBootableVolumeFlag() (resp bool, err error) {
 	return
 }
 
+// Retrieve Check if cloud-init is enabled.
+func (r Virtual_Disk_Image) GetCloudInitFlag() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Disk_Image", "getCloudInitFlag", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve
 func (r Virtual_Disk_Image) GetCoalescedDiskImages() (resp []datatypes.Virtual_Disk_Image, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Disk_Image", "getCoalescedDiskImages", nil, &r.Options, &resp)
@@ -252,6 +258,18 @@ func (r Virtual_Disk_Image) GetCoalescedDiskImages() (resp []datatypes.Virtual_D
 // Retrieve
 func (r Virtual_Disk_Image) GetCopyOnWriteFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Disk_Image", "getCopyOnWriteFlag", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve Return disk file extension
+func (r Virtual_Disk_Image) GetDiskFileExtension() (resp string, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Disk_Image", "getDiskFileExtension", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve
+func (r Virtual_Disk_Image) GetDiskImageStorageGroup() (resp datatypes.Configuration_Storage_Group, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Disk_Image", "getDiskImageStorageGroup", nil, &r.Options, &resp)
 	return
 }
 
@@ -285,7 +303,7 @@ func (r Virtual_Disk_Image) GetObject() (resp datatypes.Virtual_Disk_Image, err 
 	return
 }
 
-// no documentation yet
+// Retrieves images from the public ISO repository
 func (r Virtual_Disk_Image) GetPublicIsoImages() (resp []datatypes.Virtual_Disk_Image, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Disk_Image", "getPublicIsoImages", nil, &r.Options, &resp)
 	return
@@ -303,6 +321,18 @@ func (r Virtual_Disk_Image) GetSourceDiskImage() (resp datatypes.Virtual_Disk_Im
 	return
 }
 
+// Retrieve Return storage group details for symantec disk
+func (r Virtual_Disk_Image) GetStorageGroupDetails() (resp datatypes.Container_Image_StorageGroupDetails, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Disk_Image", "getStorageGroupDetails", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve The storage group for a virtual disk image.
+func (r Virtual_Disk_Image) GetStorageGroups() (resp []datatypes.Configuration_Storage_Group, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Disk_Image", "getStorageGroups", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve The storage repository that a disk image resides in.
 func (r Virtual_Disk_Image) GetStorageRepository() (resp datatypes.Virtual_Storage_Repository, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Disk_Image", "getStorageRepository", nil, &r.Options, &resp)
@@ -312,6 +342,12 @@ func (r Virtual_Disk_Image) GetStorageRepository() (resp datatypes.Virtual_Stora
 // Retrieve The type of storage repository that a disk image resides in.
 func (r Virtual_Disk_Image) GetStorageRepositoryType() (resp datatypes.Virtual_Storage_Repository_Type, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Disk_Image", "getStorageRepositoryType", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve Return supported hardware component IDs for symantec disk
+func (r Virtual_Disk_Image) GetSupportedHardware() (resp string, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Disk_Image", "getSupportedHardware", nil, &r.Options, &resp)
 	return
 }
 
@@ -435,20 +471,22 @@ func (r Virtual_Guest) CheckHostDiskAvailability(diskCapacity *int) (resp bool, 
 	return
 }
 
-// Returns monitoring alarm detailed history
-func (r Virtual_Guest) CloseAlarm(alarmId *string) (resp bool, err error) {
-	params := []interface{}{
-		alarmId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "closeAlarm", params, &r.Options, &resp)
-	return
-}
-
 // Creates a transaction to configure the guest's metadata disk. If the guest has user data associated with it, the transaction will create a small virtual drive and write the metadata to a file on the drive; if the drive already exists, the metadata will be rewritten. If the guest has no user data associated with it, the transaction will remove the virtual drive if it exists.
 //
 // WARNING: The transaction created by this service will shut down the guest while the metadata disk is configured. The guest will be turned back on once this process is complete.
 func (r Virtual_Guest) ConfigureMetadataDisk() (resp datatypes.Provisioning_Version1_Transaction, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "configureMetadataDisk", nil, &r.Options, &resp)
+	return
+}
+
+// Create a transaction to archive a computing instance's block devices
+func (r Virtual_Guest) CreateArchiveTemplate(groupName *string, blockDevices []datatypes.Virtual_Guest_Block_Device, note *string) (resp datatypes.Virtual_Guest_Block_Device_Template_Group, err error) {
+	params := []interface{}{
+		groupName,
+		blockDevices,
+		note,
+	}
+	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "createArchiveTemplate", params, &r.Options, &resp)
 	return
 }
 
@@ -464,329 +502,181 @@ func (r Virtual_Guest) CreateArchiveTransaction(groupName *string, blockDevices 
 }
 
 //
-// <style type="text/css">.create_object > li > div { padding-top: .5em; padding-bottom: .5em}</style>
-// createObject() enables the creation of computing instances on an account. This
-// method is a simplified alternative to interacting with the ordering system directly.
+// createObject() enables the creation of computing instances on an account. This method is a simplified alternative to interacting with the ordering system directly.
 //
 //
-// In order to create a computing instance, a template object must be sent in with a few required
-// values.
+// In order to create a computing instance, a template object must be sent in with a few required values.
 //
 //
 // When this method returns an order will have been placed for a computing instance of the specified configuration.
 //
 //
-// To determine when the instance is available you can poll the instance via [[SoftLayer_Virtual_Guest/getObject|getObject]], with an [[Extended-Object-Masks|object mask]] requesting the <code>provisionDate</code> relational property. When <code>provisionDate</code> is not null, the instance will be ready.
+// To determine when the instance is available you can poll the instance via [[SoftLayer_Virtual_Guest/getObject]], with an object mask requesting the `provisionDate` relational property. When `provisionDate` is not `null`, the instance will be ready.
 //
 //
-// <b>Warning:</b> Computing instances created via this method will incur charges on your account. For testing input parameters see [[SoftLayer_Virtual_Guest/generateOrderTemplate|generateOrderTemplate]].
+// > **Warning:** Computing instances created via this method will incur charges on your account. For testing input parameters see [[SoftLayer_Virtual_Guest/generateOrderTemplate]].
 //
 //
-// <b>Input</b> - [[SoftLayer_Virtual_Guest (type)|SoftLayer_Virtual_Guest]]
-// <ul class="create_object">
-//     <li id="guest-create-object-hostname"><code>hostname</code>
-//         <div>Hostname for the computing instance.</div><ul>
-//             <li><b>Required</b></li>
-//             <li><b>Type</b> - string</li>
-//         </ul>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-domain"><code>domain</code>
-//         <div>Domain for the computing instance.</div><ul>
-//             <li><b>Required</b></li>
-//             <li><b>Type</b> - string</li>
-//         </ul>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-start-cpus"><code>startCpus</code>
-//         <div>The number of CPU cores to allocate.</div><ul>
-//             <li><b>Required</b></li>
-//             <li><b>Type</b> - int</li>
-//             <li>See [[SoftLayer_Virtual_Guest/getCreateObjectOptions|getCreateObjectOptions]] for available options.</li>
-//         </ul>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-max-memory"><code>maxMemory</code>
-//         <div>The amount of memory to allocate in megabytes.</div><ul>
-//             <li><b>Required</b></li>
-//             <li><b>Type</b> - int</li>
-//             <li>See [[SoftLayer_Virtual_Guest/getCreateObjectOptions|getCreateObjectOptions]] for available options.</li>
-//         </ul>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-datacenter-name"><code>datacenter.name</code>
-//         <div>Specifies which datacenter the instance is to be provisioned in.</div><ul>
-//             <li><b>Required</b></li>
-//             <li><b>Type</b> - string</li>
-//             <li>The <code>datacenter</code> property is a [[SoftLayer_Location (type)|location]] structure with the <code>name</code> field set.</li>
-//             <li>See [[SoftLayer_Virtual_Guest/getCreateObjectOptions|getCreateObjectOptions]] for available options.</li>
-//         </ul>
-//         <http title="Example">{
-//     "datacenter": {
-//         "name": "dal05"
-//     }
-// }</http>
-//         <br />
-//     </li>
-//     <li  id="guest-create-object-hourly-billing-flag"><code>hourlyBillingFlag</code>
-//         <div>Specifies the billing type for the instance.</div><ul>
-//             <li><b>Required</b></li>
-//             <li><b>Type</b> - boolean</li>
-//             <li>When true the computing instance will be billed on hourly usage, otherwise it will be billed on a monthly basis.</li>
-//         </ul>
-//         <br />
-//     </li>
-//     <li  id="guest-create-object-local-disk-flag"><code>localDiskFlag</code>
-//         <div>Specifies the disk type for the instance.</div><ul>
-//             <li><b>Required</b></li>
-//             <li><b>Type</b> - boolean</li>
-//             <li>When true the disks for the computing instance will be provisioned on the host which it runs, otherwise SAN disks will be provisioned.</li>
-//         </ul>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-dedicated-account-host-only-flag"><code>dedicatedAccountHostOnlyFlag</code>
-//         <div>Specifies whether or not the instance must only run on hosts with instances from the same account</div><ul>
-//             <li><b>Optional</b></li>
-//             <li><b>Type</b> - boolean</li>
-//             <li><b>Default</b> - <code>false</code></li>
-//             <li>When true this flag specifies that a compute instance is to run on hosts that only have guests from the same account.</li>
-//         </ul>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-operating-system-reference-code"><code>operatingSystemReferenceCode</code>
-//         <div>An identifier for the operating system to provision the computing instance with.</div><ul>
-//             <li><b>Conditionally required</b> - Disallowed when <code>blockDeviceTemplateGroup.globalIdentifier</code> is provided, as the template will specify the operating system.</li>
-//             <li><b>Type</b> - string</li>
-//             <li><b>Notice</b> - Some operating systems are charged based on the value specified in <code>startCpus</code>. The price which is used can be determined by calling [[SoftLayer_Virtual_Guest/generateOrderTemplate|generateOrderTemplate]] with your desired device specifications.</li>
-//             <li>See [[SoftLayer_Virtual_Guest/getCreateObjectOptions|getCreateObjectOptions]] for available options.</li>
-//         </ul>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-block-device-template-group-global-identifier"><code>blockDeviceTemplateGroup.globalIdentifier</code>
-//         <div>A global identifier for the template to be used to provision the computing instance.</div><ul>
-//             <li><b>Conditionally required</b> - Disallowed when <code>operatingSystemReferenceCode</code> is provided, as the template will specify the operating system.</li>
-//             <li><b>Type</b> - string</li>
-//             <li><b>Notice</b> - Some operating systems are charged based on the value specified in <code>startCpus</code>. The price which is used can be determined by calling [[SoftLayer_Virtual_Guest/generateOrderTemplate|generateOrderTemplate]] with your desired device specifications.</li>
-//             <li>Both public and non-public images may be specified.</li>
-//             <li>A list of public images may be obtained via a request to [[SoftLayer_Virtual_Guest_Block_Device_Template_Group/getPublicImages|getPublicImages]].</li>
-//             <li>A list of non-public images, images owned by an account or specifically shared with an account, may be obtained via a request to [[SoftLayer_Account/getBlockDeviceTemplateGroups|getBlockDeviceTemplateGroups]].</li>
-//         </ul>
-//         <http title="Example">{
-//     "blockDeviceTemplateGroup": {
-//         "globalIdentifier": "07beadaa-1e11-476e-a188-3f7795feb9fb"
-//     }
-// }</http>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-network-components-max-speed"><code>networkComponents.maxSpeed</code>
-//         <div>Specifies the connection speed for the instance's network components.</div><ul>
-//             <li><b>Optional</b></li>
-//             <li><b>Type</b> - int</li>
-//             <li><b>Default</b> - 10</li>
-//             <li><b>Description</b> - The <code>networkComponents</code> property is an array with a single [[SoftLayer_Virtual_Guest_Network_Component (type)|network component]] structure. The <code>maxSpeed</code> property must be set to specify the network uplink speed, in megabits per second, of the computing instance.</li>
-//             <li>See [[SoftLayer_Virtual_Guest/getCreateObjectOptions|getCreateObjectOptions]] for available options.</li>
-//         </ul>
-//             <http title="Example">{
-//     "networkComponents": [
+// ### Required Input [[SoftLayer_Virtual_Guest]]
+//
+//
+//
+// - `Hostname`  String **Required**
+//     + Hostname for the computing instance.
+// - `Domain` String **Required**
+//     + Domain for the computing instance.
+// - `startCpus` Integer **Required**
+//     + The number of CPU cores to allocate.
+//     + See [[SoftLayer_Virtual_Guest/getCreateObjectOptions]] for available options.
+// - `maxMemory` Integer **Required**
+//     + The amount of memory to allocate in megabytes.
+//     + See [[SoftLayer_Virtual_Guest/getCreateObjectOptions]] for available options.
+// - `datacenter.name` *String* **Required**
+//     + Specifies which datacenter the instance is to be provisioned in. Needs to be a nested object.
+//     + Example: `"datacenter": {"name": "dal05"}`
+//     + See [[SoftLayer_Virtual_Guest/getCreateObjectOptions]] for available options.
+//
+//
+// - `hourlyBillingFlag` Boolean **Required**
+//     + Specifies the billing type for the instance.
+//     + True for hourly billing, False for monthly billing.
+// - `localDiskFlag` Boolean **Required**
+//     + Specifies the disk type for the instance.
+//     + True for local to the instance disks, False for SAN disks.
+// - `dedicatedAccountHostOnlyFlag` Boolean
+//     + When true this flag specifies that a compute instance is to run on hosts that only have guests from the same account.
+//     + Default: False
+// - `operatingSystemReferenceCode` String **Conditionally required**
+//     + An identifier for the operating system to provision the computing instance with.
+//     + Not required when using a `blockDeviceTemplateGroup.globalIdentifier`, as the template will have its own operating system.
+//     + See [[SoftLayer_Virtual_Guest/getCreateObjectOptions]] for available options.
+//     + **Notice**: Some operating systems are billed based on the number of CPUs the guest has. The price which is used can be determined by calling
+//            [[SoftLayer_Virtual_Guest/generateOrderTemplate]] with your desired device specifications.
+// - `blockDeviceTemplateGroup.globalIdentifier` String
+//     + The GUID for the template to be used to provision the computing instance.
+//     + Conflicts with `operatingSystemReferenceCode`
+//     + **Notice**: Some operating systems are billed based on the number of CPUs the guest has. The price which is used can be determined by calling
+//            [[SoftLayer_Virtual_Guest/generateOrderTemplate]] with your desired device specifications.
+//     + A list of public images may be obtained via a request to [[SoftLayer_Virtual_Guest_Block_Device_Template_Group/getPublicImages]]
+//     + A list of private images may be obtained via a request to [[SoftLayer_Account/getPrivateBlockDeviceTemplateGroups]]
+//     + Example: `"blockDeviceTemplateGroup": { globalIdentifier": "07beadaa-1e11-476e-a188-3f7795feb9fb"`
+// - `networkComponents.maxSpeed` Integer
+//     + Specifies the connection speed for the instance's network components.
+//     +  The `networkComponents` property is an array with a single [[SoftLayer_Virtual_Guest_Network_Component]] structure.
+//            The `maxSpeed` property must be set to specify the network uplink speed, in megabits per second, of the computing instance.
+//     +  See [[SoftLayer_Virtual_Guest/getCreateObjectOptions]] for available options.
+//     + Default: 10
+//     + Example: `"networkComponents": [{"maxSpeed": 1000}]`
+// - `privateNetworkOnlyFlag` Boolean
+//     + When true this flag specifies that a compute instance is to only have access to the private network.
+//     + Default: False
+// - `primaryNetworkComponent.networkVlan.id` Integer
+//     + Specifies the network vlan which is to be used for the frontend interface of the computing instance.
+//     + The `primaryNetworkComponent` property is a [[SoftLayer_Virtual_Guest_Network_Component]] structure with the `networkVlan` property populated with a i
+//           [[SoftLayer_Network_Vlan]] structure. The `id` property must be set to specify the frontend network vlan of the computing instance.
+//     + *NOTE* This is the VLAN `id`, NOT the vlan number.
+//     + Example: `"primaryNetworkComponent":{"networkVlan": {"id": 1234567}}`
+// - `backendNetworkComponent.networkVlan.id` Integer
+//     + Specifies the network vlan which is to be used for the backend interface of the computing instance.
+//     + The `backendNetworkComponent` property is a [[SoftLayer_Virtual_Guest_Network_Component]] structure with the `networkVlan` property populated with a
+//            [[SoftLayer_Network_Vlan]] structure. The `id` property must be set to specify the backend network vlan of the computing instance.
+//     + *NOTE* This is the VLAN `id`, NOT the vlan number.
+//     + Example: `"backendNetworkComponent":{"networkVlan": {"id": 1234567}}`
+// - `primaryNetworkComponent.securityGroupBindings` [[SoftLayer_Virtual_Network_SecurityGroup_NetworkComponentBinding]][]
+//     + Specifies the security groups to be attached to this VSI's frontend network adapter
+//     + The `primaryNetworkComponent` property is a [[SoftLayer_Virtual_Guest_Network_Component]] structure with the `securityGroupBindings` property populated
+//            with an array of [[SoftLayer_Virtual_Network_SecurityGroup_NetworkComponentBinding]] structures. The `securityGroup` property in each must be set to
+//            specify the security group to be attached to the primary frontend network component.
+//     + Example:
+//         ```
+//         "primaryNetworkComponent": {
+//             "securityGroupBindings": [
+//                 {"securityGroup":{"id": 5555555}},
+//                 {"securityGroup":{"id": 1112223}},
+//             ]
+//         }
+//         ```
+// - `primaryBackendNetworkComponent.securityGroupBindings` [[SoftLayer_Virtual_Network_SecurityGroup_NetworkComponentBinding]][]
+//     + Specifies the security groups to be attached to this VSI's backend network adapter
+//     + The `primaryNetworkComponent` property is a [[SoftLayer_Virtual_Guest_Network_Component]] structure with the `securityGroupBindings` property populated
+//            with an array of [[SoftLayer_Virtual_Network_SecurityGroup_NetworkComponentBinding]] structures. The `securityGroup` property in each must be set to
+//            specify the security group to be attached to the primary frontend network component.
+//     + Example:
+//         ```
+//         "primaryBackendNetworkComponent": {
+//             "securityGroupBindings": [
+//                 {"securityGroup":{"id": 33322211}},
+//                 {"securityGroup":{"id": 77777222}},
+//             ]
+//         }
+//         ```
+// - `blockDevices` [[SoftLayer_Virtual_Guest_Block_Device]][]
+//     + Block device and disk image settings for the computing instance
+//     + The `blockDevices` property is an array of [[SoftLayer_Virtual_Guest_Block_Device]] structures. Each block device must specify the `device` property
+//           along with the `diskImage`  property, which is a [[SoftLayer_Virtual_Disk_Image]] structure with the `capacity` property set. The `device` number `'1'`
+//           is reserved for the SWAP disk attached to the computing instance.
+//     + Default: The smallest available capacity for the primary disk will be used. If an image template is specified the disk capacity will be be provided by the template.
+//     + Example:
+//         ```
+//         "blockDevices":[{"device": "0", "diskImage": {"capacity": 100}}],
+//         "localDiskFlag": true
+//         ```
+//     +  See [[SoftLayer_Virtual_Guest/getCreateObjectOptions]] for available options.
+// - `userData.value`  String
+//     + Arbitrary data to be made available to the computing instance.
+//     + The `userData` property is an array with a single [[SoftLayer_Virtual_Guest_Attribute]] structure with the `value` property set to an arbitrary value.
+//           This value can be retrieved via the [[SoftLayer_Resource_Metadata/getUserMetadata]] method from a request originating from the computing instance.
+//           This is primarily useful for providing data to software that may be on the instance and configured to execute upon first boot.
+//     + Example: `"userData":[{"value": "testData"}]`
+// - `sshKeys` [[SoftLayer_Security_Ssh_Key]][]
+//     + The `sshKeys` property is an array of [[SoftLayer_Security_Ssh_Key]] structures with the `id` property set to the value of an existing SSH key.
+//     + To create a new SSH key, call [[SoftLayer_Security_Ssh_Key/createObject|createObject]].
+//     + To obtain a list of existing SSH keys, call [[SoftLayer_Account/getSshKeys]]
+//     + Example: `"sshKeys":[{"id": 1234567}]`
+// - `postInstallScriptUri` String
+//     + Specifies the uri location of the script to be downloaded and run after installation is complete. Only scripts from HTTPS servers are executed on startup.
+//
+//
+// REST Example:
+// ```
+// curl -X POST -d '{
+//     "parameters":[
 //         {
-//             "maxSpeed": 1000
+//             "hostname": "host1",
+//             "domain": "example.com",
+//             "startCpus": 1,
+//             "maxMemory": 1024,
+//             "hourlyBillingFlag": true,
+//             "localDiskFlag": true,
+//             "operatingSystemReferenceCode": "UBUNTU_LATEST"
 //         }
-//     ]
-// }</http>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-private-network-only-flag"><code>privateNetworkOnlyFlag</code>
-//         <div>Specifies whether or not the instance only has access to the private network</div><ul>
-//             <li><b>Optional</b></li>
-//             <li><b>Type</b> - boolean</li>
-//             <li><b>Default</b> - <code>false</code></li>
-//             <li>When true this flag specifies that a compute instance is to only have access to the private network.</li>
-//         </ul>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-primary-network-component-network-vlan-id"><code>primaryNetworkComponent.networkVlan.id</code>
-//         <div>Specifies the network vlan which is to be used for the frontend interface of the computing instance.</div><ul>
-//             <li><b>Optional</b></li>
-//             <li><b>Type</b> - int</li>
-//             <li><b>Description</b> - The <code>primaryNetworkComponent</code> property is a [[SoftLayer_Virtual_Guest_Network_Component (type)|network component]] structure with the <code>networkVlan</code> property populated with a [[SoftLayer_Network_Vlan (type)|vlan]] structure. The <code>id</code> property must be set to specify the frontend network vlan of the computing instance.</li>
-//         </ul>
-//         <http title="Example">{
-//     "primaryNetworkComponent": {
-//         "networkVlan": {
-//             "id": 1
-//         }
-//     }
-// }</http>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-primary-backend-network-component-network-vlan-id"><code>primaryBackendNetworkComponent.networkVlan.id</code>
-//         <div>Specifies the network vlan which is to be used for the backend interface of the computing instance.</div><ul>
-//             <li><b>Optional</b></li>
-//             <li><b>Type</b> - int</li>
-//             <li><b>Description</b> - The <code>primaryBackendNetworkComponent</code> property is a [[SoftLayer_Virtual_Guest_Network_Component (type)|network component]] structure with the <code>networkVlan</code> property populated with a [[SoftLayer_Network_Vlan (type)|vlan]] structure. The <code>id</code> property must be set to specify the backend network vlan of the computing instance.</li>
-//         </ul>
-//         <http title="Example">{
-//     "primaryBackendNetworkComponent": {
-//         "networkVlan": {
-//             "id": 2
-//         }
-//     }
-// }</http>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-primary-network-component-security-group-bindings"><code>primaryNetworkComponent.securityGroupBindings</code>
-//         <div>Specifies the security groups to be attached to this VSI's Frontend Network Adapter</div><ul>
-//             <li><b>Optional</b></li>
-//             <li><b>Type</b> - array of [[SoftLayer_Virtual_Network_SecurityGroup_NetworkComponentBinding (type)| SoftLayer_Virtual_Network_SecurityGroup_NetworkComponentBinding]] with the securityGroup property set.</li>
-//             <li><b>Description</b> - The <code>primaryNetworkComponent</code> property is a [[SoftLayer_Virtual_Guest_Network_Component (type)|network component]] structure with the <code>securityGroupBindings</code> property populated with an array of [[SoftLayer_Virtual_Network_SecurityGroup_NetworkComponentBinding (type)|Security Group Order Binding]] structures. The <code>securityGroup</code> property in each must be set to specify the security group to be attached to the primary frontend network component.</li>
-//         </ul>
-//         <http title="Example">{
-//     "primaryNetworkComponent": {
-//         "securityGroupBindings": [
-//             {
-//                 "securityGroup": {
-//                     "id": 1
-//                 }
-//             },
-//             {
-//                 "securityGroup": {
-//                     "id": 2
-//                 }
-//             }
-//         ]
-//     }
-// }</http>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-primary-backend-network-component-security-group-bindings"><code>primaryBackendNetworkComponent.securityGroupBindings</code>
-//         <div>Specifies the security groups to be attached to this VSI's Backend Network Adapter</div><ul>
-//             <li><b>Optional</b></li>
-//             <li><b>Type</b> - array of [[SoftLayer_Virtual_Network_SecurityGroup_NetworkComponentBinding (type)| SoftLayer_Virtual_Network_SecurityGroup_NetworkComponentBinding]] with the securityGroup property set.</li>
-//             <li><b>Description</b> - The <code>primaryBackendNetworkComponent</code> property is a [[SoftLayer_Virtual_Guest_Network_Component (type)|network component]] structure with the <code>securityGroupBindings</code> property populated with an array of [[SoftLayer_Virtual_Network_SecurityGroup_NetworkComponentBinding (type)|Security Group Order Binding]] structures. The <code>securityGroup</code> property in each must be set to specify the security group to be attached to the primary backend network component.</li>
-//         </ul>
-//         <http title="Example">{
-//     "primaryBackendNetworkComponent": {
-//         "securityGroupBindings": [
-//             {
-//                 "securityGroup": {
-//                     "id": 1
-//                 }
-//             },
-//             {
-//                 "securityGroup": {
-//                     "id": 2
-//                 }
-//             }
-//         ]
-//    }
-// }</http>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-block-devices"><code>blockDevices</code>
-//         <div>Block device and disk image settings for the computing instance</div><ul>
-//             <li><b>Optional</b></li>
-//             <li><b>Type</b> - array of [[SoftLayer_Virtual_Guest_Block_Device (type)|SoftLayer_Virtual_Guest_Block_Device]</li>
-//             <li><b>Default</b> - The smallest available capacity for the primary disk will be used. If an image template is specified the disk capacity will be be provided by the template.</li>
-//             <li><b>Description</b> - The <code>blockDevices</code> property is an array of [[SoftLayer_Virtual_Guest_Block_Device (type)|block device]] structures.</i>
-//             <li>Each block device must specify the <code>device</code> property along with the <code>diskImage</code> property, which is a [[SoftLayer_Virtual_Disk_Image (type)|disk image]] structure with the <code>capacity</code> property set.</li>
-//             <li>The <code>device</code> number <code>'1'</code> is reserved for the SWAP disk attached to the computing instance.</li>
-//             <li>See [[SoftLayer_Virtual_Guest/getCreateObjectOptions|getCreateObjectOptions]] for available options.</li>
-//         </ul>
-//         <http title="Example">{
-//     "blockDevices": [
-//         {
-//             "device": "0",
-//             "diskImage": {
-//                 "capacity": 100
-//             }
-//         }
-//     ],
-//     "localDiskFlag": true
-// }</http>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-user-data"><code>userData.value</code>
-//         <div>Arbitrary data to be made available to the computing instance.</div><ul>
-//             <li><b>Optional</b></li>
-//             <li><b>Type</b> - string</li>
-//             <li><b>Description</b> - The <code>userData</code> property is an array with a single [[SoftLayer_Virtual_Guest_Attribute (type)|attribute]] structure with the <code>value</code> property set to an arbitrary value.</li>
-//             <li>This value can be retrieved via the [[SoftLayer_Resource_Metadata/getUserMetadata|getUserMetadata]] method from a request originating from the computing instance. This is primarily useful for providing data to software that may be on the instance and configured to execute upon first boot.</li>
-//         </ul>
-//         <http title="Example">{
-//     "userData": [
-//         {
-//             "value": "someValue"
-//         }
-//     ]
-// }</http>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-ssh-keys"><code>sshKeys</code>
-//         <div>SSH keys to install on the computing instance upon provisioning.</div><ul>
-//             <li><b>Optional</b></li>
-//             <li><b>Type</b> - array of [[SoftLayer_Security_Ssh_Key (type)|SoftLayer_Security_Ssh_Key]]</li>
-//             <li><b>Description</b> - The <code>sshKeys</code> property is an array of [[SoftLayer_Security_Ssh_Key (type)|SSH Key]] structures with the <code>id</code> property set to the value of an existing SSH key.</li>
-//             <li>To create a new SSH key, call [[SoftLayer_Security_Ssh_Key/createObject|createObject]] on the [[SoftLayer_Security_Ssh_Key]] service.</li>
-//             <li>To obtain a list of existing SSH keys, call [[SoftLayer_Account/getSshKeys|getSshKeys]] on the [[SoftLayer_Account]] service.
-//         </ul>
-//         <http title="Example">{
-//     "sshKeys": [
-//         {
-//             "id": 123
-//         }
-//     ]
-// }</http>
-//         <br />
-//     </li>
-//     <li id="guest-create-object-post-install-script-uri"><code>postInstallScriptUri</code>
-//         <div>Specifies the uri location of the script to be downloaded and run after installation is complete.</div><ul>
-//             <li><b>Optional</b></li>
-//             <li><b>Type</b> - string</li>
-//         </ul>
-//         <br />
-//     </li>
-// </ul>
+// }' https://api.softlayer.com/rest/v3.1/SoftLayer_Virtual_Guest/createObject.json
 //
 //
-// <h1>REST Example</h1>
-// <http title="Request">curl -X POST -d '{
-//  "parameters":[
-//      {
-//          "hostname": "host1",
-//          "domain": "example.com",
-//          "startCpus": 1,
-//          "maxMemory": 1024,
-//          "hourlyBillingFlag": true,
-//          "localDiskFlag": true,
-//          "operatingSystemReferenceCode": "UBUNTU_LATEST"
-//      }
-//  ]
-// }' https://api.softlayer.com/rest/v3/SoftLayer_Virtual_Guest.json
-// </http>
-// <http title="Response">HTTP/1.1 201 Created
-// Location: https://api.softlayer.com/rest/v3/SoftLayer_Virtual_Guest/1301396/getObject
+// HTTP/1.1 201 Created
+// Location: https://api.softlayer.com/rest/v3.1/SoftLayer_Virtual_Guest/1301396/getObject
 //
 //
 // {
-//     "accountId": 232298,
-//     "createDate": "2012-11-30T16:28:17-06:00",
-//     "dedicatedAccountHostOnlyFlag": false,
-//     "domain": "example.com",
-//     "hostname": "host1",
-//     "id": 1301396,
-//     "lastPowerStateId": null,
-//     "lastVerifiedDate": null,
-//     "maxCpu": 1,
-//     "maxCpuUnits": "CORE",
-//     "maxMemory": 1024,
-//     "metricPollDate": null,
-//     "modifyDate": null,
-//     "privateNetworkOnlyFlag": false,
-//     "startCpus": 1,
-//     "statusId": 1001,
-//     "globalIdentifier": "2d203774-0ee1-49f5-9599-6ef67358dd31"
+//   "accountId": 232298,
+//   "createDate": "2012-11-30T16:28:17-06:00",
+//   "dedicatedAccountHostOnlyFlag": false,
+//   "domain": "example.com",
+//   "hostname": "host1",
+//   "id": 1301396,
+//   "lastPowerStateId": null,
+//   "lastVerifiedDate": null,
+//   "maxCpu": 1,
+//   "maxCpuUnits": "CORE",
+//   "maxMemory": 1024,
+//   "metricPollDate": null,
+//   "modifyDate": null,
+//   "privateNetworkOnlyFlag": false,
+//   "startCpus": 1,
+//   "statusId": 1001,
+//   "globalIdentifier": "2d203774-0ee1-49f5-9599-6ef67358dd31"
 // }
-// </http>
+// ```
 func (r Virtual_Guest) CreateObject(templateObject *datatypes.Virtual_Guest) (resp datatypes.Virtual_Guest, err error) {
 	params := []interface{}{
 		templateObject,
@@ -969,6 +859,15 @@ func (r Virtual_Guest) ExecuteRescueLayer() (resp bool, err error) {
 	return
 }
 
+// Find VSIs by hostname.
+func (r Virtual_Guest) FindByHostname(hostname *string) (resp []datatypes.Virtual_Guest, err error) {
+	params := []interface{}{
+		hostname,
+	}
+	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "findByHostname", params, &r.Options, &resp)
+	return
+}
+
 // Find CCI by only its primary public or private IP address. IP addresses within secondary subnets tied to the CCI will not return the CCI. If no CCI is found, no errors are generated and no data is returned.
 func (r Virtual_Guest) FindByIpAddress(ipAddress *string) (resp datatypes.Virtual_Guest, err error) {
 	params := []interface{}{
@@ -1036,17 +935,6 @@ func (r Virtual_Guest) GetAdditionalRequiredPricesForOsReload(config *datatypes.
 		config,
 	}
 	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getAdditionalRequiredPricesForOsReload", params, &r.Options, &resp)
-	return
-}
-
-// Returns monitoring alarm detailed history
-func (r Virtual_Guest) GetAlarmHistory(startDate *datatypes.Time, endDate *datatypes.Time, alarmId *string) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-		alarmId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getAlarmHistory", params, &r.Options, &resp)
 	return
 }
 
@@ -1436,6 +1324,18 @@ func (r Virtual_Guest) GetGlobalIdentifier() (resp string, err error) {
 	return
 }
 
+// Retrieve The number of GPUs attached to the guest.
+func (r Virtual_Guest) GetGpuCount() (resp int, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getGpuCount", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve The name of the GPU type attached to the guest.
+func (r Virtual_Guest) GetGpuType() (resp string, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getGpuType", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve
 func (r Virtual_Guest) GetGuestBootParameter() (resp datatypes.Virtual_Guest_Boot_Parameter, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getGuestBootParameter", nil, &r.Options, &resp)
@@ -1579,32 +1479,6 @@ func (r Virtual_Guest) GetMetricTrackingObjectId() (resp int, err error) {
 	return
 }
 
-// Returns open monitoring alarms for a given time period
-func (r Virtual_Guest) GetMonitoringActiveAlarms(startDate *datatypes.Time, endDate *datatypes.Time) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-	}
-	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getMonitoringActiveAlarms", params, &r.Options, &resp)
-	return
-}
-
-// Retrieve
-func (r Virtual_Guest) GetMonitoringAgents() (resp []datatypes.Monitoring_Agent, err error) {
-	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getMonitoringAgents", nil, &r.Options, &resp)
-	return
-}
-
-// Returns closed monitoring alarms for a given time period
-func (r Virtual_Guest) GetMonitoringClosedAlarms(startDate *datatypes.Time, endDate *datatypes.Time) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-	}
-	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getMonitoringClosedAlarms", params, &r.Options, &resp)
-	return
-}
-
 // Retrieve
 func (r Virtual_Guest) GetMonitoringRobot() (resp datatypes.Monitoring_Robot, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getMonitoringRobot", nil, &r.Options, &resp)
@@ -1620,12 +1494,6 @@ func (r Virtual_Guest) GetMonitoringServiceComponent() (resp datatypes.Network_M
 // Retrieve
 func (r Virtual_Guest) GetMonitoringServiceEligibilityFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getMonitoringServiceEligibilityFlag", nil, &r.Options, &resp)
-	return
-}
-
-// Retrieve
-func (r Virtual_Guest) GetMonitoringServiceFlag() (resp bool, err error) {
-	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getMonitoringServiceFlag", nil, &r.Options, &resp)
 	return
 }
 
@@ -1729,6 +1597,12 @@ func (r Virtual_Guest) GetOverBandwidthAllocationFlag() (resp int, err error) {
 	return
 }
 
+// Returns a list of all the pending maintenance actions affecting this guest.
+func (r Virtual_Guest) GetPendingMaintenanceActions() (resp []datatypes.Container_Virtual_Guest_PendingMaintenanceAction, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getPendingMaintenanceActions", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve When true this virtual guest must be migrated using SoftLayer_Virtual_Guest::migrate.
 func (r Virtual_Guest) GetPendingMigrationFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getPendingMigrationFlag", nil, &r.Options, &resp)
@@ -1819,30 +1693,6 @@ func (r Virtual_Guest) GetRegionalGroup() (resp datatypes.Location_Group_Regiona
 // Retrieve
 func (r Virtual_Guest) GetRegionalInternetRegistry() (resp datatypes.Network_Regional_Internet_Registry, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getRegionalInternetRegistry", nil, &r.Options, &resp)
-	return
-}
-
-// Returns open monitoring alarms generated by monitoring agents that reside in the SoftLayer monitoring cluster.
-//
-// A monitoring agent with "remoteMonitoringAgentFlag" indicates that it work from SoftLayer monitoring cluster. If a monitoring agent does not have the flag, it resides in your cloud instance.
-func (r Virtual_Guest) GetRemoteMonitoringActiveAlarms(startDate *datatypes.Time, endDate *datatypes.Time) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-	}
-	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getRemoteMonitoringActiveAlarms", params, &r.Options, &resp)
-	return
-}
-
-// Returns closed monitoring alarms generated by monitoring agents that reside in the SoftLayer monitoring cluster.
-//
-// A monitoring agent with "remoteMonitoringAgentFlag" indicates that it work from SoftLayer monitoring cluster. If a monitoring agent does not have the flag, it resides in your cloud instance.
-func (r Virtual_Guest) GetRemoteMonitoringClosedAlarms(startDate *datatypes.Time, endDate *datatypes.Time) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-	}
-	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "getRemoteMonitoringClosedAlarms", params, &r.Options, &resp)
 	return
 }
 
@@ -1942,7 +1792,7 @@ func (r Virtual_Guest) GetType() (resp datatypes.Virtual_Guest_Type, err error) 
 	return
 }
 
-// getUpgradeItemPrices() retrieves a list of all upgrades available to a CloudLayer Computing Instance. Upgradeable items include, but are not limited to, number of cores, amount of RAM, storage configuration, and network port speed.
+// Retrieves a list of all upgrades available to a virtual server. Upgradeable items include, but are not limited to, number of cores, amount of RAM, storage configuration, and network port speed.
 //
 // This method exclude downgrade item prices by default. You can set the "includeDowngradeItemPrices" parameter to true so that it can include downgrade item prices.
 func (r Virtual_Guest) GetUpgradeItemPrices(includeDowngradeItemPrices *bool) (resp []datatypes.Product_Item_Price, err error) {
@@ -2004,6 +1854,12 @@ func (r Virtual_Guest) IsBackendPingable() (resp bool, err error) {
 	return
 }
 
+// Determines if the virtual guest was provisioned from a cloud-init enabled image.
+func (r Virtual_Guest) IsCloudInit() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "isCloudInit", nil, &r.Options, &resp)
+	return
+}
+
 // Issues a ping command and returns the success (true) or failure (false) of the ping command.
 func (r Virtual_Guest) IsPingable() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "isPingable", nil, &r.Options, &resp)
@@ -2042,7 +1898,7 @@ func (r Virtual_Guest) MountIsoImage(diskImageId *int) (resp datatypes.Provision
 	return
 }
 
-// Pause a virtual guest
+// Pause a virtual guest. This can only be called when the specified VM is in the Running state.
 func (r Virtual_Guest) Pause() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "pause", nil, &r.Options, &resp)
 	return
@@ -2139,7 +1995,7 @@ func (r Virtual_Guest) RemoveTags(tags *string) (resp bool, err error) {
 	return
 }
 
-// Resume a virtual guest
+// Resume a virtual guest, this can only be called when a VSI is in Suspended state.
 func (r Virtual_Guest) Resume() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Guest", "resume", nil, &r.Options, &resp)
 	return
@@ -2489,6 +2345,12 @@ func (r Virtual_Guest_Block_Device_Template_Group) GetEncryptionAttributes() (re
 	return
 }
 
+// Retrieve The first clone of the image template group
+func (r Virtual_Guest_Block_Device_Template_Group) GetFirstChild() (resp datatypes.Virtual_Guest_Block_Device_Template_Group, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Guest_Block_Device_Template_Group", "getFirstChild", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve A flag indicating if this is a flex image.
 func (r Virtual_Guest_Block_Device_Template_Group) GetFlexImageFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Guest_Block_Device_Template_Group", "getFlexImageFlag", nil, &r.Options, &resp)
@@ -2513,6 +2375,12 @@ func (r Virtual_Guest_Block_Device_Template_Group) GetImageTypeKeyName() (resp s
 	return
 }
 
+// Retrieve A flag indicating if this is a next generation image.
+func (r Virtual_Guest_Block_Device_Template_Group) GetNextGenFlag() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Guest_Block_Device_Template_Group", "getNextGenFlag", nil, &r.Options, &resp)
+	return
+}
+
 // no documentation yet
 func (r Virtual_Guest_Block_Device_Template_Group) GetObject() (resp datatypes.Virtual_Guest_Block_Device_Template_Group, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Guest_Block_Device_Template_Group", "getObject", nil, &r.Options, &resp)
@@ -2534,6 +2402,27 @@ func (r Virtual_Guest_Block_Device_Template_Group) GetPublicCustomerOwnedImages(
 // This method gets all public image templates that the user is allowed to see.
 func (r Virtual_Guest_Block_Device_Template_Group) GetPublicImages() (resp []datatypes.Virtual_Guest_Block_Device_Template_Group, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Guest_Block_Device_Template_Group", "getPublicImages", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve
+func (r Virtual_Guest_Block_Device_Template_Group) GetRegion() (resp datatypes.Network_Service_Resource, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Guest_Block_Device_Template_Group", "getRegion", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve
+func (r Virtual_Guest_Block_Device_Template_Group) GetRegions() (resp []datatypes.Network_Service_Resource, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Guest_Block_Device_Template_Group", "getRegions", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
+func (r Virtual_Guest_Block_Device_Template_Group) GetRiasAccount(secret *string) (resp datatypes.Container_Virtual_Guest_Block_Device_Template_Group_RiasAccount, err error) {
+	params := []interface{}{
+		secret,
+	}
+	err = r.Session.DoRequest("SoftLayer_Virtual_Guest_Block_Device_Template_Group", "getRiasAccount", params, &r.Options, &resp)
 	return
 }
 
@@ -2570,6 +2459,12 @@ func (r Virtual_Guest_Block_Device_Template_Group) GetSupportedBootModes() (resp
 // Retrieve The tags associated with this image template group.
 func (r Virtual_Guest_Block_Device_Template_Group) GetTagReferences() (resp []datatypes.Tag_Reference, err error) {
 	err = r.Session.DoRequest("SoftLayer_Virtual_Guest_Block_Device_Template_Group", "getTagReferences", nil, &r.Options, &resp)
+	return
+}
+
+// This method allows you to grab the first data center that the image(s) reside on so we can pull it from there.
+func (r Virtual_Guest_Block_Device_Template_Group) GetTemplateDataCenterName() (resp string, err error) {
+	err = r.Session.DoRequest("SoftLayer_Virtual_Guest_Block_Device_Template_Group", "getTemplateDataCenterName", nil, &r.Options, &resp)
 	return
 }
 

@@ -383,6 +383,12 @@ func (r Ticket) GetAwaitingUserResponseFlag() (resp bool, err error) {
 	return
 }
 
+// Retrieve A ticket's associated BNPP compliant record
+func (r Ticket) GetBnppSupportedFlag() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Ticket", "getBnppSupportedFlag", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve A service cancellation request.
 func (r Ticket) GetCancellationRequest() (resp datatypes.Billing_Item_Cancellation_Request, err error) {
 	err = r.Session.DoRequest("SoftLayer_Ticket", "getCancellationRequest", nil, &r.Options, &resp)
@@ -413,6 +419,12 @@ func (r Ticket) GetFirstUpdate() (resp datatypes.Ticket_Update, err error) {
 	return
 }
 
+// Retrieve A ticket's associated FSBOA compliant record
+func (r Ticket) GetFsboaSupportedFlag() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Ticket", "getFsboaSupportedFlag", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve The SoftLayer department that a ticket is assigned to.
 func (r Ticket) GetGroup() (resp datatypes.Ticket_Group, err error) {
 	err = r.Session.DoRequest("SoftLayer_Ticket", "getGroup", nil, &r.Options, &resp)
@@ -440,12 +452,6 @@ func (r Ticket) GetLastEditor() (resp datatypes.User_Interface, err error) {
 // Retrieve The last update made to a ticket.
 func (r Ticket) GetLastUpdate() (resp datatypes.Ticket_Update, err error) {
 	err = r.Session.DoRequest("SoftLayer_Ticket", "getLastUpdate", nil, &r.Options, &resp)
-	return
-}
-
-// Retrieve A timestamp of the last time the Ticket was viewed by the active user.
-func (r Ticket) GetLastViewedDate() (resp datatypes.Time, err error) {
-	err = r.Session.DoRequest("SoftLayer_Ticket", "getLastViewedDate", nil, &r.Options, &resp)
 	return
 }
 

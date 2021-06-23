@@ -104,7 +104,7 @@ func (r User_Customer) AddBulkHardwareAccess(hardwareIds []int) (resp bool, err 
 	return
 }
 
-// Add multiple permissions to a portal user's permission set. [[Permissions]] control which features in the SoftLayer customer portal and API a user may use. addBulkPortalPermission() does not attempt to add permissions already assigned to the user.
+// Add multiple permissions to a portal user's permission set. [[SoftLayer_User_Customer_CustomerPermission_Permission]] control which features in the SoftLayer customer portal and API a user may use. addBulkPortalPermission() does not attempt to add permissions already assigned to the user.
 //
 // Users can assign permissions to their child users, but not to themselves. An account's master has all portal permissions and can set permissions for any of the other users on their account.
 //
@@ -182,7 +182,7 @@ func (r User_Customer) AddNotificationSubscriber(notificationKeyName *string) (r
 	return
 }
 
-// Add a permission to a portal user's permission set. [[Permissions]] control which features in the SoftLayer customer portal and API a user may use. If the user already has the permission you're attempting to add then addPortalPermission() returns true.
+// Add a permission to a portal user's permission set. [[SoftLayer_User_Customer_CustomerPermission_Permission]] control which features in the SoftLayer customer portal and API a user may use. If the user already has the permission you're attempting to add then addPortalPermission() returns true.
 //
 // Users can assign permissions to their child users, but not to themselves. An account's master has all portal permissions and can set permissions for any of the other users on their account.
 //
@@ -222,7 +222,7 @@ func (r User_Customer) AddVirtualGuestAccess(virtualGuestId *int) (resp bool, er
 //
 // The new parent must be a user on the same account, and must not be a child of this user.  A user is not allowed to change their own parent.
 //
-// If the cascadeFlag is set to false, then an exception will be thrown if the new parent does not have all of the permissions that this user possesses.  If the cascadeFlag is set to true, then permissions will be removed from this user and the descendants of this user as necessary so that no children of the parent will have permissions that the parent does not possess.
+// If the cascadeFlag is set to false, then an exception will be thrown if the new parent does not have all of the permissions that this user possesses.  If the cascadeFlag is set to true, then permissions will be removed from this user and the descendants of this user as necessary so that no children of the parent will have permissions that the parent does not possess. However, setting the cascadeFlag to true will not remove the access all device permissions from this user. The customer portal will need to be used to remove these permissions.
 func (r User_Customer) AssignNewParentId(parentId *int, cascadePermissionsFlag *bool) (resp datatypes.User_Customer, err error) {
 	params := []interface{}{
 		parentId,
@@ -273,7 +273,13 @@ func (r User_Customer) CreateNotificationSubscriber(keyName *string, resourceTab
 	return
 }
 
-// Create a new user in the SoftLayer customer portal. createObject() creates a user's portal record and adds them into the SoftLayer community forums. It is not possible to set up SLL or PPTP enable flags during object creation. These flags are ignored during object creation. You will need to make a subsequent call to edit object in order to enable VPN access. An account's master user and sub-users who have the User Manage permission can add new users. createObject() creates users with a default permission set. After adding a user it may be helpful to set their permissions and hardware access.
+// Create a new user in the SoftLayer customer portal. It is not possible to set up SLL enable flags during object creation. These flags are ignored during object creation. You will need to make a subsequent call to edit object in order to enable VPN access.
+//
+// An account's master user and sub-users who have the User Manage permission can add new users.
+//
+// Users are created with a default permission set. After adding a user it may be helpful to set their permissions and device access.
+//
+// secondaryPasswordTimeoutDays will be set to the system configured default value if the attribute is not provided or the attribute is not a valid value.
 //
 // Note, neither password nor vpnPassword parameters are required.
 //
@@ -287,7 +293,9 @@ func (r User_Customer) CreateNotificationSubscriber(keyName *string, resourceTab
 //
 // vpnPassword If the vpnPassword is provided, then the user's vpnPassword will be set to the provided password.  When creating a vpn only user, the vpnPassword MUST be supplied.  If the vpnPassword is not provided, then the user will need to use the portal to edit their profile and set the vpnPassword.
 //
-// IBMid considerations When a SoftLayer account is linked to a Platform Services (PaaS, formerly Bluemix) account, AND the trait on the SoftLayer Account indicating IBMid authentication is set, then SoftLayer will delegate the creation of the user to PaaS.  The Platform Services "invite user" API call is asynchronous, and so no user object can be returned from this API call.  In this specific case, this API will throw a SoftLayer_Exception_User_Customer_DelegateIamIdInvitationToPaas exception, with text indicating that the call was at least accepted by Platform Services.  The Platform Services API is the preferred API for creating users based on IBMid in a linked account pair.  If you have automation using this API that depends on getting a synchronous response with a user object with an id, you should contact SoftLayer Support to have the "IBMid authentication" trait set to 0 on this account.  In that case, a normal SoftLayer user will be created (no IBMid association set up) and the createObject call will return synchronously as before.
+// IBMid considerations When a SoftLayer account is linked to a Platform Services (PaaS, formerly Bluemix) account, AND the trait on the SoftLayer Account indicating IBMid authentication is set, then SoftLayer will delegate the creation of an ACTIVE user to PaaS. This means that even though the request to create a new user in such an account may start at the IMS API, via this delegation we effectively turn it into a request that is driven by PaaS. In particular this means that any "invitation email" that comes to the user, will come from PaaS, not from IMS via IBMid.
+//
+// Users created in states other than ACTIVE (for example, a VPN_ONLY user) will be created directly in IMS without delegation (but note that no invitation is sent for a user created in any state other than ACTIVE).
 func (r User_Customer) CreateObject(templateObject *datatypes.User_Customer, password *string, vpnPassword *string) (resp datatypes.User_Customer, err error) {
 	params := []interface{}{
 		templateObject,
@@ -372,6 +380,12 @@ func (r User_Customer) GetAdditionalEmails() (resp []datatypes.User_Customer_Add
 }
 
 // no documentation yet
+func (r User_Customer) GetAgentImpersonationToken() (resp string, err error) {
+	err = r.Session.DoRequest("SoftLayer_User_Customer", "getAgentImpersonationToken", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
 func (r User_Customer) GetAllowedDedicatedHostIds() (resp []int, err error) {
 	err = r.Session.DoRequest("SoftLayer_User_Customer", "getAllowedDedicatedHostIds", nil, &r.Options, &resp)
 	return
@@ -422,7 +436,7 @@ func (r User_Customer) GetDedicatedHosts() (resp []datatypes.Virtual_DedicatedHo
 	return
 }
 
-// This API gets the default account for the OpenIdConnect identity that is linked to the current SoftLayer user identity. If there is no default present, the API returns null, except in the special case where we find one active user linked to the IBMid. In that case, we will set the link from the IBMid to that user as default, and return the account of which that user is a member. Invoke this only on IBMid-authenticated users.
+// This method is not applicable to legacy SoftLayer-authenticated users and can only be invoked for IBMid-authenticated users.
 func (r User_Customer) GetDefaultAccount(providerType *string) (resp datatypes.Account, err error) {
 	params := []interface{}{
 		providerType,
@@ -569,6 +583,15 @@ func (r User_Customer) GetParent() (resp datatypes.User_Customer, err error) {
 	return
 }
 
+// no documentation yet
+func (r User_Customer) GetPasswordRequirements(isVpn *bool) (resp datatypes.Container_User_Customer_PasswordSet, err error) {
+	params := []interface{}{
+		isVpn,
+	}
+	err = r.Session.DoRequest("SoftLayer_User_Customer", "getPasswordRequirements", params, &r.Options, &resp)
+	return
+}
+
 // Retrieve A portal user's permissions. These permissions control that user's access to functions within the SoftLayer customer portal and API.
 func (r User_Customer) GetPermissions() (resp []datatypes.User_Customer_CustomerPermission_Permission, err error) {
 	err = r.Session.DoRequest("SoftLayer_User_Customer", "getPermissions", nil, &r.Options, &resp)
@@ -608,7 +631,9 @@ func (r User_Customer) GetPreferences() (resp []datatypes.User_Preference, err e
 	return
 }
 
-// Retrieve the authentication requirements for an outstanding password set/reset request.  The password key provided to the user in an email generated by the [[SoftLayer_User_Customer::newUserPassword|newUserPassword]]. Password recovery keys are valid for 24 hours after they're generated.
+// Retrieve the authentication requirements for an outstanding password set/reset request.  The requirements returned in the same SoftLayer_Container_User_Customer_PasswordSet container which is provided as a parameter into this request.  The SoftLayer_Container_User_Customer_PasswordSet::authenticationMethods array will contain an entry for each authentication method required for the user.  See SoftLayer_Container_User_Customer_PasswordSet for more details.
+//
+// If the user has required authentication methods, then authentication information will be supplied to the SoftLayer_User_Customer::processPasswordSetRequest method within this same SoftLayer_Container_User_Customer_PasswordSet container.  All existing information in the container must continue to exist in the container to complete the password set/reset process.
 func (r User_Customer) GetRequirementsForPasswordSet(passwordSet *datatypes.Container_User_Customer_PasswordSet) (resp datatypes.Container_User_Customer_PasswordSet, err error) {
 	params := []interface{}{
 		passwordSet,
@@ -623,7 +648,7 @@ func (r User_Customer) GetRoles() (resp []datatypes.User_Permission_Role, err er
 	return
 }
 
-// Retrieve
+// Retrieve [DEPRECATED]
 func (r User_Customer) GetSalesforceUserLink() (resp datatypes.User_Customer_Link, err error) {
 	err = r.Session.DoRequest("SoftLayer_User_Customer", "getSalesforceUserLink", nil, &r.Options, &resp)
 	return
@@ -701,7 +726,9 @@ func (r User_Customer) GetUnsuccessfulLogins() (resp []datatypes.User_Customer_A
 	return
 }
 
-// Retrieve a user object using a password token. When a new user is created or when a user has requested a password change using initiatePortalPasswordChange, they will have received an email that contains a url with a token.  That token is used as the parameter for getUserIdForPasswordSet.
+// Retrieve a user id using a password token provided to the user in an email generated by the SoftLayer_User_Customer::initiatePortalPasswordChange request. Password recovery keys are valid for 24 hours after they're generated.
+//
+// When a new user is created or when a user has requested a password change using initiatePortalPasswordChange, they will have received an email that contains a url with a token.  That token is used as the parameter for getUserIdForPasswordSet.  Once the user id is known, then the SoftLayer_User_Customer object can be retrieved which is necessary to complete the process to set or reset a user's password.
 func (r User_Customer) GetUserIdForPasswordSet(key *string) (resp int, err error) {
 	params := []interface{}{
 		key,
@@ -765,7 +792,7 @@ func (r User_Customer) InitiateExternalAuthentication(authenticationContainer *d
 //
 // If this is a new master user who has never logged into the portal, then password reset will be initiated. Once a master user has logged into the portal, they must setup their security questions prior to logging out because master users are required to answer a security question during the password reset process.  Should a master user not have security questions defined and not remember their password in order to define the security questions, then they will need to contact support at live chat or Revenue Services for assistance.
 //
-// Due to security reasons, the number reset requests per username are limited within a undisclosed timeframe.
+// Due to security reasons, the number of reset requests per username are limited within a undisclosed timeframe.
 func (r User_Customer) InitiatePortalPasswordChange(username *string) (resp bool, err error) {
 	params := []interface{}{
 		username,
@@ -799,18 +826,6 @@ func (r User_Customer) IsMasterUser() (resp bool, err error) {
 	return
 }
 
-// This method is deprecated! SoftLayer Community Forums no longer exist, therefore, any password verified will return false. In the future, this method will be completely removed.
-//
-// Determine if a string is the given user's login password to the SoftLayer community forums.
-func (r User_Customer) IsValidForumPassword(password *string) (err error) {
-	var resp datatypes.Void
-	params := []interface{}{
-		password,
-	}
-	err = r.Session.DoRequest("SoftLayer_User_Customer", "isValidForumPassword", params, &r.Options, &resp)
-	return
-}
-
 // Determine if a string is the given user's login password to the SoftLayer customer portal.
 func (r User_Customer) IsValidPortalPassword(password *string) (resp bool, err error) {
 	params := []interface{}{
@@ -829,7 +844,9 @@ func (r User_Customer) PerformExternalAuthentication(authenticationContainer *da
 	return
 }
 
-// Set the password for a user who has an outstanding password request. A user with an outstanding password request will have an unused and unexpired password key.  The password key is part of the url provided to the user in the email sent to the user with information on how to set their password.  The email was generated by the [[SoftLayer_User_Customer::initiatePortalPasswordRequest|initiatePortalPasswordRequest]] method. Password recovery keys are valid for 24 hours after they're generated.
+// Set the password for a user who has an outstanding password request. A user with an outstanding password request will have an unused and unexpired password key.  The password key is part of the url provided to the user in the email sent to the user with information on how to set their password.  The email was generated by the SoftLayer_User_Customer::initiatePortalPasswordRequest request. Password recovery keys are valid for 24 hours after they're generated.
+//
+// If the user has required authentication methods as specified by in the SoftLayer_Container_User_Customer_PasswordSet container returned from the SoftLayer_User_Customer::getRequirementsForPasswordSet request, then additional requests must be made to processPasswordSetRequest to authenticate the user before changing the password.  First, if the user has security questions set on their profile, they will be required to answer one of their questions correctly. Next, if the user has Verisign, Google Authentication, or Phone Factor on their account, they must authenticate according to the two-factor provider.  All of this authentication is done using the SoftLayer_Container_User_Customer_PasswordSet container.  If the user has Phone Factor authentication, additional requests to SoftLayer_User_Customer::checkPhoneFactorAuthenticationForPasswordSet is required until a response other than Awaiting Response is received.
 //
 // User portal passwords must match the following restrictions. Portal passwords must...
 // * ...be over eight characters long.
@@ -839,7 +856,6 @@ func (r User_Customer) PerformExternalAuthentication(authenticationContainer *da
 // * ...contain at least one number
 // * ...contain one of the special characters _ - | @ . , ? / ! ~ # $ % ^ & * ( ) { } [ ] \ + =
 // * ...not match your username
-// * ...not match your forum password
 func (r User_Customer) ProcessPasswordSetRequest(passwordSet *datatypes.Container_User_Customer_PasswordSet, authenticationContainer *datatypes.Container_User_Customer_External_Binding) (resp bool, err error) {
 	params := []interface{}{
 		passwordSet,
@@ -908,7 +924,7 @@ func (r User_Customer) RemoveBulkHardwareAccess(hardwareIds []int) (resp bool, e
 	return
 }
 
-// Remove (revoke) multiple permissions from a portal user's permission set. [[Permissions]] control which features in the SoftLayer customer portal and API a user may use. Removing a user's permission will affect that user's portal and API access. removePortalPermission() does not attempt to remove permissions that are not assigned to the user.
+// Remove (revoke) multiple permissions from a portal user's permission set. [[SoftLayer_User_Customer_CustomerPermission_Permission]] control which features in the SoftLayer customer portal and API a user may use. Removing a user's permission will affect that user's portal and API access. removePortalPermission() does not attempt to remove permissions that are not assigned to the user.
 //
 // Users can grant or revoke permissions to their child users, but not to themselves. An account's master has all portal permissions and can grant permissions for any of the other users on their account.
 //
@@ -978,7 +994,7 @@ func (r User_Customer) RemoveHardwareAccess(hardwareId *int) (resp bool, err err
 	return
 }
 
-// Remove (revoke) a permission from a portal user's permission set. [[Permissions]] control which features in the SoftLayer customer portal and API a user may use. Removing a user's permission will affect that user's portal and API access. If the user does not have the permission you're attempting to remove then removePortalPermission() returns true.
+// Remove (revoke) a permission from a portal user's permission set. [[SoftLayer_User_Customer_CustomerPermission_Permission]] control which features in the SoftLayer customer portal and API a user may use. Removing a user's permission will affect that user's portal and API access. If the user does not have the permission you're attempting to remove then removePortalPermission() returns true.
 //
 // Users can assign permissions to their child users, but not to themselves. An account's master has all portal permissions and can set permissions for any of the other users on their account.
 //
@@ -1058,6 +1074,17 @@ func (r User_Customer) SamlLogout(samlResponse *string) (err error) {
 	return
 }
 
+// no documentation yet
+func (r User_Customer) SelfPasswordChange(currentPassword *string, newPassword *string) (err error) {
+	var resp datatypes.Void
+	params := []interface{}{
+		currentPassword,
+		newPassword,
+	}
+	err = r.Session.DoRequest("SoftLayer_User_Customer", "selfPasswordChange", params, &r.Options, &resp)
+	return
+}
+
 // An OpenIdConnect identity, for example an IBMid, can be linked or mapped to one or more individual SoftLayer users, but no more than one per account. If an OpenIdConnect identity is mapped to multiple accounts in this manner, one such account should be identified as the default account for that identity. Invoke this only on IBMid-authenticated users.
 func (r User_Customer) SetDefaultAccount(providerType *string, accountId *int) (resp datatypes.Account, err error) {
 	params := []interface{}{
@@ -1074,27 +1101,6 @@ func (r User_Customer) SilentlyMigrateUserOpenIdConnect(providerType *string) (r
 		providerType,
 	}
 	err = r.Session.DoRequest("SoftLayer_User_Customer", "silentlyMigrateUserOpenIdConnect", params, &r.Options, &resp)
-	return
-}
-
-// This method is deprecated! SoftLayer Community Forums no longer exist, therefore, this method will return false. In the future, this method will be completely removed.
-//
-// Update a user's password on the SoftLayer community forums. As with portal passwords, user forum passwords must match the following restrictions. Forum passwords must...
-// * ...be over eight characters long.
-// * ...be under twenty characters long.
-// * ...contain at least one uppercase letter
-// * ...contain at least one lowercase letter
-// * ...contain at least one number
-// * ...contain one of the special characters _ - | @ . , ? / ! ~ # $ % ^ & * ( ) { } [ ] \ + =
-// * ...not match your username
-// * ...not match your portal password
-// Finally, users can only update their own password.
-func (r User_Customer) UpdateForumPassword(password *string) (err error) {
-	var resp datatypes.Void
-	params := []interface{}{
-		password,
-	}
-	err = r.Session.DoRequest("SoftLayer_User_Customer", "updateForumPassword", params, &r.Options, &resp)
 	return
 }
 
@@ -1137,7 +1143,6 @@ func (r User_Customer) UpdateSubscriberDeliveryMethod(notificationKeyName *strin
 // * ...contain at least one number
 // * ...contain one of the special characters _ - | @ . , ? / ! ~ # $ % ^ & * ( ) { } [ ] \ =
 // * ...not match your username
-// * ...not match your forum password
 // Finally, users can only update their own VPN password. An account's master user can update any of their account users' VPN passwords.
 func (r User_Customer) UpdateVpnPassword(password *string) (resp bool, err error) {
 	params := []interface{}{
@@ -2343,7 +2348,7 @@ func (r User_Customer_Notification_Hardware) GetUser() (resp datatypes.User_Cust
 	return
 }
 
-// The SoftLayer_User_Customer_Notification_Virtual_Guest object stores links between customers and the virtual guests they wish to monitor.  This link is not enough, the user must be sure to also create SoftLayer_Network_Monitor_Version1_Query_Host instance with the response action set to "notify users" in order for the users linked to that hardware object to be notified on failure.
+// The SoftLayer_User_Customer_Notification_Virtual_Guest object stores links between customers and the virtual guests they wish to monitor.  This link is not enough, the user must be sure to also create SoftLayer_Network_Monitor_Version1_Query_Host instance with the response action set to "notify users" in order for the users linked to that Virtual Guest object to be notified on failure.
 type User_Customer_Notification_Virtual_Guest struct {
 	Session *session.Session
 	Options sl.Options
@@ -2410,7 +2415,7 @@ func (r User_Customer_Notification_Virtual_Guest) DeleteObjects(templateObjects 
 	return
 }
 
-// This method returns all SoftLayer_User_Customer_Notification_Virtual_Guest objects associated with the passed in ID as long as that hardware ID is owned by the current user's account.
+// This method returns all SoftLayer_User_Customer_Notification_Virtual_Guest objects associated with the passed in ID as long as that Virtual Guest ID is owned by the current user's account.
 //
 // This behavior can also be accomplished by simply tapping monitoringUserNotification on the Virtual_Guest object.
 func (r User_Customer_Notification_Virtual_Guest) FindByGuestId(id *int) (resp []datatypes.User_Customer_Notification_Virtual_Guest, err error) {
@@ -2526,7 +2531,7 @@ func (r User_Customer_OpenIdConnect) AddBulkHardwareAccess(hardwareIds []int) (r
 	return
 }
 
-// Add multiple permissions to a portal user's permission set. [[Permissions]] control which features in the SoftLayer customer portal and API a user may use. addBulkPortalPermission() does not attempt to add permissions already assigned to the user.
+// Add multiple permissions to a portal user's permission set. [[SoftLayer_User_Customer_CustomerPermission_Permission]] control which features in the SoftLayer customer portal and API a user may use. addBulkPortalPermission() does not attempt to add permissions already assigned to the user.
 //
 // Users can assign permissions to their child users, but not to themselves. An account's master has all portal permissions and can set permissions for any of the other users on their account.
 //
@@ -2604,7 +2609,7 @@ func (r User_Customer_OpenIdConnect) AddNotificationSubscriber(notificationKeyNa
 	return
 }
 
-// Add a permission to a portal user's permission set. [[Permissions]] control which features in the SoftLayer customer portal and API a user may use. If the user already has the permission you're attempting to add then addPortalPermission() returns true.
+// Add a permission to a portal user's permission set. [[SoftLayer_User_Customer_CustomerPermission_Permission]] control which features in the SoftLayer customer portal and API a user may use. If the user already has the permission you're attempting to add then addPortalPermission() returns true.
 //
 // Users can assign permissions to their child users, but not to themselves. An account's master has all portal permissions and can set permissions for any of the other users on their account.
 //
@@ -2644,7 +2649,7 @@ func (r User_Customer_OpenIdConnect) AddVirtualGuestAccess(virtualGuestId *int) 
 //
 // The new parent must be a user on the same account, and must not be a child of this user.  A user is not allowed to change their own parent.
 //
-// If the cascadeFlag is set to false, then an exception will be thrown if the new parent does not have all of the permissions that this user possesses.  If the cascadeFlag is set to true, then permissions will be removed from this user and the descendants of this user as necessary so that no children of the parent will have permissions that the parent does not possess.
+// If the cascadeFlag is set to false, then an exception will be thrown if the new parent does not have all of the permissions that this user possesses.  If the cascadeFlag is set to true, then permissions will be removed from this user and the descendants of this user as necessary so that no children of the parent will have permissions that the parent does not possess. However, setting the cascadeFlag to true will not remove the access all device permissions from this user. The customer portal will need to be used to remove these permissions.
 func (r User_Customer_OpenIdConnect) AssignNewParentId(parentId *int, cascadePermissionsFlag *bool) (resp datatypes.User_Customer, err error) {
 	params := []interface{}{
 		parentId,
@@ -2707,7 +2712,13 @@ func (r User_Customer_OpenIdConnect) CreateNotificationSubscriber(keyName *strin
 	return
 }
 
-// Create a new user in the SoftLayer customer portal. createObject() creates a user's portal record and adds them into the SoftLayer community forums. It is not possible to set up SLL or PPTP enable flags during object creation. These flags are ignored during object creation. You will need to make a subsequent call to edit object in order to enable VPN access. An account's master user and sub-users who have the User Manage permission can add new users. createObject() creates users with a default permission set. After adding a user it may be helpful to set their permissions and hardware access.
+// Create a new user in the SoftLayer customer portal. It is not possible to set up SLL enable flags during object creation. These flags are ignored during object creation. You will need to make a subsequent call to edit object in order to enable VPN access.
+//
+// An account's master user and sub-users who have the User Manage permission can add new users.
+//
+// Users are created with a default permission set. After adding a user it may be helpful to set their permissions and device access.
+//
+// secondaryPasswordTimeoutDays will be set to the system configured default value if the attribute is not provided or the attribute is not a valid value.
 //
 // Note, neither password nor vpnPassword parameters are required.
 //
@@ -2721,7 +2732,9 @@ func (r User_Customer_OpenIdConnect) CreateNotificationSubscriber(keyName *strin
 //
 // vpnPassword If the vpnPassword is provided, then the user's vpnPassword will be set to the provided password.  When creating a vpn only user, the vpnPassword MUST be supplied.  If the vpnPassword is not provided, then the user will need to use the portal to edit their profile and set the vpnPassword.
 //
-// IBMid considerations When a SoftLayer account is linked to a Platform Services (PaaS, formerly Bluemix) account, AND the trait on the SoftLayer Account indicating IBMid authentication is set, then SoftLayer will delegate the creation of the user to PaaS.  The Platform Services "invite user" API call is asynchronous, and so no user object can be returned from this API call.  In this specific case, this API will throw a SoftLayer_Exception_User_Customer_DelegateIamIdInvitationToPaas exception, with text indicating that the call was at least accepted by Platform Services.  The Platform Services API is the preferred API for creating users based on IBMid in a linked account pair.  If you have automation using this API that depends on getting a synchronous response with a user object with an id, you should contact SoftLayer Support to have the "IBMid authentication" trait set to 0 on this account.  In that case, a normal SoftLayer user will be created (no IBMid association set up) and the createObject call will return synchronously as before.
+// IBMid considerations When a SoftLayer account is linked to a Platform Services (PaaS, formerly Bluemix) account, AND the trait on the SoftLayer Account indicating IBMid authentication is set, then SoftLayer will delegate the creation of an ACTIVE user to PaaS. This means that even though the request to create a new user in such an account may start at the IMS API, via this delegation we effectively turn it into a request that is driven by PaaS. In particular this means that any "invitation email" that comes to the user, will come from PaaS, not from IMS via IBMid.
+//
+// Users created in states other than ACTIVE (for example, a VPN_ONLY user) will be created directly in IMS without delegation (but note that no invitation is sent for a user created in any state other than ACTIVE).
 func (r User_Customer_OpenIdConnect) CreateObject(templateObject *datatypes.User_Customer_OpenIdConnect, password *string, vpnPassword *string) (resp datatypes.User_Customer_OpenIdConnect, err error) {
 	params := []interface{}{
 		templateObject,
@@ -2733,7 +2746,8 @@ func (r User_Customer_OpenIdConnect) CreateObject(templateObject *datatypes.User
 }
 
 // no documentation yet
-func (r User_Customer_OpenIdConnect) CreateOpenIdConnectUserAndCompleteInvitation(providerType *string, user *datatypes.User_Customer, password *string, registrationCode *string) (resp string, err error) {
+func (r User_Customer_OpenIdConnect) CreateOpenIdConnectUserAndCompleteInvitation(providerType *string, user *datatypes.User_Customer, password *string, registrationCode *string) (err error) {
+	var resp datatypes.Void
 	params := []interface{}{
 		providerType,
 		user,
@@ -2829,6 +2843,12 @@ func (r User_Customer_OpenIdConnect) GetAdditionalEmails() (resp []datatypes.Use
 }
 
 // no documentation yet
+func (r User_Customer_OpenIdConnect) GetAgentImpersonationToken() (resp string, err error) {
+	err = r.Session.DoRequest("SoftLayer_User_Customer_OpenIdConnect", "getAgentImpersonationToken", nil, &r.Options, &resp)
+	return
+}
+
+// no documentation yet
 func (r User_Customer_OpenIdConnect) GetAllowedDedicatedHostIds() (resp []int, err error) {
 	err = r.Session.DoRequest("SoftLayer_User_Customer_OpenIdConnect", "getAllowedDedicatedHostIds", nil, &r.Options, &resp)
 	return
@@ -2879,7 +2899,7 @@ func (r User_Customer_OpenIdConnect) GetDedicatedHosts() (resp []datatypes.Virtu
 	return
 }
 
-// This API gets the default account for the OpenIdConnect identity that is linked to the current SoftLayer user identity. If there is no default present, the API returns null, except in the special case where we find one active user linked to the IAMid. In that case, we will set the link from the IAMid to that user as default, and return the account of which that user is a member. Invoke this only on IAMid-authenticated users.
+// This API gets the account associated with the default user for the OpenIdConnect identity that is linked to the current active SoftLayer user identity. When a single active user is found for that IAMid, it becomes the default user and the associated account is returned. When multiple default users are found only the first is preserved and the associated account is returned (remaining defaults see their default flag unset). If the current SoftLayer user identity isn't linked to any OpenIdConnect identity, or if none of the linked users were found as defaults, the API returns null. Invoke this only on IAMid-authenticated users.
 func (r User_Customer_OpenIdConnect) GetDefaultAccount(providerType *string) (resp datatypes.Account, err error) {
 	params := []interface{}{
 		providerType,
@@ -3046,6 +3066,15 @@ func (r User_Customer_OpenIdConnect) GetParent() (resp datatypes.User_Customer, 
 	return
 }
 
+// no documentation yet
+func (r User_Customer_OpenIdConnect) GetPasswordRequirements(isVpn *bool) (resp datatypes.Container_User_Customer_PasswordSet, err error) {
+	params := []interface{}{
+		isVpn,
+	}
+	err = r.Session.DoRequest("SoftLayer_User_Customer_OpenIdConnect", "getPasswordRequirements", params, &r.Options, &resp)
+	return
+}
+
 // Retrieve A portal user's permissions. These permissions control that user's access to functions within the SoftLayer customer portal and API.
 func (r User_Customer_OpenIdConnect) GetPermissions() (resp []datatypes.User_Customer_CustomerPermission_Permission, err error) {
 	err = r.Session.DoRequest("SoftLayer_User_Customer_OpenIdConnect", "getPermissions", nil, &r.Options, &resp)
@@ -3098,7 +3127,9 @@ func (r User_Customer_OpenIdConnect) GetPreferences() (resp []datatypes.User_Pre
 	return
 }
 
-// Retrieve the authentication requirements for an outstanding password set/reset request.  The password key provided to the user in an email generated by the [[SoftLayer_User_Customer::newUserPassword|newUserPassword]]. Password recovery keys are valid for 24 hours after they're generated.
+// Retrieve the authentication requirements for an outstanding password set/reset request.  The requirements returned in the same SoftLayer_Container_User_Customer_PasswordSet container which is provided as a parameter into this request.  The SoftLayer_Container_User_Customer_PasswordSet::authenticationMethods array will contain an entry for each authentication method required for the user.  See SoftLayer_Container_User_Customer_PasswordSet for more details.
+//
+// If the user has required authentication methods, then authentication information will be supplied to the SoftLayer_User_Customer::processPasswordSetRequest method within this same SoftLayer_Container_User_Customer_PasswordSet container.  All existing information in the container must continue to exist in the container to complete the password set/reset process.
 func (r User_Customer_OpenIdConnect) GetRequirementsForPasswordSet(passwordSet *datatypes.Container_User_Customer_PasswordSet) (resp datatypes.Container_User_Customer_PasswordSet, err error) {
 	params := []interface{}{
 		passwordSet,
@@ -3113,7 +3144,7 @@ func (r User_Customer_OpenIdConnect) GetRoles() (resp []datatypes.User_Permissio
 	return
 }
 
-// Retrieve
+// Retrieve [DEPRECATED]
 func (r User_Customer_OpenIdConnect) GetSalesforceUserLink() (resp datatypes.User_Customer_Link, err error) {
 	err = r.Session.DoRequest("SoftLayer_User_Customer_OpenIdConnect", "getSalesforceUserLink", nil, &r.Options, &resp)
 	return
@@ -3202,7 +3233,9 @@ func (r User_Customer_OpenIdConnect) GetUserForUnifiedInvitation(openIdConnectUs
 	return
 }
 
-// Retrieve a user object using a password token. When a new user is created or when a user has requested a password change using initiatePortalPasswordChange, they will have received an email that contains a url with a token.  That token is used as the parameter for getUserIdForPasswordSet.
+// Retrieve a user id using a password token provided to the user in an email generated by the SoftLayer_User_Customer::initiatePortalPasswordChange request. Password recovery keys are valid for 24 hours after they're generated.
+//
+// When a new user is created or when a user has requested a password change using initiatePortalPasswordChange, they will have received an email that contains a url with a token.  That token is used as the parameter for getUserIdForPasswordSet.  Once the user id is known, then the SoftLayer_User_Customer object can be retrieved which is necessary to complete the process to set or reset a user's password.
 func (r User_Customer_OpenIdConnect) GetUserIdForPasswordSet(key *string) (resp int, err error) {
 	params := []interface{}{
 		key,
@@ -3266,7 +3299,7 @@ func (r User_Customer_OpenIdConnect) InitiateExternalAuthentication(authenticati
 //
 // If this is a new master user who has never logged into the portal, then password reset will be initiated. Once a master user has logged into the portal, they must setup their security questions prior to logging out because master users are required to answer a security question during the password reset process.  Should a master user not have security questions defined and not remember their password in order to define the security questions, then they will need to contact support at live chat or Revenue Services for assistance.
 //
-// Due to security reasons, the number reset requests per username are limited within a undisclosed timeframe.
+// Due to security reasons, the number of reset requests per username are limited within a undisclosed timeframe.
 func (r User_Customer_OpenIdConnect) InitiatePortalPasswordChange(username *string) (resp bool, err error) {
 	params := []interface{}{
 		username,
@@ -3300,18 +3333,6 @@ func (r User_Customer_OpenIdConnect) IsMasterUser() (resp bool, err error) {
 	return
 }
 
-// This method is deprecated! SoftLayer Community Forums no longer exist, therefore, any password verified will return false. In the future, this method will be completely removed.
-//
-// Determine if a string is the given user's login password to the SoftLayer community forums.
-func (r User_Customer_OpenIdConnect) IsValidForumPassword(password *string) (err error) {
-	var resp datatypes.Void
-	params := []interface{}{
-		password,
-	}
-	err = r.Session.DoRequest("SoftLayer_User_Customer_OpenIdConnect", "isValidForumPassword", params, &r.Options, &resp)
-	return
-}
-
 // Determine if a string is the given user's login password to the SoftLayer customer portal.
 func (r User_Customer_OpenIdConnect) IsValidPortalPassword(password *string) (resp bool, err error) {
 	params := []interface{}{
@@ -3330,7 +3351,9 @@ func (r User_Customer_OpenIdConnect) PerformExternalAuthentication(authenticatio
 	return
 }
 
-// Set the password for a user who has an outstanding password request. A user with an outstanding password request will have an unused and unexpired password key.  The password key is part of the url provided to the user in the email sent to the user with information on how to set their password.  The email was generated by the [[SoftLayer_User_Customer::initiatePortalPasswordRequest|initiatePortalPasswordRequest]] method. Password recovery keys are valid for 24 hours after they're generated.
+// Set the password for a user who has an outstanding password request. A user with an outstanding password request will have an unused and unexpired password key.  The password key is part of the url provided to the user in the email sent to the user with information on how to set their password.  The email was generated by the SoftLayer_User_Customer::initiatePortalPasswordRequest request. Password recovery keys are valid for 24 hours after they're generated.
+//
+// If the user has required authentication methods as specified by in the SoftLayer_Container_User_Customer_PasswordSet container returned from the SoftLayer_User_Customer::getRequirementsForPasswordSet request, then additional requests must be made to processPasswordSetRequest to authenticate the user before changing the password.  First, if the user has security questions set on their profile, they will be required to answer one of their questions correctly. Next, if the user has Verisign, Google Authentication, or Phone Factor on their account, they must authenticate according to the two-factor provider.  All of this authentication is done using the SoftLayer_Container_User_Customer_PasswordSet container.  If the user has Phone Factor authentication, additional requests to SoftLayer_User_Customer::checkPhoneFactorAuthenticationForPasswordSet is required until a response other than Awaiting Response is received.
 //
 // User portal passwords must match the following restrictions. Portal passwords must...
 // * ...be over eight characters long.
@@ -3340,7 +3363,6 @@ func (r User_Customer_OpenIdConnect) PerformExternalAuthentication(authenticatio
 // * ...contain at least one number
 // * ...contain one of the special characters _ - | @ . , ? / ! ~ # $ % ^ & * ( ) { } [ ] \ + =
 // * ...not match your username
-// * ...not match your forum password
 func (r User_Customer_OpenIdConnect) ProcessPasswordSetRequest(passwordSet *datatypes.Container_User_Customer_PasswordSet, authenticationContainer *datatypes.Container_User_Customer_External_Binding) (resp bool, err error) {
 	params := []interface{}{
 		passwordSet,
@@ -3409,7 +3431,7 @@ func (r User_Customer_OpenIdConnect) RemoveBulkHardwareAccess(hardwareIds []int)
 	return
 }
 
-// Remove (revoke) multiple permissions from a portal user's permission set. [[Permissions]] control which features in the SoftLayer customer portal and API a user may use. Removing a user's permission will affect that user's portal and API access. removePortalPermission() does not attempt to remove permissions that are not assigned to the user.
+// Remove (revoke) multiple permissions from a portal user's permission set. [[SoftLayer_User_Customer_CustomerPermission_Permission]] control which features in the SoftLayer customer portal and API a user may use. Removing a user's permission will affect that user's portal and API access. removePortalPermission() does not attempt to remove permissions that are not assigned to the user.
 //
 // Users can grant or revoke permissions to their child users, but not to themselves. An account's master has all portal permissions and can grant permissions for any of the other users on their account.
 //
@@ -3479,7 +3501,7 @@ func (r User_Customer_OpenIdConnect) RemoveHardwareAccess(hardwareId *int) (resp
 	return
 }
 
-// Remove (revoke) a permission from a portal user's permission set. [[Permissions]] control which features in the SoftLayer customer portal and API a user may use. Removing a user's permission will affect that user's portal and API access. If the user does not have the permission you're attempting to remove then removePortalPermission() returns true.
+// Remove (revoke) a permission from a portal user's permission set. [[SoftLayer_User_Customer_CustomerPermission_Permission]] control which features in the SoftLayer customer portal and API a user may use. Removing a user's permission will affect that user's portal and API access. If the user does not have the permission you're attempting to remove then removePortalPermission() returns true.
 //
 // Users can assign permissions to their child users, but not to themselves. An account's master has all portal permissions and can set permissions for any of the other users on their account.
 //
@@ -3559,6 +3581,17 @@ func (r User_Customer_OpenIdConnect) SamlLogout(samlResponse *string) (err error
 	return
 }
 
+// no documentation yet
+func (r User_Customer_OpenIdConnect) SelfPasswordChange(currentPassword *string, newPassword *string) (err error) {
+	var resp datatypes.Void
+	params := []interface{}{
+		currentPassword,
+		newPassword,
+	}
+	err = r.Session.DoRequest("SoftLayer_User_Customer_OpenIdConnect", "selfPasswordChange", params, &r.Options, &resp)
+	return
+}
+
 // An OpenIdConnect identity, for example an IAMid, can be linked or mapped to one or more individual SoftLayer users, but no more than one per account. If an OpenIdConnect identity is mapped to multiple accounts in this manner, one such account should be identified as the default account for that identity. Invoke this only on IBMid-authenticated users.
 func (r User_Customer_OpenIdConnect) SetDefaultAccount(providerType *string, accountId *int) (resp datatypes.Account, err error) {
 	params := []interface{}{
@@ -3575,27 +3608,6 @@ func (r User_Customer_OpenIdConnect) SilentlyMigrateUserOpenIdConnect(providerTy
 		providerType,
 	}
 	err = r.Session.DoRequest("SoftLayer_User_Customer_OpenIdConnect", "silentlyMigrateUserOpenIdConnect", params, &r.Options, &resp)
-	return
-}
-
-// This method is deprecated! SoftLayer Community Forums no longer exist, therefore, this method will return false. In the future, this method will be completely removed.
-//
-// Update a user's password on the SoftLayer community forums. As with portal passwords, user forum passwords must match the following restrictions. Forum passwords must...
-// * ...be over eight characters long.
-// * ...be under twenty characters long.
-// * ...contain at least one uppercase letter
-// * ...contain at least one lowercase letter
-// * ...contain at least one number
-// * ...contain one of the special characters _ - | @ . , ? / ! ~ # $ % ^ & * ( ) { } [ ] \ + =
-// * ...not match your username
-// * ...not match your portal password
-// Finally, users can only update their own password.
-func (r User_Customer_OpenIdConnect) UpdateForumPassword(password *string) (err error) {
-	var resp datatypes.Void
-	params := []interface{}{
-		password,
-	}
-	err = r.Session.DoRequest("SoftLayer_User_Customer_OpenIdConnect", "updateForumPassword", params, &r.Options, &resp)
 	return
 }
 
@@ -3638,7 +3650,6 @@ func (r User_Customer_OpenIdConnect) UpdateSubscriberDeliveryMethod(notification
 // * ...contain at least one number
 // * ...contain one of the special characters _ - | @ . , ? / ! ~ # $ % ^ & * ( ) { } [ ] \ =
 // * ...not match your username
-// * ...not match your forum password
 // Finally, users can only update their own VPN password. An account's master user can update any of their account users' VPN passwords.
 func (r User_Customer_OpenIdConnect) UpdateVpnPassword(password *string) (resp bool, err error) {
 	params := []interface{}{
@@ -4030,7 +4041,9 @@ func (r User_External_Binding_Vendor) GetObject() (resp datatypes.User_External_
 	return
 }
 
-// no documentation yet
+// The SoftLayer_User_Permission_Action data type contains local attributes to identify and describe the valid actions a customer user can perform within IMS.  This includes a name, key name, and description.  This data can not be modified by users of IMS.
+//
+// It also contains relational attributes that indicate which SoftLayer_User_Permission_Group's include the action.
 type User_Permission_Action struct {
 	Session *session.Session
 	Options sl.Options
@@ -4070,7 +4083,7 @@ func (r User_Permission_Action) Offset(offset int) User_Permission_Action {
 	return r
 }
 
-// no documentation yet
+// Object filters and result limits are enabled on this method.
 func (r User_Permission_Action) GetAllObjects() (resp []datatypes.User_Permission_Action, err error) {
 	err = r.Session.DoRequest("SoftLayer_User_Permission_Action", "getAllObjects", nil, &r.Options, &resp)
 	return
@@ -4082,7 +4095,9 @@ func (r User_Permission_Action) GetObject() (resp datatypes.User_Permission_Acti
 	return
 }
 
-// no documentation yet
+// The SoftLayer_User_Permission_Group data type contains local attributes to identify and describe the permission groups that have been created within IMS.  These includes a name, description, and account id.  Permission groups are defined specifically for a single [[SoftLayer_Account]].
+//
+// It also contains relational attributes that indicate what SoftLayer_User_Permission_Action objects belong to a particular group, and what SoftLayer_User_Permission_Role objects the group is linked.
 type User_Permission_Group struct {
 	Session *session.Session
 	Options sl.Options
@@ -4122,7 +4137,7 @@ func (r User_Permission_Group) Offset(offset int) User_Permission_Group {
 	return r
 }
 
-// no documentation yet
+// Assigns a SoftLayer_User_Permission_Action object to the group.
 func (r User_Permission_Group) AddAction(action *datatypes.User_Permission_Action) (err error) {
 	var resp datatypes.Void
 	params := []interface{}{
@@ -4132,7 +4147,7 @@ func (r User_Permission_Group) AddAction(action *datatypes.User_Permission_Actio
 	return
 }
 
-// no documentation yet
+// Assigns multiple SoftLayer_User_Permission_Action objects to the group.
 func (r User_Permission_Group) AddBulkActions(actions []datatypes.User_Permission_Action) (err error) {
 	var resp datatypes.Void
 	params := []interface{}{
@@ -4142,7 +4157,7 @@ func (r User_Permission_Group) AddBulkActions(actions []datatypes.User_Permissio
 	return
 }
 
-// no documentation yet
+// Links multiple SoftLayer_Hardware_Server, SoftLayer_Virtual_Guest, or SoftLayer_Virtual_DedicatedHost objects to the group. All objects must be of the same type.
 func (r User_Permission_Group) AddBulkResourceObjects(resourceObjects []datatypes.Entity, resourceTypeKeyName *string) (resp bool, err error) {
 	params := []interface{}{
 		resourceObjects,
@@ -4152,7 +4167,7 @@ func (r User_Permission_Group) AddBulkResourceObjects(resourceObjects []datatype
 	return
 }
 
-// no documentation yet
+// Links a SoftLayer_Hardware_Server, SoftLayer_Virtual_Guest, or SoftLayer_Virtual_DedicatedHost object to the group.
 func (r User_Permission_Group) AddResourceObject(resourceObject *datatypes.Entity, resourceTypeKeyName *string) (resp bool, err error) {
 	params := []interface{}{
 		resourceObject,
@@ -4162,7 +4177,7 @@ func (r User_Permission_Group) AddResourceObject(resourceObject *datatypes.Entit
 	return
 }
 
-// no documentation yet
+// Customer created permission groups must be of type NORMAL.  The SYSTEM type is reserved for internal use. The account id supplied in the template permission group must match account id of the user who is creating the permission group.  The user who is creating the permission group must have the permission to manage users.
 func (r User_Permission_Group) CreateObject(templateObject *datatypes.User_Permission_Group) (resp datatypes.User_Permission_Group, err error) {
 	params := []interface{}{
 		templateObject,
@@ -4171,13 +4186,13 @@ func (r User_Permission_Group) CreateObject(templateObject *datatypes.User_Permi
 	return
 }
 
-// no documentation yet
+// Customer users can only delete permission groups of type NORMAL.  The SYSTEM type is reserved for internal use. The user who is creating the permission group must have the permission to manage users.
 func (r User_Permission_Group) DeleteObject() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_User_Permission_Group", "deleteObject", nil, &r.Options, &resp)
 	return
 }
 
-// no documentation yet
+// Allows a user to modify the name and description of an existing customer permission group. Customer permission groups must be of type NORMAL.  The SYSTEM type is reserved for internal use. The account id supplied in the template permission group must match account id of the user who is creating the permission group.  The user who is creating the permission group must have the permission to manage users.
 func (r User_Permission_Group) EditObject(templateObject *datatypes.User_Permission_Group) (resp datatypes.User_Permission_Group, err error) {
 	params := []interface{}{
 		templateObject,
@@ -4216,7 +4231,7 @@ func (r User_Permission_Group) GetType() (resp datatypes.User_Permission_Group_T
 	return
 }
 
-// no documentation yet
+// Links a SoftLayer_User_Permission_Role object to the group.
 func (r User_Permission_Group) LinkRole(role *datatypes.User_Permission_Role) (err error) {
 	var resp datatypes.Void
 	params := []interface{}{
@@ -4226,7 +4241,7 @@ func (r User_Permission_Group) LinkRole(role *datatypes.User_Permission_Role) (e
 	return
 }
 
-// no documentation yet
+// Unassigns a SoftLayer_User_Permission_Action object from the group.
 func (r User_Permission_Group) RemoveAction(action *datatypes.User_Permission_Action) (err error) {
 	var resp datatypes.Void
 	params := []interface{}{
@@ -4236,7 +4251,7 @@ func (r User_Permission_Group) RemoveAction(action *datatypes.User_Permission_Ac
 	return
 }
 
-// no documentation yet
+// Unassigns multiple SoftLayer_User_Permission_Action objects from the group.
 func (r User_Permission_Group) RemoveBulkActions(actions []datatypes.User_Permission_Action) (err error) {
 	var resp datatypes.Void
 	params := []interface{}{
@@ -4246,7 +4261,7 @@ func (r User_Permission_Group) RemoveBulkActions(actions []datatypes.User_Permis
 	return
 }
 
-// no documentation yet
+// Unlinks multiple SoftLayer_Hardware_Server, SoftLayer_Virtual_Guest, or SoftLayer_Virtual_DedicatedHost objects from the group. All objects must be of the same type.
 func (r User_Permission_Group) RemoveBulkResourceObjects(resourceObjects []datatypes.Entity, resourceTypeKeyName *string) (resp bool, err error) {
 	params := []interface{}{
 		resourceObjects,
@@ -4256,7 +4271,7 @@ func (r User_Permission_Group) RemoveBulkResourceObjects(resourceObjects []datat
 	return
 }
 
-// no documentation yet
+// Unlinks a SoftLayer_Hardware_Server, SoftLayer_Virtual_Guest, or SoftLayer_Virtual_DedicatedHost object from the group.
 func (r User_Permission_Group) RemoveResourceObject(resourceObject *datatypes.Entity, resourceTypeKeyName *string) (resp bool, err error) {
 	params := []interface{}{
 		resourceObject,
@@ -4266,7 +4281,7 @@ func (r User_Permission_Group) RemoveResourceObject(resourceObject *datatypes.En
 	return
 }
 
-// no documentation yet
+// Removes a link from SoftLayer_User_Permission_Role object to the group.
 func (r User_Permission_Group) UnlinkRole(role *datatypes.User_Permission_Role) (err error) {
 	var resp datatypes.Void
 	params := []interface{}{
@@ -4276,7 +4291,9 @@ func (r User_Permission_Group) UnlinkRole(role *datatypes.User_Permission_Role) 
 	return
 }
 
-// no documentation yet
+// These are the attributes which describe a SoftLayer_User_Permission_Group_Type. All SoftLayer_User_Permission_Group objects must be linked to one of these types.
+//
+// For further information see: [[SoftLayer_User_Permission_Group]].
 type User_Permission_Group_Type struct {
 	Session *session.Session
 	Options sl.Options
@@ -4316,7 +4333,7 @@ func (r User_Permission_Group_Type) Offset(offset int) User_Permission_Group_Typ
 	return r
 }
 
-// Retrieve
+// Retrieve The groups that are of this type.
 func (r User_Permission_Group_Type) GetGroups() (resp []datatypes.User_Permission_Group, err error) {
 	err = r.Session.DoRequest("SoftLayer_User_Permission_Group_Type", "getGroups", nil, &r.Options, &resp)
 	return
@@ -4328,7 +4345,61 @@ func (r User_Permission_Group_Type) GetObject() (resp datatypes.User_Permission_
 	return
 }
 
+// These are the variables relating to SoftLayer_User_Permission_Resource_Type. Collectively they describe the types of resources which can be linked to [[SoftLayer_User_Permission_Group]].
+type User_Permission_Resource_Type struct {
+	Session *session.Session
+	Options sl.Options
+}
+
+// GetUserPermissionResourceTypeService returns an instance of the User_Permission_Resource_Type SoftLayer service
+func GetUserPermissionResourceTypeService(sess *session.Session) User_Permission_Resource_Type {
+	return User_Permission_Resource_Type{Session: sess}
+}
+
+func (r User_Permission_Resource_Type) Id(id int) User_Permission_Resource_Type {
+	r.Options.Id = &id
+	return r
+}
+
+func (r User_Permission_Resource_Type) Mask(mask string) User_Permission_Resource_Type {
+	if !strings.HasPrefix(mask, "mask[") && (strings.Contains(mask, "[") || strings.Contains(mask, ",")) {
+		mask = fmt.Sprintf("mask[%s]", mask)
+	}
+
+	r.Options.Mask = mask
+	return r
+}
+
+func (r User_Permission_Resource_Type) Filter(filter string) User_Permission_Resource_Type {
+	r.Options.Filter = filter
+	return r
+}
+
+func (r User_Permission_Resource_Type) Limit(limit int) User_Permission_Resource_Type {
+	r.Options.Limit = &limit
+	return r
+}
+
+func (r User_Permission_Resource_Type) Offset(offset int) User_Permission_Resource_Type {
+	r.Options.Offset = &offset
+	return r
+}
+
+// Retrieve an array of SoftLayer_User_Permission_Resource_Type objects.
+func (r User_Permission_Resource_Type) GetAllObjects() (resp []datatypes.User_Permission_Resource_Type, err error) {
+	err = r.Session.DoRequest("SoftLayer_User_Permission_Resource_Type", "getAllObjects", nil, &r.Options, &resp)
+	return
+}
+
 // no documentation yet
+func (r User_Permission_Resource_Type) GetObject() (resp datatypes.User_Permission_Resource_Type, err error) {
+	err = r.Session.DoRequest("SoftLayer_User_Permission_Resource_Type", "getObject", nil, &r.Options, &resp)
+	return
+}
+
+// The SoftLayer_User_Permission_Role data type contains local attributes to identify and describe the permission roles that have been created within IMS.  These includes a name, description, and account id.  Permission groups are defined specifically for a single [[SoftLayer_Account]].
+//
+// It also contains relational attributes that indicate what SoftLayer_User_Permission_Group objects are linked to a particular role, and the SoftLayer_User_Customer objects assigned to the role.
 type User_Permission_Role struct {
 	Session *session.Session
 	Options sl.Options
@@ -4368,7 +4439,7 @@ func (r User_Permission_Role) Offset(offset int) User_Permission_Role {
 	return r
 }
 
-// no documentation yet
+// Assigns a SoftLayer_User_Customer object to the role.
 func (r User_Permission_Role) AddUser(user *datatypes.User_Customer) (err error) {
 	var resp datatypes.Void
 	params := []interface{}{
@@ -4378,7 +4449,7 @@ func (r User_Permission_Role) AddUser(user *datatypes.User_Customer) (err error)
 	return
 }
 
-// no documentation yet
+// Customer created permission roles must set the systemFlag attribute to false.  The SYSTEM type is reserved for internal use. The account id supplied in the template permission group must match account id of the user who is creating the permission group.  The user who is creating the permission group must have the permission to manage users.
 func (r User_Permission_Role) CreateObject(templateObject *datatypes.User_Permission_Role) (resp datatypes.User_Permission_Role, err error) {
 	params := []interface{}{
 		templateObject,
@@ -4387,13 +4458,13 @@ func (r User_Permission_Role) CreateObject(templateObject *datatypes.User_Permis
 	return
 }
 
-// no documentation yet
+// Customer users can only delete permission roles with systemFlag set to false.  The SYSTEM type is reserved for internal use. The user who is creating the permission role must have the permission to manage users.
 func (r User_Permission_Role) DeleteObject() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_User_Permission_Role", "deleteObject", nil, &r.Options, &resp)
 	return
 }
 
-// no documentation yet
+// Allows a user to modify the name and description of an existing customer permission role. Customer permission roles must set the systemFlag attribute to false.  The SYSTEM type is reserved for internal use. The account id supplied in the template permission role must match account id of the user who is creating the permission role.  The user who is creating the permission role must have the permission to manage users.
 func (r User_Permission_Role) EditObject(templateObject *datatypes.User_Permission_Role) (resp datatypes.User_Permission_Role, err error) {
 	params := []interface{}{
 		templateObject,
@@ -4432,7 +4503,7 @@ func (r User_Permission_Role) GetUsers() (resp []datatypes.User_Customer, err er
 	return
 }
 
-// no documentation yet
+// Links a SoftLayer_User_Permission_Group object to the role.
 func (r User_Permission_Role) LinkGroup(group *datatypes.User_Permission_Group) (err error) {
 	var resp datatypes.Void
 	params := []interface{}{
@@ -4442,7 +4513,7 @@ func (r User_Permission_Role) LinkGroup(group *datatypes.User_Permission_Group) 
 	return
 }
 
-// no documentation yet
+// Unassigns a SoftLayer_User_Customer object from the role.
 func (r User_Permission_Role) RemoveUser(user *datatypes.User_Customer) (err error) {
 	var resp datatypes.Void
 	params := []interface{}{
@@ -4452,7 +4523,7 @@ func (r User_Permission_Role) RemoveUser(user *datatypes.User_Customer) (err err
 	return
 }
 
-// no documentation yet
+// Unlinks a SoftLayer_User_Permission_Group object to the role.
 func (r User_Permission_Role) UnlinkGroup(group *datatypes.User_Permission_Group) (err error) {
 	var resp datatypes.Void
 	params := []interface{}{

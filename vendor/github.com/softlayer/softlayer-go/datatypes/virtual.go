@@ -118,6 +118,12 @@ type Virtual_Disk_Image struct {
 	// A disk image's unique md5 checksum.
 	Checksum *string `json:"checksum,omitempty" xmlrpc:"checksum,omitempty"`
 
+	// A column to save the Algorithm being used to store the checksum.
+	ChecksumAlgorithm *string `json:"checksumAlgorithm,omitempty" xmlrpc:"checksumAlgorithm,omitempty"`
+
+	// Check if cloud-init is enabled.
+	CloudInitFlag *bool `json:"cloudInitFlag,omitempty" xmlrpc:"cloudInitFlag,omitempty"`
+
 	// A count of
 	CoalescedDiskImageCount *uint `json:"coalescedDiskImageCount,omitempty" xmlrpc:"coalescedDiskImageCount,omitempty"`
 
@@ -132,6 +138,12 @@ type Virtual_Disk_Image struct {
 
 	// A brief description of a virtual disk image.
 	Description *string `json:"description,omitempty" xmlrpc:"description,omitempty"`
+
+	// Return disk file extension
+	DiskFileExtension *string `json:"diskFileExtension,omitempty" xmlrpc:"diskFileExtension,omitempty"`
+
+	// no documentation yet
+	DiskImageStorageGroup *Configuration_Storage_Group `json:"diskImageStorageGroup,omitempty" xmlrpc:"diskImageStorageGroup,omitempty"`
 
 	// A disk image's unique ID.
 	Id *int `json:"id,omitempty" xmlrpc:"id,omitempty"`
@@ -166,6 +178,15 @@ type Virtual_Disk_Image struct {
 	// The original disk image that the current disk image was cloned from.
 	SourceDiskImage *Virtual_Disk_Image `json:"sourceDiskImage,omitempty" xmlrpc:"sourceDiskImage,omitempty"`
 
+	// A count of the storage group for a virtual disk image.
+	StorageGroupCount *uint `json:"storageGroupCount,omitempty" xmlrpc:"storageGroupCount,omitempty"`
+
+	// Return storage group details for symantec disk
+	StorageGroupDetails *Container_Image_StorageGroupDetails `json:"storageGroupDetails,omitempty" xmlrpc:"storageGroupDetails,omitempty"`
+
+	// The storage group for a virtual disk image.
+	StorageGroups []Configuration_Storage_Group `json:"storageGroups,omitempty" xmlrpc:"storageGroups,omitempty"`
+
 	// The storage repository that a disk image resides in.
 	StorageRepository *Virtual_Storage_Repository `json:"storageRepository,omitempty" xmlrpc:"storageRepository,omitempty"`
 
@@ -174,6 +195,9 @@ type Virtual_Disk_Image struct {
 
 	// The type of storage repository that a disk image resides in.
 	StorageRepositoryType *Virtual_Storage_Repository_Type `json:"storageRepositoryType,omitempty" xmlrpc:"storageRepositoryType,omitempty"`
+
+	// Return supported hardware component IDs for symantec disk
+	SupportedHardware *string `json:"supportedHardware,omitempty" xmlrpc:"supportedHardware,omitempty"`
 
 	// The template that attaches a disk image to a [[SoftLayer_Virtual_Guest_Block_Device_Template_Group|archive]].
 	TemplateBlockDevice *Virtual_Guest_Block_Device_Template `json:"templateBlockDevice,omitempty" xmlrpc:"templateBlockDevice,omitempty"`
@@ -416,6 +440,12 @@ type Virtual_Guest struct {
 	// A guest's universally unique identifier.
 	GlobalIdentifier *string `json:"globalIdentifier,omitempty" xmlrpc:"globalIdentifier,omitempty"`
 
+	// The number of GPUs attached to the guest.
+	GpuCount *int `json:"gpuCount,omitempty" xmlrpc:"gpuCount,omitempty"`
+
+	// The name of the GPU type attached to the guest.
+	GpuType *string `json:"gpuType,omitempty" xmlrpc:"gpuType,omitempty"`
+
 	// no documentation yet
 	GuestBootParameter *Virtual_Guest_Boot_Parameter `json:"guestBootParameter,omitempty" xmlrpc:"guestBootParameter,omitempty"`
 
@@ -494,12 +524,6 @@ type Virtual_Guest struct {
 	// The date a virtual computing instance was last modified.
 	ModifyDate *Time `json:"modifyDate,omitempty" xmlrpc:"modifyDate,omitempty"`
 
-	// A count of
-	MonitoringAgentCount *uint `json:"monitoringAgentCount,omitempty" xmlrpc:"monitoringAgentCount,omitempty"`
-
-	// no documentation yet
-	MonitoringAgents []Monitoring_Agent `json:"monitoringAgents,omitempty" xmlrpc:"monitoringAgents,omitempty"`
-
 	// no documentation yet
 	MonitoringRobot *Monitoring_Robot `json:"monitoringRobot,omitempty" xmlrpc:"monitoringRobot,omitempty"`
 
@@ -508,9 +532,6 @@ type Virtual_Guest struct {
 
 	// no documentation yet
 	MonitoringServiceEligibilityFlag *bool `json:"monitoringServiceEligibilityFlag,omitempty" xmlrpc:"monitoringServiceEligibilityFlag,omitempty"`
-
-	// no documentation yet
-	MonitoringServiceFlag *bool `json:"monitoringServiceFlag,omitempty" xmlrpc:"monitoringServiceFlag,omitempty"`
 
 	// The monitoring notification objects for this guest. Each object links this guest instance to a user account that will be notified if monitoring on this guest object fails
 	MonitoringUserNotification []User_Customer_Notification_Virtual_Guest `json:"monitoringUserNotification,omitempty" xmlrpc:"monitoringUserNotification,omitempty"`
@@ -901,6 +922,9 @@ type Virtual_Guest_Block_Device_Template_Group struct {
 	// A collection of locations containing a copy of this image template group. Will only be populated for parent template group objects.
 	Datacenters []Location `json:"datacenters,omitempty" xmlrpc:"datacenters,omitempty"`
 
+	// The first clone of the image template group
+	FirstChild *Virtual_Guest_Block_Device_Template_Group `json:"firstChild,omitempty" xmlrpc:"firstChild,omitempty"`
+
 	// A flag indicating if this is a flex image.
 	FlexImageFlag *bool `json:"flexImageFlag,omitempty" xmlrpc:"flexImageFlag,omitempty"`
 
@@ -919,6 +943,9 @@ type Virtual_Guest_Block_Device_Template_Group struct {
 	// A user definable and optional name of a block device template group.
 	Name *string `json:"name,omitempty" xmlrpc:"name,omitempty"`
 
+	// A flag indicating if this is a next generation image.
+	NextGenFlag *bool `json:"nextGenFlag,omitempty" xmlrpc:"nextGenFlag,omitempty"`
+
 	// A block device template group's user defined note.
 	Note *string `json:"note,omitempty" xmlrpc:"note,omitempty"`
 
@@ -930,6 +957,15 @@ type Virtual_Guest_Block_Device_Template_Group struct {
 
 	// no documentation yet
 	PublicFlag *int `json:"publicFlag,omitempty" xmlrpc:"publicFlag,omitempty"`
+
+	// no documentation yet
+	Region *Network_Service_Resource `json:"region,omitempty" xmlrpc:"region,omitempty"`
+
+	// A count of
+	RegionCount *uint `json:"regionCount,omitempty" xmlrpc:"regionCount,omitempty"`
+
+	// no documentation yet
+	Regions []Network_Service_Resource `json:"regions,omitempty" xmlrpc:"regions,omitempty"`
 
 	// A count of the ssh keys to be implemented on the server when provisioned or reloaded from an image template group.
 	SshKeyCount *uint `json:"sshKeyCount,omitempty" xmlrpc:"sshKeyCount,omitempty"`
@@ -961,7 +997,7 @@ type Virtual_Guest_Block_Device_Template_Group struct {
 	// A block device template group's [[SoftLayer_Provisioning_Version1_Transaction|transaction]] ID.  This will only be set when there is a transaction being performed on the block device template group.
 	TransactionId *int `json:"transactionId,omitempty" xmlrpc:"transactionId,omitempty"`
 
-	// A block device template group's [[SoftLayer_User|user]] ID
+	// A block device template group's [[SoftLayer_User_Customer]] ID
 	UserRecordId *int `json:"userRecordId,omitempty" xmlrpc:"userRecordId,omitempty"`
 }
 

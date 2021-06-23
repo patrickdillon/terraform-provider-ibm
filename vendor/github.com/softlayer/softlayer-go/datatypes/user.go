@@ -281,6 +281,9 @@ type User_Customer struct {
 	// Determines if this portal user is managed by IBMid federation.
 	ManagedByOpenIdConnectFlag *bool `json:"managedByOpenIdConnectFlag,omitempty" xmlrpc:"managedByOpenIdConnectFlag,omitempty"`
 
+	// The minimum number of hours that must pass between password resets.
+	MinimumPasswordLifeHours *int `json:"minimumPasswordLifeHours,omitempty" xmlrpc:"minimumPasswordLifeHours,omitempty"`
+
 	// A count of a portal user's associated mobile device profiles.
 	MobileDeviceCount *uint `json:"mobileDeviceCount,omitempty" xmlrpc:"mobileDeviceCount,omitempty"`
 
@@ -347,13 +350,16 @@ type User_Customer struct {
 	// no documentation yet
 	Preferences []User_Preference `json:"preferences,omitempty" xmlrpc:"preferences,omitempty"`
 
+	// no documentation yet
+	PreventPreviousPasswords *int `json:"preventPreviousPasswords,omitempty" xmlrpc:"preventPreviousPasswords,omitempty"`
+
 	// A count of
 	RoleCount *uint `json:"roleCount,omitempty" xmlrpc:"roleCount,omitempty"`
 
 	// no documentation yet
 	Roles []User_Permission_Role `json:"roles,omitempty" xmlrpc:"roles,omitempty"`
 
-	// no documentation yet
+	// [DEPRECATED]
 	SalesforceUserLink *User_Customer_Link `json:"salesforceUserLink,omitempty" xmlrpc:"salesforceUserLink,omitempty"`
 
 	// no documentation yet
@@ -695,6 +701,9 @@ type User_Customer_Link struct {
 	DestinationUserId *int `json:"destinationUserId,omitempty" xmlrpc:"destinationUserId,omitempty"`
 
 	// no documentation yet
+	IamIdVerificationFlag *int `json:"iamIdVerificationFlag,omitempty" xmlrpc:"iamIdVerificationFlag,omitempty"`
+
+	// no documentation yet
 	Id *int `json:"id,omitempty" xmlrpc:"id,omitempty"`
 
 	// The realm of the IAMid unique identifier.
@@ -714,11 +723,6 @@ type User_Customer_Link struct {
 
 	// no documentation yet
 	UserId *int `json:"userId,omitempty" xmlrpc:"userId,omitempty"`
-}
-
-// no documentation yet
-type User_Customer_Link_ThePlanet struct {
-	User_Customer_Link
 }
 
 // no documentation yet
@@ -866,7 +870,7 @@ type User_Customer_Notification_Hardware struct {
 	UserId *int `json:"userId,omitempty" xmlrpc:"userId,omitempty"`
 }
 
-// The SoftLayer_User_Customer_Notification_Virtual_Guest object stores links between customers and the virtual guests they wish to monitor.  This link is not enough, the user must be sure to also create SoftLayer_Network_Monitor_Version1_Query_Host instance with the response action set to "notify users" in order for the users linked to that hardware object to be notified on failure.
+// The SoftLayer_User_Customer_Notification_Virtual_Guest object stores links between customers and the virtual guests they wish to monitor.  This link is not enough, the user must be sure to also create SoftLayer_Network_Monitor_Version1_Query_Host instance with the response action set to "notify users" in order for the users linked to that Virtual Guest object to be notified on failure.
 type User_Customer_Notification_Virtual_Guest struct {
 	Entity
 
@@ -1255,7 +1259,9 @@ type User_Interface struct {
 	Entity
 }
 
-// no documentation yet
+// The SoftLayer_User_Permission_Action data type contains local attributes to identify and describe the valid actions a customer user can perform within IMS.  This includes a name, key name, and description.  This data can not be modified by users of IMS.
+//
+// It also contains relational attributes that indicate which SoftLayer_User_Permission_Group's include the action.
 type User_Permission_Action struct {
 	Entity
 
@@ -1281,7 +1287,9 @@ type User_Permission_Action struct {
 	Name *string `json:"name,omitempty" xmlrpc:"name,omitempty"`
 }
 
-// no documentation yet
+// The SoftLayer_User_Permission_Group data type contains local attributes to identify and describe the permission groups that have been created within IMS.  These includes a name, description, and account id.  Permission groups are defined specifically for a single [[SoftLayer_Account]].
+//
+// It also contains relational attributes that indicate what SoftLayer_User_Permission_Action objects belong to a particular group, and what SoftLayer_User_Permission_Role objects the group is linked.
 type User_Permission_Group struct {
 	Entity
 
@@ -1303,7 +1311,7 @@ type User_Permission_Group struct {
 	// The description of the permission group.
 	Description *string `json:"description,omitempty" xmlrpc:"description,omitempty"`
 
-	// The date the temporary group will be destroyed.
+	// The date the group will be destroyed.
 	ExpirationDate *Time `json:"expirationDate,omitempty" xmlrpc:"expirationDate,omitempty"`
 
 	// A permission groups internal identifying number.
@@ -1328,40 +1336,55 @@ type User_Permission_Group struct {
 	TypeId *int `json:"typeId,omitempty" xmlrpc:"typeId,omitempty"`
 }
 
-// no documentation yet
+// These are the attributes which describe a SoftLayer_User_Permission_Group_Type. All SoftLayer_User_Permission_Group objects must be linked to one of these types.
+//
+// For further information see: [[SoftLayer_User_Permission_Group]].
 type User_Permission_Group_Type struct {
 	Entity
 
-	// no documentation yet
-	CreateDate *Time `json:"createDate,omitempty" xmlrpc:"createDate,omitempty"`
-
-	// A count of
+	// A count of the groups that are of this type.
 	GroupCount *uint `json:"groupCount,omitempty" xmlrpc:"groupCount,omitempty"`
 
-	// no documentation yet
+	// The groups that are of this type.
 	Groups []User_Permission_Group `json:"groups,omitempty" xmlrpc:"groups,omitempty"`
 
-	// no documentation yet
+	// Unique Record ID.
 	Id *int `json:"id,omitempty" xmlrpc:"id,omitempty"`
 
-	// no documentation yet
+	// The keyname for the group type.
 	KeyName *string `json:"keyName,omitempty" xmlrpc:"keyName,omitempty"`
 
-	// no documentation yet
-	ModifyDate *Time `json:"modifyDate,omitempty" xmlrpc:"modifyDate,omitempty"`
-
-	// no documentation yet
+	// A descriptive name for the group type.
 	Name *string `json:"name,omitempty" xmlrpc:"name,omitempty"`
 }
 
-// no documentation yet
+// These are the variables relating to SoftLayer_User_Permission_Resource_Type. Collectively they describe the types of resources which can be linked to [[SoftLayer_User_Permission_Group]].
+type User_Permission_Resource_Type struct {
+	Entity
+
+	// The associated IMS class name for a resource type.
+	ClassName *string `json:"className,omitempty" xmlrpc:"className,omitempty"`
+
+	// Resource Type record ID.
+	Id *int `json:"id,omitempty" xmlrpc:"id,omitempty"`
+
+	// Descriptive Identifier for a Resource Type. A key name contains no spaces, but may use underscores.
+	KeyName *string `json:"keyName,omitempty" xmlrpc:"keyName,omitempty"`
+
+	// A name for the resource type. It is the most descriptive variable of the resource type and can include spaces.
+	Name *string `json:"name,omitempty" xmlrpc:"name,omitempty"`
+}
+
+// The SoftLayer_User_Permission_Role data type contains local attributes to identify and describe the permission roles that have been created within IMS.  These includes a name, description, and account id.  Permission groups are defined specifically for a single [[SoftLayer_Account]].
+//
+// It also contains relational attributes that indicate what SoftLayer_User_Permission_Group objects are linked to a particular role, and the SoftLayer_User_Customer objects assigned to the role.
 type User_Permission_Role struct {
 	Entity
 
 	// no documentation yet
 	Account *Account `json:"account,omitempty" xmlrpc:"account,omitempty"`
 
-	// A permission roles associated [[SoftLayer_Account|customer account]] id.
+	// Id of a [[SoftLayer_Account]] to which this role belongs.
 	AccountId *int `json:"accountId,omitempty" xmlrpc:"accountId,omitempty"`
 
 	// A count of
@@ -1394,7 +1417,7 @@ type User_Permission_Role struct {
 	// A flag showing if new users should be automatically added to this role.
 	NewUserDefaultFlag *int `json:"newUserDefaultFlag,omitempty" xmlrpc:"newUserDefaultFlag,omitempty"`
 
-	// A flag showing if the permission role was created by our internal system for a single user. If this flag is set only a single user can be assigned to this permission role and it can not be deleted.
+	// A flag showing if the permission role was created by our internal system for a single user. If this flag is set, only a single user can be assigned to this permission role and it can not be deleted.
 	SystemFlag *int `json:"systemFlag,omitempty" xmlrpc:"systemFlag,omitempty"`
 
 	// A count of

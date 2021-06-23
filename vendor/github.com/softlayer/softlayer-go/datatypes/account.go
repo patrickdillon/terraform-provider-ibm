@@ -98,8 +98,14 @@ type Account struct {
 	// The account's active top level colocation containers.
 	ActiveColocationContainers []Billing_Item `json:"activeColocationContainers,omitempty" xmlrpc:"activeColocationContainers,omitempty"`
 
-	// Account's currently active Flexible Credit enrollment.
+	// [Deprecated] Please use SoftLayer_Account::activeFlexibleCreditEnrollments.
 	ActiveFlexibleCreditEnrollment *FlexibleCredit_Enrollment `json:"activeFlexibleCreditEnrollment,omitempty" xmlrpc:"activeFlexibleCreditEnrollment,omitempty"`
+
+	// A count of
+	ActiveFlexibleCreditEnrollmentCount *uint `json:"activeFlexibleCreditEnrollmentCount,omitempty" xmlrpc:"activeFlexibleCreditEnrollmentCount,omitempty"`
+
+	// no documentation yet
+	ActiveFlexibleCreditEnrollments []FlexibleCredit_Enrollment `json:"activeFlexibleCreditEnrollments,omitempty" xmlrpc:"activeFlexibleCreditEnrollments,omitempty"`
 
 	// A count of
 	ActiveNotificationSubscriberCount *uint `json:"activeNotificationSubscriberCount,omitempty" xmlrpc:"activeNotificationSubscriberCount,omitempty"`
@@ -425,10 +431,10 @@ type Account struct {
 	// no documentation yet
 	GlobalIpv6Records []Network_Subnet_IpAddress_Global `json:"globalIpv6Records,omitempty" xmlrpc:"globalIpv6Records,omitempty"`
 
-	// A count of the global load balancer accounts for a softlayer customer account.
+	// A count of [Deprecated] The global load balancer accounts for a softlayer customer account.
 	GlobalLoadBalancerAccountCount *uint `json:"globalLoadBalancerAccountCount,omitempty" xmlrpc:"globalLoadBalancerAccountCount,omitempty"`
 
-	// The global load balancer accounts for a softlayer customer account.
+	// [Deprecated] The global load balancer accounts for a softlayer customer account.
 	GlobalLoadBalancerAccounts []Network_LoadBalancer_Global_Account `json:"globalLoadBalancerAccounts,omitempty" xmlrpc:"globalLoadBalancerAccounts,omitempty"`
 
 	// An account's associated hardware objects.
@@ -581,6 +587,9 @@ type Account struct {
 	// A flag indicating if an account belongs to a reseller or not.
 	IsReseller *int `json:"isReseller,omitempty" xmlrpc:"isReseller,omitempty"`
 
+	// no documentation yet
+	IscsiIsolationDisabled *bool `json:"iscsiIsolationDisabled,omitempty" xmlrpc:"iscsiIsolationDisabled,omitempty"`
+
 	// An account's associated iSCSI storage volumes.
 	IscsiNetworkStorage []Network_Storage `json:"iscsiNetworkStorage,omitempty" xmlrpc:"iscsiNetworkStorage,omitempty"`
 
@@ -683,6 +692,9 @@ type Account struct {
 	// An account's media transfer service requests.
 	MediaDataTransferRequests []Account_Media_Data_Transfer_Request `json:"mediaDataTransferRequests,omitempty" xmlrpc:"mediaDataTransferRequests,omitempty"`
 
+	// Flag indicating whether this account is restricted to the IBM Cloud portal.
+	MigratedToIbmCloudPortalFlag *bool `json:"migratedToIbmCloudPortalFlag,omitempty" xmlrpc:"migratedToIbmCloudPortalFlag,omitempty"`
+
 	// The date an account was last modified.
 	ModifyDate *Time `json:"modifyDate,omitempty" xmlrpc:"modifyDate,omitempty"`
 
@@ -704,7 +716,7 @@ type Account struct {
 	// A count of an account's associated NAS storage volumes.
 	NasNetworkStorageCount *uint `json:"nasNetworkStorageCount,omitempty" xmlrpc:"nasNetworkStorageCount,omitempty"`
 
-	// Whether or not this account can define their own networks.
+	// [Deprecated] Whether or not this account can define their own networks.
 	NetworkCreationFlag *bool `json:"networkCreationFlag,omitempty" xmlrpc:"networkCreationFlag,omitempty"`
 
 	// A count of all network gateway devices on this account.
@@ -1001,13 +1013,13 @@ type Account struct {
 	// The postal code of the mailing address belonging to an account.
 	PostalCode *string `json:"postalCode,omitempty" xmlrpc:"postalCode,omitempty"`
 
-	// Boolean flag dictating whether or not this account supports PPTP VPN Access.
+	// (Deprecated) Boolean flag dictating whether or not this account supports PPTP VPN Access.
 	PptpVpnAllowedFlag *bool `json:"pptpVpnAllowedFlag,omitempty" xmlrpc:"pptpVpnAllowedFlag,omitempty"`
 
-	// A count of an account's associated portal users with PPTP VPN access.
+	// A count of an account's associated portal users with PPTP VPN access. (Deprecated)
 	PptpVpnUserCount *uint `json:"pptpVpnUserCount,omitempty" xmlrpc:"pptpVpnUserCount,omitempty"`
 
-	// An account's associated portal users with PPTP VPN access.
+	// An account's associated portal users with PPTP VPN access. (Deprecated)
 	PptpVpnUsers []User_Customer `json:"pptpVpnUsers,omitempty" xmlrpc:"pptpVpnUsers,omitempty"`
 
 	// The total recurring amount for an accounts previous revenue.
@@ -1151,8 +1163,11 @@ type Account struct {
 	// All Routers that an accounts VLANs reside on
 	Routers []Hardware `json:"routers,omitempty" xmlrpc:"routers,omitempty"`
 
-	// An account's reverse WHOIS data. This data is used when making SWIP requests.
-	RwhoisData *Network_Subnet_Rwhois_Data `json:"rwhoisData,omitempty" xmlrpc:"rwhoisData,omitempty"`
+	// DEPRECATED
+	RwhoisData []Network_Subnet_Rwhois_Data `json:"rwhoisData,omitempty" xmlrpc:"rwhoisData,omitempty"`
+
+	// A count of dEPRECATED
+	RwhoisDataCount *uint `json:"rwhoisDataCount,omitempty" xmlrpc:"rwhoisDataCount,omitempty"`
 
 	// The SAML configuration for this account.
 	SamlAuthentication *Account_Authentication_Saml `json:"samlAuthentication,omitempty" xmlrpc:"samlAuthentication,omitempty"`
@@ -2074,11 +2089,6 @@ type Account_Link_OpenStack_ProjectDetails struct {
 }
 
 // no documentation yet
-type Account_Link_ThePlanet struct {
-	Account_Link
-}
-
-// no documentation yet
 type Account_Link_Vendor struct {
 	Entity
 
@@ -2514,6 +2524,17 @@ type Account_ProofOfConcept_Approver_Type struct {
 
 	// Name of a Proof of Concept account approver type.
 	Name *string `json:"name,omitempty" xmlrpc:"name,omitempty"`
+}
+
+// A [SoftLayer_Account_ProofOfConcept_Campaign_Code] provides a `code` and an optional `description`.
+type Account_ProofOfConcept_Campaign_Code struct {
+	Entity
+
+	// no documentation yet
+	Code *string `json:"code,omitempty" xmlrpc:"code,omitempty"`
+
+	// no documentation yet
+	Description *string `json:"description,omitempty" xmlrpc:"description,omitempty"`
 }
 
 // no documentation yet

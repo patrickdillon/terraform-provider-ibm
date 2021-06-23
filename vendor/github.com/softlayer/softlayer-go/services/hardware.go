@@ -87,21 +87,12 @@ func (r Hardware) AllowAccessToNetworkStorageList(networkStorageTemplateObjects 
 	return
 }
 
-// Captures a Flex Image of the hard disk on the physical machine, based on the capture template parameter. Returns the image template group containing the disk image.
+// Captures an Image of the hard disk on the physical machine, based on the capture template parameter. Returns the image template group containing the disk image.
 func (r Hardware) CaptureImage(captureTemplate *datatypes.Container_Disk_Image_Capture_Template) (resp datatypes.Virtual_Guest_Block_Device_Template_Group, err error) {
 	params := []interface{}{
 		captureTemplate,
 	}
 	err = r.Session.DoRequest("SoftLayer_Hardware", "captureImage", params, &r.Options, &resp)
-	return
-}
-
-// Returns monitoring alarm detailed history
-func (r Hardware) CloseAlarm(alarmId *string) (resp bool, err error) {
-	params := []interface{}{
-		alarmId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware", "closeAlarm", params, &r.Options, &resp)
 	return
 }
 
@@ -423,7 +414,7 @@ func (r Hardware) ExecuteRemoteScript(uri *string) (err error) {
 	return
 }
 
-// The '''findByIpAddress''' method finds hardware using its primary public or private IP address. IP addresses that have a secondary subnet tied to the hardware will not return the hardware - alternate means of locating the hardware must be used (see '''Associated Methods'''). If no hardware is found, no errors are generated and no data is returned.
+// The '''findByIpAddress''' method finds hardware using its primary public or private IP address. IP addresses that have a secondary subnet tied to the hardware will not return the hardware. If no hardware is found, no errors are generated and no data is returned.
 func (r Hardware) FindByIpAddress(ipAddress *string) (resp datatypes.Hardware, err error) {
 	params := []interface{}{
 		ipAddress,
@@ -463,17 +454,6 @@ func (r Hardware) GetActiveComponents() (resp []datatypes.Hardware_Component, er
 // Retrieve A piece of hardware's active network monitoring incidents.
 func (r Hardware) GetActiveNetworkMonitorIncident() (resp []datatypes.Network_Monitor_Version1_Incident, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware", "getActiveNetworkMonitorIncident", nil, &r.Options, &resp)
-	return
-}
-
-// The '''getAlarmHistory''' method retrieves a detailed history for the monitoring alarm. When calling this method, a start and end date for the history to be retrieved must be entered.
-func (r Hardware) GetAlarmHistory(startDate *datatypes.Time, endDate *datatypes.Time, alarmId *string) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-		alarmId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware", "getAlarmHistory", params, &r.Options, &resp)
 	return
 }
 
@@ -943,33 +923,7 @@ func (r Hardware) GetModules() (resp []datatypes.Hardware_Component, err error) 
 	return
 }
 
-// Returns open monitoring alarms for a given time period
-func (r Hardware) GetMonitoringActiveAlarms(startDate *datatypes.Time, endDate *datatypes.Time) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware", "getMonitoringActiveAlarms", params, &r.Options, &resp)
-	return
-}
-
-// Retrieve Information regarding the monitoring agents associated with a piece of hardware.
-func (r Hardware) GetMonitoringAgents() (resp []datatypes.Monitoring_Agent, err error) {
-	err = r.Session.DoRequest("SoftLayer_Hardware", "getMonitoringAgents", nil, &r.Options, &resp)
-	return
-}
-
-// Returns closed monitoring alarms for a given time period
-func (r Hardware) GetMonitoringClosedAlarms(startDate *datatypes.Time, endDate *datatypes.Time) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware", "getMonitoringClosedAlarms", params, &r.Options, &resp)
-	return
-}
-
-// Retrieve Information regarding the hardware's monitoring robot.
+// Retrieve
 func (r Hardware) GetMonitoringRobot() (resp datatypes.Monitoring_Robot, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware", "getMonitoringRobot", nil, &r.Options, &resp)
 	return
@@ -981,15 +935,9 @@ func (r Hardware) GetMonitoringServiceComponent() (resp datatypes.Network_Monito
 	return
 }
 
-// Retrieve The monitoring service flag eligibility status for a piece of hardware.
+// Retrieve
 func (r Hardware) GetMonitoringServiceEligibilityFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware", "getMonitoringServiceEligibilityFlag", nil, &r.Options, &resp)
-	return
-}
-
-// Retrieve The service flag status for a piece of hardware.
-func (r Hardware) GetMonitoringServiceFlag() (resp bool, err error) {
-	err = r.Session.DoRequest("SoftLayer_Hardware", "getMonitoringServiceFlag", nil, &r.Options, &resp)
 	return
 }
 
@@ -1362,6 +1310,12 @@ func (r Hardware) GetSshKeys() (resp []datatypes.Security_Ssh_Key, err error) {
 }
 
 // Retrieve
+func (r Hardware) GetStorageGroups() (resp []datatypes.Configuration_Storage_Group, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware", "getStorageGroups", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve A piece of hardware's private storage network components. [Deprecated]
 func (r Hardware) GetStorageNetworkComponents() (resp []datatypes.Network_Component, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware", "getStorageNetworkComponents", nil, &r.Options, &resp)
 	return
@@ -2108,21 +2062,12 @@ func (r Hardware_Router) AllowAccessToNetworkStorageList(networkStorageTemplateO
 	return
 }
 
-// Captures a Flex Image of the hard disk on the physical machine, based on the capture template parameter. Returns the image template group containing the disk image.
+// Captures an Image of the hard disk on the physical machine, based on the capture template parameter. Returns the image template group containing the disk image.
 func (r Hardware_Router) CaptureImage(captureTemplate *datatypes.Container_Disk_Image_Capture_Template) (resp datatypes.Virtual_Guest_Block_Device_Template_Group, err error) {
 	params := []interface{}{
 		captureTemplate,
 	}
 	err = r.Session.DoRequest("SoftLayer_Hardware_Router", "captureImage", params, &r.Options, &resp)
-	return
-}
-
-// Returns monitoring alarm detailed history
-func (r Hardware_Router) CloseAlarm(alarmId *string) (resp bool, err error) {
-	params := []interface{}{
-		alarmId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_Router", "closeAlarm", params, &r.Options, &resp)
 	return
 }
 
@@ -2444,7 +2389,7 @@ func (r Hardware_Router) ExecuteRemoteScript(uri *string) (err error) {
 	return
 }
 
-// The '''findByIpAddress''' method finds hardware using its primary public or private IP address. IP addresses that have a secondary subnet tied to the hardware will not return the hardware - alternate means of locating the hardware must be used (see '''Associated Methods'''). If no hardware is found, no errors are generated and no data is returned.
+// The '''findByIpAddress''' method finds hardware using its primary public or private IP address. IP addresses that have a secondary subnet tied to the hardware will not return the hardware. If no hardware is found, no errors are generated and no data is returned.
 func (r Hardware_Router) FindByIpAddress(ipAddress *string) (resp datatypes.Hardware, err error) {
 	params := []interface{}{
 		ipAddress,
@@ -2484,17 +2429,6 @@ func (r Hardware_Router) GetActiveComponents() (resp []datatypes.Hardware_Compon
 // Retrieve A piece of hardware's active network monitoring incidents.
 func (r Hardware_Router) GetActiveNetworkMonitorIncident() (resp []datatypes.Network_Monitor_Version1_Incident, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_Router", "getActiveNetworkMonitorIncident", nil, &r.Options, &resp)
-	return
-}
-
-// The '''getAlarmHistory''' method retrieves a detailed history for the monitoring alarm. When calling this method, a start and end date for the history to be retrieved must be entered.
-func (r Hardware_Router) GetAlarmHistory(startDate *datatypes.Time, endDate *datatypes.Time, alarmId *string) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-		alarmId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_Router", "getAlarmHistory", params, &r.Options, &resp)
 	return
 }
 
@@ -2976,33 +2910,7 @@ func (r Hardware_Router) GetModules() (resp []datatypes.Hardware_Component, err 
 	return
 }
 
-// Returns open monitoring alarms for a given time period
-func (r Hardware_Router) GetMonitoringActiveAlarms(startDate *datatypes.Time, endDate *datatypes.Time) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_Router", "getMonitoringActiveAlarms", params, &r.Options, &resp)
-	return
-}
-
-// Retrieve Information regarding the monitoring agents associated with a piece of hardware.
-func (r Hardware_Router) GetMonitoringAgents() (resp []datatypes.Monitoring_Agent, err error) {
-	err = r.Session.DoRequest("SoftLayer_Hardware_Router", "getMonitoringAgents", nil, &r.Options, &resp)
-	return
-}
-
-// Returns closed monitoring alarms for a given time period
-func (r Hardware_Router) GetMonitoringClosedAlarms(startDate *datatypes.Time, endDate *datatypes.Time) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_Router", "getMonitoringClosedAlarms", params, &r.Options, &resp)
-	return
-}
-
-// Retrieve Information regarding the hardware's monitoring robot.
+// Retrieve
 func (r Hardware_Router) GetMonitoringRobot() (resp datatypes.Monitoring_Robot, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_Router", "getMonitoringRobot", nil, &r.Options, &resp)
 	return
@@ -3014,15 +2922,9 @@ func (r Hardware_Router) GetMonitoringServiceComponent() (resp datatypes.Network
 	return
 }
 
-// Retrieve The monitoring service flag eligibility status for a piece of hardware.
+// Retrieve
 func (r Hardware_Router) GetMonitoringServiceEligibilityFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_Router", "getMonitoringServiceEligibilityFlag", nil, &r.Options, &resp)
-	return
-}
-
-// Retrieve The service flag status for a piece of hardware.
-func (r Hardware_Router) GetMonitoringServiceFlag() (resp bool, err error) {
-	err = r.Session.DoRequest("SoftLayer_Hardware_Router", "getMonitoringServiceFlag", nil, &r.Options, &resp)
 	return
 }
 
@@ -3401,6 +3303,12 @@ func (r Hardware_Router) GetSshKeys() (resp []datatypes.Security_Ssh_Key, err er
 }
 
 // Retrieve
+func (r Hardware_Router) GetStorageGroups() (resp []datatypes.Configuration_Storage_Group, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_Router", "getStorageGroups", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve A piece of hardware's private storage network components. [Deprecated]
 func (r Hardware_Router) GetStorageNetworkComponents() (resp []datatypes.Network_Component, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_Router", "getStorageNetworkComponents", nil, &r.Options, &resp)
 	return
@@ -3711,21 +3619,12 @@ func (r Hardware_SecurityModule) BootToRescueLayer(noOsBootEnvironment *string) 
 	return
 }
 
-// Captures a Flex Image of the hard disk on the physical machine, based on the capture template parameter. Returns the image template group containing the disk image.
+// Captures an Image of the hard disk on the physical machine, based on the capture template parameter. Returns the image template group containing the disk image.
 func (r Hardware_SecurityModule) CaptureImage(captureTemplate *datatypes.Container_Disk_Image_Capture_Template) (resp datatypes.Virtual_Guest_Block_Device_Template_Group, err error) {
 	params := []interface{}{
 		captureTemplate,
 	}
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "captureImage", params, &r.Options, &resp)
-	return
-}
-
-// Returns monitoring alarm detailed history
-func (r Hardware_SecurityModule) CloseAlarm(alarmId *string) (resp bool, err error) {
-	params := []interface{}{
-		alarmId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "closeAlarm", params, &r.Options, &resp)
 	return
 }
 
@@ -4104,7 +4003,7 @@ func (r Hardware_SecurityModule) ExecuteRemoteScript(uri *string) (err error) {
 	return
 }
 
-// The '''findByIpAddress''' method finds hardware using its primary public or private IP address. IP addresses that have a secondary subnet tied to the hardware will not return the hardware - alternate means of locating the hardware must be used (see '''Associated Methods'''). If no hardware is found, no errors are generated and no data is returned.
+// The '''findByIpAddress''' method finds hardware using its primary public or private IP address. IP addresses that have a secondary subnet tied to the hardware will not return the hardware. If no hardware is found, no errors are generated and no data is returned.
 func (r Hardware_SecurityModule) FindByIpAddress(ipAddress *string) (resp datatypes.Hardware, err error) {
 	params := []interface{}{
 		ipAddress,
@@ -4168,17 +4067,6 @@ func (r Hardware_SecurityModule) GetActiveTransaction() (resp datatypes.Provisio
 // Retrieve Any active transaction(s) that are currently running for the server (example: os reload).
 func (r Hardware_SecurityModule) GetActiveTransactions() (resp []datatypes.Provisioning_Version1_Transaction, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getActiveTransactions", nil, &r.Options, &resp)
-	return
-}
-
-// The '''getAlarmHistory''' method retrieves a detailed history for the monitoring alarm. When calling this method, a start and end date for the history to be retrieved must be entered.
-func (r Hardware_SecurityModule) GetAlarmHistory(startDate *datatypes.Time, endDate *datatypes.Time, alarmId *string) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-		alarmId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getAlarmHistory", params, &r.Options, &resp)
 	return
 }
 
@@ -4406,6 +4294,12 @@ func (r Hardware_SecurityModule) GetBootModeOptions() (resp []string, err error)
 // Retrieve Status indicating whether or not a piece of hardware has business continuance insurance.
 func (r Hardware_SecurityModule) GetBusinessContinuanceInsuranceFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getBusinessContinuanceInsuranceFlag", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve Determine if the server is able to be image captured. If unable to image capture a reason will be provided.
+func (r Hardware_SecurityModule) GetCaptureEnabledFlag() (resp datatypes.Container_Hardware_CaptureEnabled, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getCaptureEnabledFlag", nil, &r.Options, &resp)
 	return
 }
 
@@ -4846,6 +4740,12 @@ func (r Hardware_SecurityModule) GetLockboxNetworkStorage() (resp datatypes.Netw
 	return
 }
 
+// Retrieve Returns a list of logical volumes on the physical machine.
+func (r Hardware_SecurityModule) GetLogicalVolumeStorageGroups() (resp []datatypes.Configuration_Storage_Group, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getLogicalVolumeStorageGroups", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve A flag indicating that the hardware is a managed resource.
 func (r Hardware_SecurityModule) GetManagedResourceFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getManagedResourceFlag", nil, &r.Options, &resp)
@@ -4888,33 +4788,7 @@ func (r Hardware_SecurityModule) GetModules() (resp []datatypes.Hardware_Compone
 	return
 }
 
-// Returns open monitoring alarms for a given time period
-func (r Hardware_SecurityModule) GetMonitoringActiveAlarms(startDate *datatypes.Time, endDate *datatypes.Time) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getMonitoringActiveAlarms", params, &r.Options, &resp)
-	return
-}
-
-// Retrieve Information regarding the monitoring agents associated with a piece of hardware.
-func (r Hardware_SecurityModule) GetMonitoringAgents() (resp []datatypes.Monitoring_Agent, err error) {
-	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getMonitoringAgents", nil, &r.Options, &resp)
-	return
-}
-
-// Returns closed monitoring alarms for a given time period
-func (r Hardware_SecurityModule) GetMonitoringClosedAlarms(startDate *datatypes.Time, endDate *datatypes.Time) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getMonitoringClosedAlarms", params, &r.Options, &resp)
-	return
-}
-
-// Retrieve Information regarding the hardware's monitoring robot.
+// Retrieve
 func (r Hardware_SecurityModule) GetMonitoringRobot() (resp datatypes.Monitoring_Robot, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getMonitoringRobot", nil, &r.Options, &resp)
 	return
@@ -4926,15 +4800,9 @@ func (r Hardware_SecurityModule) GetMonitoringServiceComponent() (resp datatypes
 	return
 }
 
-// Retrieve The monitoring service flag eligibility status for a piece of hardware.
+// Retrieve
 func (r Hardware_SecurityModule) GetMonitoringServiceEligibilityFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getMonitoringServiceEligibilityFlag", nil, &r.Options, &resp)
-	return
-}
-
-// Retrieve The service flag status for a piece of hardware.
-func (r Hardware_SecurityModule) GetMonitoringServiceFlag() (resp bool, err error) {
-	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getMonitoringServiceFlag", nil, &r.Options, &resp)
 	return
 }
 
@@ -5124,6 +4992,12 @@ func (r Hardware_SecurityModule) GetParentHardware() (resp datatypes.Hardware, e
 	return
 }
 
+// Retrieve
+func (r Hardware_SecurityModule) GetPartitions() (resp []datatypes.Hardware_Server_Partition, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getPartitions", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve Information regarding the Point of Presence (PoP) location in which a piece of hardware resides.
 func (r Hardware_SecurityModule) GetPointOfPresenceLocation() (resp datatypes.Location, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getPointOfPresenceLocation", nil, &r.Options, &resp)
@@ -5222,6 +5096,8 @@ func (r Hardware_SecurityModule) GetPrivateVlan() (resp datatypes.Network_Vlan, 
 	return
 }
 
+//
+// *** DEPRECATED ***
 // Retrieve a backend network VLAN by searching for an IP address
 func (r Hardware_SecurityModule) GetPrivateVlanByIpAddress(ipAddress *string) (resp datatypes.Network_Vlan, err error) {
 	params := []interface{}{
@@ -5511,6 +5387,12 @@ func (r Hardware_SecurityModule) GetStatisticsRemoteManagement() (resp datatypes
 }
 
 // Retrieve
+func (r Hardware_SecurityModule) GetStorageGroups() (resp []datatypes.Configuration_Storage_Group, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getStorageGroups", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve A piece of hardware's private storage network components. [Deprecated]
 func (r Hardware_SecurityModule) GetStorageNetworkComponents() (resp []datatypes.Network_Component, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "getStorageNetworkComponents", nil, &r.Options, &resp)
 	return
@@ -5986,6 +5868,12 @@ func (r Hardware_SecurityModule) SparePool(action *string, newOrder *bool) (resp
 	return
 }
 
+// Test the RAID Alert service by sending the service a request to store a test email for this server. The server must have an account ID and MAC address.  A RAID controller must also be installed.
+func (r Hardware_SecurityModule) TestRaidAlertService() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule", "testRaidAlertService", nil, &r.Options, &resp)
+	return
+}
+
 // Attempt to toggle the IPMI interface.  If there is an active transaction on the server, it will throw an exception. This method creates a transaction to toggle the interface.  It is not instant.
 func (r Hardware_SecurityModule) ToggleManagementInterface(enabled *bool) (resp bool, err error) {
 	params := []interface{}{
@@ -6101,21 +5989,12 @@ func (r Hardware_SecurityModule750) BootToRescueLayer(noOsBootEnvironment *strin
 	return
 }
 
-// Captures a Flex Image of the hard disk on the physical machine, based on the capture template parameter. Returns the image template group containing the disk image.
+// Captures an Image of the hard disk on the physical machine, based on the capture template parameter. Returns the image template group containing the disk image.
 func (r Hardware_SecurityModule750) CaptureImage(captureTemplate *datatypes.Container_Disk_Image_Capture_Template) (resp datatypes.Virtual_Guest_Block_Device_Template_Group, err error) {
 	params := []interface{}{
 		captureTemplate,
 	}
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "captureImage", params, &r.Options, &resp)
-	return
-}
-
-// Returns monitoring alarm detailed history
-func (r Hardware_SecurityModule750) CloseAlarm(alarmId *string) (resp bool, err error) {
-	params := []interface{}{
-		alarmId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "closeAlarm", params, &r.Options, &resp)
 	return
 }
 
@@ -6494,7 +6373,7 @@ func (r Hardware_SecurityModule750) ExecuteRemoteScript(uri *string) (err error)
 	return
 }
 
-// The '''findByIpAddress''' method finds hardware using its primary public or private IP address. IP addresses that have a secondary subnet tied to the hardware will not return the hardware - alternate means of locating the hardware must be used (see '''Associated Methods'''). If no hardware is found, no errors are generated and no data is returned.
+// The '''findByIpAddress''' method finds hardware using its primary public or private IP address. IP addresses that have a secondary subnet tied to the hardware will not return the hardware. If no hardware is found, no errors are generated and no data is returned.
 func (r Hardware_SecurityModule750) FindByIpAddress(ipAddress *string) (resp datatypes.Hardware, err error) {
 	params := []interface{}{
 		ipAddress,
@@ -6558,17 +6437,6 @@ func (r Hardware_SecurityModule750) GetActiveTransaction() (resp datatypes.Provi
 // Retrieve Any active transaction(s) that are currently running for the server (example: os reload).
 func (r Hardware_SecurityModule750) GetActiveTransactions() (resp []datatypes.Provisioning_Version1_Transaction, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getActiveTransactions", nil, &r.Options, &resp)
-	return
-}
-
-// The '''getAlarmHistory''' method retrieves a detailed history for the monitoring alarm. When calling this method, a start and end date for the history to be retrieved must be entered.
-func (r Hardware_SecurityModule750) GetAlarmHistory(startDate *datatypes.Time, endDate *datatypes.Time, alarmId *string) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-		alarmId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getAlarmHistory", params, &r.Options, &resp)
 	return
 }
 
@@ -6796,6 +6664,12 @@ func (r Hardware_SecurityModule750) GetBootModeOptions() (resp []string, err err
 // Retrieve Status indicating whether or not a piece of hardware has business continuance insurance.
 func (r Hardware_SecurityModule750) GetBusinessContinuanceInsuranceFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getBusinessContinuanceInsuranceFlag", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve Determine if the server is able to be image captured. If unable to image capture a reason will be provided.
+func (r Hardware_SecurityModule750) GetCaptureEnabledFlag() (resp datatypes.Container_Hardware_CaptureEnabled, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getCaptureEnabledFlag", nil, &r.Options, &resp)
 	return
 }
 
@@ -7236,6 +7110,12 @@ func (r Hardware_SecurityModule750) GetLockboxNetworkStorage() (resp datatypes.N
 	return
 }
 
+// Retrieve Returns a list of logical volumes on the physical machine.
+func (r Hardware_SecurityModule750) GetLogicalVolumeStorageGroups() (resp []datatypes.Configuration_Storage_Group, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getLogicalVolumeStorageGroups", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve A flag indicating that the hardware is a managed resource.
 func (r Hardware_SecurityModule750) GetManagedResourceFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getManagedResourceFlag", nil, &r.Options, &resp)
@@ -7278,33 +7158,7 @@ func (r Hardware_SecurityModule750) GetModules() (resp []datatypes.Hardware_Comp
 	return
 }
 
-// Returns open monitoring alarms for a given time period
-func (r Hardware_SecurityModule750) GetMonitoringActiveAlarms(startDate *datatypes.Time, endDate *datatypes.Time) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getMonitoringActiveAlarms", params, &r.Options, &resp)
-	return
-}
-
-// Retrieve Information regarding the monitoring agents associated with a piece of hardware.
-func (r Hardware_SecurityModule750) GetMonitoringAgents() (resp []datatypes.Monitoring_Agent, err error) {
-	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getMonitoringAgents", nil, &r.Options, &resp)
-	return
-}
-
-// Returns closed monitoring alarms for a given time period
-func (r Hardware_SecurityModule750) GetMonitoringClosedAlarms(startDate *datatypes.Time, endDate *datatypes.Time) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getMonitoringClosedAlarms", params, &r.Options, &resp)
-	return
-}
-
-// Retrieve Information regarding the hardware's monitoring robot.
+// Retrieve
 func (r Hardware_SecurityModule750) GetMonitoringRobot() (resp datatypes.Monitoring_Robot, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getMonitoringRobot", nil, &r.Options, &resp)
 	return
@@ -7316,15 +7170,9 @@ func (r Hardware_SecurityModule750) GetMonitoringServiceComponent() (resp dataty
 	return
 }
 
-// Retrieve The monitoring service flag eligibility status for a piece of hardware.
+// Retrieve
 func (r Hardware_SecurityModule750) GetMonitoringServiceEligibilityFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getMonitoringServiceEligibilityFlag", nil, &r.Options, &resp)
-	return
-}
-
-// Retrieve The service flag status for a piece of hardware.
-func (r Hardware_SecurityModule750) GetMonitoringServiceFlag() (resp bool, err error) {
-	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getMonitoringServiceFlag", nil, &r.Options, &resp)
 	return
 }
 
@@ -7514,6 +7362,12 @@ func (r Hardware_SecurityModule750) GetParentHardware() (resp datatypes.Hardware
 	return
 }
 
+// Retrieve
+func (r Hardware_SecurityModule750) GetPartitions() (resp []datatypes.Hardware_Server_Partition, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getPartitions", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve Information regarding the Point of Presence (PoP) location in which a piece of hardware resides.
 func (r Hardware_SecurityModule750) GetPointOfPresenceLocation() (resp datatypes.Location, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getPointOfPresenceLocation", nil, &r.Options, &resp)
@@ -7612,6 +7466,8 @@ func (r Hardware_SecurityModule750) GetPrivateVlan() (resp datatypes.Network_Vla
 	return
 }
 
+//
+// *** DEPRECATED ***
 // Retrieve a backend network VLAN by searching for an IP address
 func (r Hardware_SecurityModule750) GetPrivateVlanByIpAddress(ipAddress *string) (resp datatypes.Network_Vlan, err error) {
 	params := []interface{}{
@@ -7901,6 +7757,12 @@ func (r Hardware_SecurityModule750) GetStatisticsRemoteManagement() (resp dataty
 }
 
 // Retrieve
+func (r Hardware_SecurityModule750) GetStorageGroups() (resp []datatypes.Configuration_Storage_Group, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getStorageGroups", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve A piece of hardware's private storage network components. [Deprecated]
 func (r Hardware_SecurityModule750) GetStorageNetworkComponents() (resp []datatypes.Network_Component, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "getStorageNetworkComponents", nil, &r.Options, &resp)
 	return
@@ -8376,6 +8238,12 @@ func (r Hardware_SecurityModule750) SparePool(action *string, newOrder *bool) (r
 	return
 }
 
+// Test the RAID Alert service by sending the service a request to store a test email for this server. The server must have an account ID and MAC address.  A RAID controller must also be installed.
+func (r Hardware_SecurityModule750) TestRaidAlertService() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_SecurityModule750", "testRaidAlertService", nil, &r.Options, &resp)
+	return
+}
+
 // Attempt to toggle the IPMI interface.  If there is an active transaction on the server, it will throw an exception. This method creates a transaction to toggle the interface.  It is not instant.
 func (r Hardware_SecurityModule750) ToggleManagementInterface(enabled *bool) (resp bool, err error) {
 	params := []interface{}{
@@ -8491,21 +8359,12 @@ func (r Hardware_Server) BootToRescueLayer(noOsBootEnvironment *string) (resp bo
 	return
 }
 
-// Captures a Flex Image of the hard disk on the physical machine, based on the capture template parameter. Returns the image template group containing the disk image.
+// Captures an Image of the hard disk on the physical machine, based on the capture template parameter. Returns the image template group containing the disk image.
 func (r Hardware_Server) CaptureImage(captureTemplate *datatypes.Container_Disk_Image_Capture_Template) (resp datatypes.Virtual_Guest_Block_Device_Template_Group, err error) {
 	params := []interface{}{
 		captureTemplate,
 	}
 	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "captureImage", params, &r.Options, &resp)
-	return
-}
-
-// Returns monitoring alarm detailed history
-func (r Hardware_Server) CloseAlarm(alarmId *string) (resp bool, err error) {
-	params := []interface{}{
-		alarmId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "closeAlarm", params, &r.Options, &resp)
 	return
 }
 
@@ -8884,7 +8743,7 @@ func (r Hardware_Server) ExecuteRemoteScript(uri *string) (err error) {
 	return
 }
 
-// The '''findByIpAddress''' method finds hardware using its primary public or private IP address. IP addresses that have a secondary subnet tied to the hardware will not return the hardware - alternate means of locating the hardware must be used (see '''Associated Methods'''). If no hardware is found, no errors are generated and no data is returned.
+// The '''findByIpAddress''' method finds hardware using its primary public or private IP address. IP addresses that have a secondary subnet tied to the hardware will not return the hardware. If no hardware is found, no errors are generated and no data is returned.
 func (r Hardware_Server) FindByIpAddress(ipAddress *string) (resp datatypes.Hardware, err error) {
 	params := []interface{}{
 		ipAddress,
@@ -8948,17 +8807,6 @@ func (r Hardware_Server) GetActiveTransaction() (resp datatypes.Provisioning_Ver
 // Retrieve Any active transaction(s) that are currently running for the server (example: os reload).
 func (r Hardware_Server) GetActiveTransactions() (resp []datatypes.Provisioning_Version1_Transaction, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getActiveTransactions", nil, &r.Options, &resp)
-	return
-}
-
-// The '''getAlarmHistory''' method retrieves a detailed history for the monitoring alarm. When calling this method, a start and end date for the history to be retrieved must be entered.
-func (r Hardware_Server) GetAlarmHistory(startDate *datatypes.Time, endDate *datatypes.Time, alarmId *string) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-		alarmId,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getAlarmHistory", params, &r.Options, &resp)
 	return
 }
 
@@ -9186,6 +9034,12 @@ func (r Hardware_Server) GetBootModeOptions() (resp []string, err error) {
 // Retrieve Status indicating whether or not a piece of hardware has business continuance insurance.
 func (r Hardware_Server) GetBusinessContinuanceInsuranceFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getBusinessContinuanceInsuranceFlag", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve Determine if the server is able to be image captured. If unable to image capture a reason will be provided.
+func (r Hardware_Server) GetCaptureEnabledFlag() (resp datatypes.Container_Hardware_CaptureEnabled, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getCaptureEnabledFlag", nil, &r.Options, &resp)
 	return
 }
 
@@ -9626,6 +9480,12 @@ func (r Hardware_Server) GetLockboxNetworkStorage() (resp datatypes.Network_Stor
 	return
 }
 
+// Retrieve Returns a list of logical volumes on the physical machine.
+func (r Hardware_Server) GetLogicalVolumeStorageGroups() (resp []datatypes.Configuration_Storage_Group, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getLogicalVolumeStorageGroups", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve A flag indicating that the hardware is a managed resource.
 func (r Hardware_Server) GetManagedResourceFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getManagedResourceFlag", nil, &r.Options, &resp)
@@ -9668,33 +9528,7 @@ func (r Hardware_Server) GetModules() (resp []datatypes.Hardware_Component, err 
 	return
 }
 
-// Returns open monitoring alarms for a given time period
-func (r Hardware_Server) GetMonitoringActiveAlarms(startDate *datatypes.Time, endDate *datatypes.Time) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getMonitoringActiveAlarms", params, &r.Options, &resp)
-	return
-}
-
-// Retrieve Information regarding the monitoring agents associated with a piece of hardware.
-func (r Hardware_Server) GetMonitoringAgents() (resp []datatypes.Monitoring_Agent, err error) {
-	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getMonitoringAgents", nil, &r.Options, &resp)
-	return
-}
-
-// Returns closed monitoring alarms for a given time period
-func (r Hardware_Server) GetMonitoringClosedAlarms(startDate *datatypes.Time, endDate *datatypes.Time) (resp []datatypes.Container_Monitoring_Alarm_History, err error) {
-	params := []interface{}{
-		startDate,
-		endDate,
-	}
-	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getMonitoringClosedAlarms", params, &r.Options, &resp)
-	return
-}
-
-// Retrieve Information regarding the hardware's monitoring robot.
+// Retrieve
 func (r Hardware_Server) GetMonitoringRobot() (resp datatypes.Monitoring_Robot, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getMonitoringRobot", nil, &r.Options, &resp)
 	return
@@ -9706,15 +9540,9 @@ func (r Hardware_Server) GetMonitoringServiceComponent() (resp datatypes.Network
 	return
 }
 
-// Retrieve The monitoring service flag eligibility status for a piece of hardware.
+// Retrieve
 func (r Hardware_Server) GetMonitoringServiceEligibilityFlag() (resp bool, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getMonitoringServiceEligibilityFlag", nil, &r.Options, &resp)
-	return
-}
-
-// Retrieve The service flag status for a piece of hardware.
-func (r Hardware_Server) GetMonitoringServiceFlag() (resp bool, err error) {
-	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getMonitoringServiceFlag", nil, &r.Options, &resp)
 	return
 }
 
@@ -9904,6 +9732,12 @@ func (r Hardware_Server) GetParentHardware() (resp datatypes.Hardware, err error
 	return
 }
 
+// Retrieve
+func (r Hardware_Server) GetPartitions() (resp []datatypes.Hardware_Server_Partition, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getPartitions", nil, &r.Options, &resp)
+	return
+}
+
 // Retrieve Information regarding the Point of Presence (PoP) location in which a piece of hardware resides.
 func (r Hardware_Server) GetPointOfPresenceLocation() (resp datatypes.Location, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getPointOfPresenceLocation", nil, &r.Options, &resp)
@@ -10002,6 +9836,8 @@ func (r Hardware_Server) GetPrivateVlan() (resp datatypes.Network_Vlan, err erro
 	return
 }
 
+//
+// *** DEPRECATED ***
 // Retrieve a backend network VLAN by searching for an IP address
 func (r Hardware_Server) GetPrivateVlanByIpAddress(ipAddress *string) (resp datatypes.Network_Vlan, err error) {
 	params := []interface{}{
@@ -10291,6 +10127,12 @@ func (r Hardware_Server) GetStatisticsRemoteManagement() (resp datatypes.Hardwar
 }
 
 // Retrieve
+func (r Hardware_Server) GetStorageGroups() (resp []datatypes.Configuration_Storage_Group, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getStorageGroups", nil, &r.Options, &resp)
+	return
+}
+
+// Retrieve A piece of hardware's private storage network components. [Deprecated]
 func (r Hardware_Server) GetStorageNetworkComponents() (resp []datatypes.Network_Component, err error) {
 	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "getStorageNetworkComponents", nil, &r.Options, &resp)
 	return
@@ -10763,6 +10605,12 @@ func (r Hardware_Server) SparePool(action *string, newOrder *bool) (resp bool, e
 		newOrder,
 	}
 	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "sparePool", params, &r.Options, &resp)
+	return
+}
+
+// Test the RAID Alert service by sending the service a request to store a test email for this server. The server must have an account ID and MAC address.  A RAID controller must also be installed.
+func (r Hardware_Server) TestRaidAlertService() (resp bool, err error) {
+	err = r.Session.DoRequest("SoftLayer_Hardware_Server", "testRaidAlertService", nil, &r.Options, &resp)
 	return
 }
 
