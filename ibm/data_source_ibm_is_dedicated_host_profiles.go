@@ -9,15 +9,14 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
 	"github.com/IBM/vpc-go-sdk/vpcv1"
 )
 
 func dataSourceIbmIsDedicatedHostProfiles() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceIbmIsDedicatedHostProfilesRead,
+		Read: dataSourceIbmIsDedicatedHostProfilesRead,
 
 		Schema: map[string]*schema.Schema{
 			"first": &schema.Schema{
@@ -354,34 +353,34 @@ func dataSourceIbmIsDedicatedHostProfiles() *schema.Resource {
 	}
 }
 
-func dataSourceIbmIsDedicatedHostProfilesRead(context context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func dataSourceIbmIsDedicatedHostProfilesRead(d *schema.ResourceData, meta interface{}) error {
 	vpcClient, err := meta.(ClientSession).VpcV1API()
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 
 	listDedicatedHostProfilesOptions := &vpcv1.ListDedicatedHostProfilesOptions{}
 
-	dedicatedHostProfileCollection, response, err := vpcClient.ListDedicatedHostProfilesWithContext(context, listDedicatedHostProfilesOptions)
+	dedicatedHostProfileCollection, response, err := vpcClient.ListDedicatedHostProfilesWithContext(context.TODO(), listDedicatedHostProfilesOptions)
 	if err != nil {
 		log.Printf("[DEBUG] ListDedicatedHostProfilesWithContext failed %s\n%s", err, response)
-		return diag.FromErr(err)
+		return err
 	}
 
 	if dedicatedHostProfileCollection.First != nil {
 		err = d.Set("first", dataSourceDedicatedHostProfileCollectionFlattenFirst(*dedicatedHostProfileCollection.First))
 		if err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting first %s", err))
+			return fmt.Errorf("Error setting first %s", err)
 		}
 	}
 	if err = d.Set("limit", dedicatedHostProfileCollection.Limit); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting limit: %s", err))
+		return fmt.Errorf("Error setting limit: %s", err)
 	}
 
 	if dedicatedHostProfileCollection.Next != nil {
 		err = d.Set("next", dataSourceDedicatedHostProfileCollectionFlattenNext(*dedicatedHostProfileCollection.Next))
 		if err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting next %s", err))
+			return fmt.Errorf("Error setting next %s", err)
 		}
 	}
 
@@ -392,11 +391,11 @@ func dataSourceIbmIsDedicatedHostProfilesRead(context context.Context, d *schema
 		if dedicatedHostProfileCollection.Profiles != nil {
 			err = d.Set("profiles", dataSourceDedicatedHostProfileCollectionFlattenProfiles(dedicatedHostProfileCollection.Profiles))
 			if err != nil {
-				return diag.FromErr(fmt.Errorf("Error setting profiles %s", err))
+				return fmt.Errorf("Error setting profiles %s", err)
 			}
 		}
 		if err = d.Set("total_count", dedicatedHostProfileCollection.TotalCount); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting total_count: %s", err))
+			return fmt.Errorf("Error setting total_count: %s", err)
 		}
 	}
 	return nil

@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/apache/openwhisk-client-go/whisk"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 const (
@@ -72,7 +72,7 @@ func resourceIBMFunctionPackage() *schema.Resource {
 			funcPkgUsrDefParams: {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Description:      "Parameters values in KEY VALUE format. Parameter bindings included in the context passed to the package.",
+				Description:      "Parameters values in KEY VALUE format. Parameter bindings included in the context.TODO() passed to the package.",
 				ValidateFunc:     InvokeValidator("ibm_function_package", funcPkgUsrDefParams),
 				Default:          "[]",
 				DiffSuppressFunc: suppressEquivalentJSON,

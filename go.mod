@@ -41,7 +41,7 @@ require (
 	github.com/hashicorp/go-uuid v1.0.2
 	github.com/hashicorp/go-version v1.3.0
 	github.com/hashicorp/hil v0.0.0-20200423225030-a18a1cd20038 // indirect
-	github.com/hashicorp/terraform-plugin-sdk/v2 v2.6.1
+	github.com/hashicorp/terraform-plugin-sdk v1.16.0
 	github.com/hokaccha/go-prettyjson v0.0.0-20170213120834-e6b9231a2b1c // indirect
 	github.com/kardianos/govendor v1.0.9 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect

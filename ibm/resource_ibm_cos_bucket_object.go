@@ -5,7 +5,6 @@ package ibm
 
 import (
 	"bytes"
-	"context"
 	"encoding/base64"
 	"fmt"
 	"io"
@@ -22,17 +21,17 @@ import (
 	token "github.com/IBM/ibm-cos-sdk-go/aws/credentials/ibmiam/token"
 	"github.com/IBM/ibm-cos-sdk-go/aws/session"
 	"github.com/IBM/ibm-cos-sdk-go/service/s3"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceIBMCOSBucketObject() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceIBMCOSBucketObjectCreate,
-		ReadContext:   resourceIBMCOSBucketObjectRead,
-		UpdateContext: resourceIBMCOSBucketObjectUpdate,
-		DeleteContext: resourceIBMCOSBucketObjectDelete,
-		Importer:      &schema.ResourceImporter{},
+		Create:   resourceIBMCOSBucketObjectCreate,
+		Read:     resourceIBMCOSBucketObjectRead,
+		Update:   resourceIBMCOSBucketObjectUpdate,
+		Delete:   resourceIBMCOSBucketObjectDelete,
+		Importer: &schema.ResourceImporter{},
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(60 * time.Minute),
@@ -123,7 +122,7 @@ func resourceIBMCOSBucketObject() *schema.Resource {
 	}
 }
 
-func resourceIBMCOSBucketObjectCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceIBMCOSBucketObjectCreate(d *schema.ResourceData, m interface{}) error {
 	bucketCRN := d.Get("bucket_crn").(string)
 	bucketName := strings.Split(bucketCRN, ":bucket:")[1]
 	instanceCRN := fmt.Sprintf("%s::", strings.Split(bucketCRN, ":bucket:")[0])
@@ -133,12 +132,12 @@ func resourceIBMCOSBucketObjectCreate(ctx context.Context, d *schema.ResourceDat
 
 	bxSession, err := m.(ClientSession).BluemixSession()
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 
 	s3Client, err := getS3Client(bxSession, bucketLocation, endpointType, instanceCRN)
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 
 	objectKey := d.Get("key").(string)
@@ -147,10 +146,10 @@ func resourceIBMCOSBucketObjectCreate(ctx context.Context, d *schema.ResourceDat
 	// overwrite objects that is not managed by Terraform
 	exists, err := objectExists(s3Client, bucketName, objectKey)
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 	if exists {
-		return diag.FromErr(fmt.Errorf("error COS bucket (%s) object (%s) already exists", bucketName, objectKey))
+		return fmt.Errorf("error COS bucket (%s) object (%s) already exists", bucketName, objectKey)
 	}
 
 	var body io.ReadSeeker
@@ -162,14 +161,14 @@ func resourceIBMCOSBucketObjectCreate(ctx context.Context, d *schema.ResourceDat
 		content := v.(string)
 		contentRaw, err := base64.StdEncoding.DecodeString(content)
 		if err != nil {
-			return diag.FromErr(fmt.Errorf("error decoding content_base64: %s", err))
+			return fmt.Errorf("error decoding content_base64: %s", err)
 		}
 		body = bytes.NewReader(contentRaw)
 	} else if v, ok := d.GetOk("content_file"); ok {
 		path := v.(string)
 		file, err := os.Open(path)
 		if err != nil {
-			return diag.FromErr(fmt.Errorf("error opening COS object file (%s): %s", path, err))
+			return fmt.Errorf("error opening COS object file (%s): %s", path, err)
 		}
 
 		body = file
@@ -188,16 +187,16 @@ func resourceIBMCOSBucketObjectCreate(ctx context.Context, d *schema.ResourceDat
 	}
 
 	if _, err := s3Client.PutObject(putInput); err != nil {
-		return diag.FromErr(fmt.Errorf("error putting object (%s) in COS bucket (%s): %s", objectKey, bucketName, err))
+		return fmt.Errorf("error putting object (%s) in COS bucket (%s): %s", objectKey, bucketName, err)
 	}
 
 	objectID := getObjectId(bucketCRN, objectKey, bucketLocation)
 	d.SetId(objectID)
 
-	return resourceIBMCOSBucketObjectRead(ctx, d, m)
+	return resourceIBMCOSBucketObjectRead(d, m)
 }
 
-func resourceIBMCOSBucketObjectRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceIBMCOSBucketObjectRead(d *schema.ResourceData, m interface{}) error {
 	objectID := d.Id()
 
 	bucketCRN := parseObjectId(objectID, "bucketCRN")
@@ -211,12 +210,12 @@ func resourceIBMCOSBucketObjectRead(ctx context.Context, d *schema.ResourceData,
 
 	bxSession, err := m.(ClientSession).BluemixSession()
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 
 	s3Client, err := getS3Client(bxSession, bucketLocation, endpointType, instanceCRN)
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 
 	objectKey := parseObjectId(objectID, "objectKey")
@@ -230,7 +229,7 @@ func resourceIBMCOSBucketObjectRead(ctx context.Context, d *schema.ResourceData,
 		if aerr, ok := err.(awserr.Error); ok && aerr.Code() == "NotFound" {
 			d.SetId("") // Set state back to empty for terraform refresh
 		}
-		return diag.FromErr(fmt.Errorf("failed getting COS bucket (%s) object (%s): %w", bucketName, objectKey, err))
+		return fmt.Errorf("failed getting COS bucket (%s) object (%s): %w", bucketName, objectKey, err)
 	}
 
 	log.Printf("[DEBUG] Received COS object: %s", out)
@@ -251,13 +250,13 @@ func resourceIBMCOSBucketObjectRead(ctx context.Context, d *schema.ResourceData,
 		}
 		out, err := s3Client.GetObject(&getInput)
 		if err != nil {
-			return diag.FromErr(fmt.Errorf("failed getting COS object: %w", err))
+			return fmt.Errorf("failed getting COS object: %w", err)
 		}
 
 		buf := new(bytes.Buffer)
 		bytesRead, err := buf.ReadFrom(out.Body)
 		if err != nil {
-			return diag.FromErr(fmt.Errorf("failed reading content of COS bucket (%s) object (%s): %w", bucketName, objectKey, err))
+			return fmt.Errorf("failed reading content of COS bucket (%s) object (%s): %w", bucketName, objectKey, err)
 		}
 		log.Printf("[INFO] Saving %d bytes from COS bucket (%s) object (%s)", bytesRead, bucketName, objectKey)
 		d.Set("body", buf.String())
@@ -278,7 +277,7 @@ func resourceIBMCOSBucketObjectRead(ctx context.Context, d *schema.ResourceData,
 	return nil
 }
 
-func resourceIBMCOSBucketObjectUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceIBMCOSBucketObjectUpdate(d *schema.ResourceData, m interface{}) error {
 	if d.HasChanges("content", "content_base64", "content_file", "etag") {
 		bucketCRN := d.Get("bucket_crn").(string)
 		bucketName := strings.Split(bucketCRN, ":bucket:")[1]
@@ -289,12 +288,12 @@ func resourceIBMCOSBucketObjectUpdate(ctx context.Context, d *schema.ResourceDat
 
 		bxSession, err := m.(ClientSession).BluemixSession()
 		if err != nil {
-			return diag.FromErr(err)
+			return err
 		}
 
 		s3Client, err := getS3Client(bxSession, bucketLocation, endpointType, instanceCRN)
 		if err != nil {
-			return diag.FromErr(err)
+			return err
 		}
 
 		var body io.ReadSeeker
@@ -306,14 +305,14 @@ func resourceIBMCOSBucketObjectUpdate(ctx context.Context, d *schema.ResourceDat
 			content := v.(string)
 			contentRaw, err := base64.StdEncoding.DecodeString(content)
 			if err != nil {
-				return diag.FromErr(fmt.Errorf("error decoding content_base64: %s", err))
+				return fmt.Errorf("error decoding content_base64: %s", err)
 			}
 			body = bytes.NewReader(contentRaw)
 		} else if v, ok := d.GetOk("content_file"); ok {
 			path := v.(string)
 			file, err := os.Open(path)
 			if err != nil {
-				return diag.FromErr(fmt.Errorf("error opening COS object file (%s): %s", path, err))
+				return fmt.Errorf("error opening COS object file (%s): %s", path, err)
 			}
 
 			body = file
@@ -334,17 +333,17 @@ func resourceIBMCOSBucketObjectUpdate(ctx context.Context, d *schema.ResourceDat
 		}
 
 		if _, err := s3Client.PutObject(putInput); err != nil {
-			return diag.FromErr(fmt.Errorf("error putting object (%s) in COS bucket (%s): %s", objectKey, bucketName, err))
+			return fmt.Errorf("error putting object (%s) in COS bucket (%s): %s", objectKey, bucketName, err)
 		}
 
 		objectID := getObjectId(bucketCRN, objectKey, bucketLocation)
 		d.SetId(objectID)
 	}
 
-	return resourceIBMCOSBucketObjectRead(ctx, d, m)
+	return resourceIBMCOSBucketObjectRead(d, m)
 }
 
-func resourceIBMCOSBucketObjectDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceIBMCOSBucketObjectDelete(d *schema.ResourceData, m interface{}) error {
 	bucketCRN := d.Get("bucket_crn").(string)
 	bucketName := strings.Split(bucketCRN, ":bucket:")[1]
 	instanceCRN := fmt.Sprintf("%s::", strings.Split(bucketCRN, ":bucket:")[0])
@@ -354,12 +353,12 @@ func resourceIBMCOSBucketObjectDelete(ctx context.Context, d *schema.ResourceDat
 
 	bxSession, err := m.(ClientSession).BluemixSession()
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 
 	s3Client, err := getS3Client(bxSession, bucketLocation, endpointType, instanceCRN)
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 	objectKey := d.Get("key").(string)
 
@@ -370,7 +369,7 @@ func resourceIBMCOSBucketObjectDelete(ctx context.Context, d *schema.ResourceDat
 	}
 
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 	return nil
 }

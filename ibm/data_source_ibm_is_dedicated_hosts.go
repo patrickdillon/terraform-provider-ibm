@@ -9,15 +9,14 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
 	"github.com/IBM/vpc-go-sdk/vpcv1"
 )
 
 func dataSourceIbmIsDedicatedHosts() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceIbmIsDedicatedHostsRead,
+		Read: dataSourceIbmIsDedicatedHostsRead,
 
 		Schema: map[string]*schema.Schema{
 			"host_group": &schema.Schema{
@@ -385,10 +384,10 @@ func dataSourceIbmIsDedicatedHosts() *schema.Resource {
 	}
 }
 
-func dataSourceIbmIsDedicatedHostsRead(context context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func dataSourceIbmIsDedicatedHostsRead(d *schema.ResourceData, meta interface{}) error {
 	vpcClient, err := meta.(ClientSession).VpcV1API()
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 
 	listDedicatedHostsOptions := &vpcv1.ListDedicatedHostsOptions{}
@@ -397,10 +396,10 @@ func dataSourceIbmIsDedicatedHostsRead(context context.Context, d *schema.Resour
 		listDedicatedHostsOptions.DedicatedHostGroupID = &hostgroupid
 	}
 
-	dedicatedHostCollection, response, err := vpcClient.ListDedicatedHostsWithContext(context, listDedicatedHostsOptions)
+	dedicatedHostCollection, response, err := vpcClient.ListDedicatedHostsWithContext(context.TODO(), listDedicatedHostsOptions)
 	if err != nil {
 		log.Printf("[DEBUG] ListDedicatedHostsWithContext failed %s\n%s", err, response)
-		return diag.FromErr(err)
+		return err
 	}
 
 	if len(dedicatedHostCollection.DedicatedHosts) != 0 {
@@ -410,29 +409,29 @@ func dataSourceIbmIsDedicatedHostsRead(context context.Context, d *schema.Resour
 		if dedicatedHostCollection.DedicatedHosts != nil {
 			err = d.Set("dedicated_hosts", dataSourceDedicatedHostCollectionFlattenDedicatedHosts(dedicatedHostCollection.DedicatedHosts))
 			if err != nil {
-				return diag.FromErr(fmt.Errorf("Error setting dedicated_hosts %s", err))
+				return fmt.Errorf("Error setting dedicated_hosts %s", err)
 			}
 		}
 
 		if dedicatedHostCollection.First != nil {
 			err = d.Set("first", dataSourceDedicatedHostCollectionFlattenFirst(*dedicatedHostCollection.First))
 			if err != nil {
-				return diag.FromErr(fmt.Errorf("Error setting first %s", err))
+				return fmt.Errorf("Error setting first %s", err)
 			}
 		}
 		if err = d.Set("limit", dedicatedHostCollection.Limit); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting limit: %s", err))
+			return fmt.Errorf("Error setting limit: %s", err)
 		}
 
 		if dedicatedHostCollection.Next != nil {
 			err = d.Set("next", dataSourceDedicatedHostCollectionFlattenNext(*dedicatedHostCollection.Next))
 			if err != nil {
-				return diag.FromErr(fmt.Errorf("Error setting next %s", err))
+				return fmt.Errorf("Error setting next %s", err)
 			}
 		}
 
 		if err = d.Set("total_count", dedicatedHostCollection.TotalCount); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting total_count: %s", err))
+			return fmt.Errorf("Error setting total_count: %s", err)
 		}
 	}
 	return nil

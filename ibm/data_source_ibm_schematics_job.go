@@ -8,15 +8,14 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
 	"github.com/IBM/schematics-go-sdk/schematicsv1"
 )
 
 func dataSourceIBMSchematicsJob() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceIBMSchematicsJobRead,
+		Read: dataSourceIBMSchematicsJobRead,
 
 		Schema: map[string]*schema.Schema{
 			"job_id": &schema.Schema{
@@ -1069,131 +1068,131 @@ func dataSourceIBMSchematicsJob() *schema.Resource {
 	}
 }
 
-func dataSourceIBMSchematicsJobRead(context context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func dataSourceIBMSchematicsJobRead(d *schema.ResourceData, meta interface{}) error {
 	schematicsClient, err := meta.(ClientSession).SchematicsV1()
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 
 	getJobOptions := &schematicsv1.GetJobOptions{}
 
 	getJobOptions.SetJobID(d.Get("job_id").(string))
 
-	job, response, err := schematicsClient.GetJobWithContext(context, getJobOptions)
+	job, response, err := schematicsClient.GetJobWithContext(context.TODO(), getJobOptions)
 	if err != nil {
 		log.Printf("[DEBUG] GetJobWithContext failed %s\n%s", err, response)
-		return diag.FromErr(err)
+		return err
 	}
 
 	d.SetId(*job.ID)
 	if err = d.Set("command_object", job.CommandObject); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting command_object: %s", err))
+		return fmt.Errorf("Error setting command_object: %s", err)
 	}
 	if err = d.Set("command_object_id", job.CommandObjectID); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting command_object_id: %s", err))
+		return fmt.Errorf("Error setting command_object_id: %s", err)
 	}
 	if err = d.Set("command_name", job.CommandName); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting command_name: %s", err))
+		return fmt.Errorf("Error setting command_name: %s", err)
 	}
 	if err = d.Set("command_options", job.CommandOptions); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting command_options: %s", err))
+		return fmt.Errorf("Error setting command_options: %s", err)
 	}
 
 	if job.Inputs != nil {
 		err = d.Set("job_inputs", dataSourceJobFlattenInputs(job.Inputs))
 		if err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting job_inputs %s", err))
+			return fmt.Errorf("Error setting job_inputs %s", err)
 		}
 	}
 
 	if job.Settings != nil {
 		err = d.Set("job_env_settings", dataSourceJobFlattenSettings(job.Settings))
 		if err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting job_env_settings %s", err))
+			return fmt.Errorf("Error setting job_env_settings %s", err)
 		}
 	}
 	if err = d.Set("tags", job.Tags); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting tags: %s", err))
+		return fmt.Errorf("Error setting tags: %s", err)
 	}
 	if err = d.Set("id", job.ID); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting id: %s", err))
+		return fmt.Errorf("Error setting id: %s", err)
 	}
 	if err = d.Set("name", job.Name); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting name: %s", err))
+		return fmt.Errorf("Error setting name: %s", err)
 	}
 	if err = d.Set("description", job.Description); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting description: %s", err))
+		return fmt.Errorf("Error setting description: %s", err)
 	}
 	if err = d.Set("location", job.Location); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting location: %s", err))
+		return fmt.Errorf("Error setting location: %s", err)
 	}
 	if err = d.Set("resource_group", job.ResourceGroup); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting resource_group: %s", err))
+		return fmt.Errorf("Error setting resource_group: %s", err)
 	}
 	if job.SubmittedAt != nil {
 		if err = d.Set("submitted_at", job.SubmittedAt.String()); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting submitted_at: %s", err))
+			return fmt.Errorf("Error setting submitted_at: %s", err)
 		}
 	}
 	if err = d.Set("submitted_by", job.SubmittedBy); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting submitted_by: %s", err))
+		return fmt.Errorf("Error setting submitted_by: %s", err)
 	}
 	if job.StartAt != nil {
 		if err = d.Set("start_at", job.StartAt.String()); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting start_at: %s", err))
+			return fmt.Errorf("Error setting start_at: %s", err)
 		}
 	}
 	if job.EndAt != nil {
 		if err = d.Set("end_at", job.EndAt.String()); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting end_at: %s", err))
+			return fmt.Errorf("Error setting end_at: %s", err)
 		}
 	}
 	if err = d.Set("duration", job.Duration); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting duration: %s", err))
+		return fmt.Errorf("Error setting duration: %s", err)
 	}
 
 	if job.Status != nil {
 		err = d.Set("status", dataSourceJobFlattenStatus(*job.Status))
 		if err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting status %s", err))
+			return fmt.Errorf("Error setting status %s", err)
 		}
 	}
 
 	if job.Data != nil {
 		err = d.Set("data", dataSourceJobFlattenData(*job.Data))
 		if err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting data %s", err))
+			return fmt.Errorf("Error setting data %s", err)
 		}
 	}
 	if err = d.Set("targets_ini", job.TargetsIni); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting targets_ini: %s", err))
+		return fmt.Errorf("Error setting targets_ini: %s", err)
 	}
 
 	if job.Bastion != nil {
 		err = d.Set("bastion", dataSourceJobFlattenBastion(*job.Bastion))
 		if err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting bastion %s", err))
+			return fmt.Errorf("Error setting bastion %s", err)
 		}
 	}
 
 	if job.LogSummary != nil {
 		err = d.Set("job_log_summary", dataSourceJobFlattenLogSummary(*job.LogSummary))
 		if err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting job_log_summary %s", err))
+			return fmt.Errorf("Error setting job_log_summary %s", err)
 		}
 	}
 	if err = d.Set("log_store_url", job.LogStoreURL); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting log_store_url: %s", err))
+		return fmt.Errorf("Error setting log_store_url: %s", err)
 	}
 	if err = d.Set("state_store_url", job.StateStoreURL); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting state_store_url: %s", err))
+		return fmt.Errorf("Error setting state_store_url: %s", err)
 	}
 	if err = d.Set("results_url", job.ResultsURL); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting results_url: %s", err))
+		return fmt.Errorf("Error setting results_url: %s", err)
 	}
 	if job.UpdatedAt != nil {
 		if err = d.Set("updated_at", job.UpdatedAt.String()); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting updated_at: %s", err))
+			return fmt.Errorf("Error setting updated_at: %s", err)
 		}
 	}
 
