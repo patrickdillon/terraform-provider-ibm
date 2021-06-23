@@ -28,7 +28,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/softlayer/softlayer-go/datatypes"
 	"github.com/softlayer/softlayer-go/sl"
-	"github.ibm.com/ibmcloud/kubernetesservice-go-sdk/kubernetesserviceapiv1"
 
 	"github.com/IBM-Cloud/bluemix-go/api/container/containerv1"
 	"github.com/IBM-Cloud/bluemix-go/api/container/containerv2"
@@ -2156,33 +2155,6 @@ func IgnoreSystemLabels(labels map[string]string) map[string]string {
 	return result
 }
 
-// expandCosConfig ..
-func expandCosConfig(cos []interface{}) *kubernetesserviceapiv1.COSBucket {
-	if len(cos) == 0 || cos[0] == nil {
-		return &kubernetesserviceapiv1.COSBucket{}
-	}
-	in := cos[0].(map[string]interface{})
-	obj := &kubernetesserviceapiv1.COSBucket{
-		Bucket:   ptrToString(in["bucket"].(string)),
-		Endpoint: ptrToString(in["endpoint"].(string)),
-		Region:   ptrToString(in["region"].(string)),
-	}
-	return obj
-}
-
-// expandCosCredentials ..
-func expandCosCredentials(cos []interface{}) *kubernetesserviceapiv1.COSAuthorization {
-	if len(cos) == 0 || cos[0] == nil {
-		return &kubernetesserviceapiv1.COSAuthorization{}
-	}
-	in := cos[0].(map[string]interface{})
-	obj := &kubernetesserviceapiv1.COSAuthorization{
-		AccessKeyID:     ptrToString(in["access_key-id"].(string)),
-		SecretAccessKey: ptrToString(in["secret_access_key"].(string)),
-	}
-	return obj
-}
-
 // flattenHostLabels ..
 func flattenHostLabels(hostLabels []interface{}) map[string]string {
 	labels := make(map[string]string)
@@ -2489,64 +2461,6 @@ func getIBMUniqueId(accountID, userEmail string, meta interface{}) (string, erro
 		}
 	}
 	return "", fmt.Errorf("User %s is not found under account %s", userEmail, accountID)
-}
-
-func immutableResourceCustomizeDiff(resourceList []string, diff *schema.ResourceDiff) error {
-
-	for _, rName := range resourceList {
-		if diff.Id() != "" && diff.HasChange(rName) {
-			o, n := diff.GetChange(rName)
-			old := o.(string)
-			new := n.(string)
-			if len(old) > 0 && old != new {
-				if !(rName == sateLocZone && strings.Contains(old, new)) {
-					return fmt.Errorf("'%s' attribute is immutable and can't be changed from %s to %s.", rName, old, new)
-				}
-			}
-		}
-	}
-	return nil
-}
-
-func flattenSatelliteWorkerPoolZones(zones *schema.Set) []kubernetesserviceapiv1.SatelliteCreateWorkerPoolZone {
-	zoneList := make([]kubernetesserviceapiv1.SatelliteCreateWorkerPoolZone, zones.Len())
-	for i, v := range zones.List() {
-		data := v.(map[string]interface{})
-		if v, ok := data["id"]; ok && v.(string) != "" {
-			zoneList[i].ID = sl.String(v.(string))
-		}
-	}
-
-	return zoneList
-}
-
-func flattenSatelliteWorkerPools(list []kubernetesserviceapiv1.GetWorkerPoolResponse) []map[string]interface{} {
-	workerPools := make([]map[string]interface{}, len(list))
-	for i, workerPool := range list {
-		l := map[string]interface{}{
-			"id":                         *workerPool.ID,
-			"name":                       *workerPool.PoolName,
-			"isolation":                  *workerPool.Isolation,
-			"flavour":                    *workerPool.Flavor,
-			"size_per_zone":              *workerPool.WorkerCount,
-			"state":                      *workerPool.Lifecycle.ActualState,
-			"default_worker_pool_labels": workerPool.Labels,
-			"host_labels":                workerPool.HostLabels,
-		}
-		zones := workerPool.Zones
-		zonesConfig := make([]map[string]interface{}, len(zones))
-		for j, zone := range zones {
-			z := map[string]interface{}{
-				"zone":         *zone.ID,
-				"worker_count": int(*zone.WorkerCount),
-			}
-			zonesConfig[j] = z
-		}
-		l["zones"] = zonesConfig
-		workerPools[i] = l
-	}
-
-	return workerPools
 }
 
 func flattenWorkerPoolHostLabels(hostLabels map[string]string) *schema.Set {
