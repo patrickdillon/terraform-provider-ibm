@@ -16,8 +16,8 @@ import (
 	"time"
 
 	"github.com/IBM-Cloud/terraform-provider-ibm/ibm/internal/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/softlayer/softlayer-go/datatypes"
 	"github.com/softlayer/softlayer-go/filter"
 	"github.com/softlayer/softlayer-go/helpers/product"
@@ -2070,9 +2070,6 @@ func placeOrder(d *schema.ResourceData, meta interface{}, name string, publicVla
 		}
 		// GenerateOrderTemplate omits UserData, subnet, and maxSpeed, so configure virtual_guest.
 		template.VirtualGuests[0] = opts
-		if opts.DedicatedHost != nil {
-			template.HostId = opts.DedicatedHost.Id
-		}
 		guestOrders = append(guestOrders, template)
 
 	}

@@ -9,9 +9,9 @@ import (
 	"log"
 
 	"github.com/go-openapi/strfmt"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
 	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/IBM/schematics-go-sdk/schematicsv1"
@@ -23,11 +23,11 @@ const (
 
 func resourceIBMSchematicsAction() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceIBMSchematicsActionCreate,
-		ReadContext:   resourceIBMSchematicsActionRead,
-		UpdateContext: resourceIBMSchematicsActionUpdate,
-		DeleteContext: resourceIBMSchematicsActionDelete,
-		Importer:      &schema.ResourceImporter{},
+		Create:   resourceIBMSchematicsActionCreate,
+		Read:     resourceIBMSchematicsActionRead,
+		Update:   resourceIBMSchematicsActionUpdate,
+		Delete:   resourceIBMSchematicsActionDelete,
+		Importer: &schema.ResourceImporter{},
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
@@ -867,10 +867,10 @@ func resourceIBMSchematicsActionValidator() *ResourceValidator {
 	return &resourceValidator
 }
 
-func resourceIBMSchematicsActionCreate(context context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceIBMSchematicsActionCreate(d *schema.ResourceData, meta interface{}) error {
 	schematicsClient, err := meta.(ClientSession).SchematicsV1()
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 
 	createActionOptions := &schematicsv1.CreateActionOptions{}
@@ -980,15 +980,15 @@ func resourceIBMSchematicsActionCreate(context context.Context, d *schema.Resour
 		createActionOptions.SetXGithubToken(d.Get("x_github_token").(string))
 	}
 
-	action, response, err := schematicsClient.CreateActionWithContext(context, createActionOptions)
+	action, response, err := schematicsClient.CreateActionWithContext(context.TODO(), createActionOptions)
 	if err != nil {
 		log.Printf("[DEBUG] CreateActionWithContext failed %s\n%s", err, response)
-		return diag.FromErr(err)
+		return err
 	}
 
 	d.SetId(*action.ID)
 
-	return resourceIBMSchematicsActionRead(context, d, meta)
+	return resourceIBMSchematicsActionRead(d, meta)
 }
 
 func resourceIBMSchematicsActionMapToUserState(userStateMap map[string]interface{}) schematicsv1.UserState {
@@ -1216,76 +1216,76 @@ func resourceIBMSchematicsActionMapToActionState(actionStateMap map[string]inter
 	return actionState
 }
 
-func resourceIBMSchematicsActionRead(context context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceIBMSchematicsActionRead(d *schema.ResourceData, meta interface{}) error {
 	schematicsClient, err := meta.(ClientSession).SchematicsV1()
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 
 	getActionOptions := &schematicsv1.GetActionOptions{}
 
 	getActionOptions.SetActionID(d.Id())
 
-	action, response, err := schematicsClient.GetActionWithContext(context, getActionOptions)
+	action, response, err := schematicsClient.GetActionWithContext(context.TODO(), getActionOptions)
 	if err != nil {
 		if response != nil && response.StatusCode == 404 {
 			d.SetId("")
 			return nil
 		}
 		log.Printf("[DEBUG] GetActionWithContext failed %s\n%s", err, response)
-		return diag.FromErr(err)
+		return err
 	}
 
 	if err = d.Set("name", action.Name); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting name: %s", err))
+		return fmt.Errorf("Error setting name: %s", err)
 	}
 	if err = d.Set("description", action.Description); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting description: %s", err))
+		return fmt.Errorf("Error setting description: %s", err)
 	}
 	if err = d.Set("location", action.Location); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting location: %s", err))
+		return fmt.Errorf("Error setting location: %s", err)
 	}
 	if err = d.Set("resource_group", action.ResourceGroup); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting resource_group: %s", err))
+		return fmt.Errorf("Error setting resource_group: %s", err)
 	}
 	if action.Tags != nil {
 		if err = d.Set("tags", action.Tags); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting tags: %s", err))
+			return fmt.Errorf("Error setting tags: %s", err)
 		}
 	}
 	if action.UserState != nil {
 		userStateMap := resourceIBMSchematicsActionUserStateToMap(*action.UserState)
 		if err = d.Set("user_state", []map[string]interface{}{userStateMap}); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting user_state: %s", err))
+			return fmt.Errorf("Error setting user_state: %s", err)
 		}
 	}
 	if err = d.Set("source_readme_url", action.SourceReadmeURL); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting source_readme_url: %s", err))
+		return fmt.Errorf("Error setting source_readme_url: %s", err)
 	}
 	if _, ok := d.GetOk("source"); ok {
 		if action.Source != nil {
 			sourceMap := resourceIBMSchematicsActionExternalSourceToMap(*action.Source)
 			if err = d.Set("source", []map[string]interface{}{sourceMap}); err != nil {
-				return diag.FromErr(fmt.Errorf("Error setting source: %s", err))
+				return fmt.Errorf("Error setting source: %s", err)
 			}
 		}
 	}
 	if err = d.Set("source_type", action.SourceType); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting source_type: %s", err))
+		return fmt.Errorf("Error setting source_type: %s", err)
 	}
 	if err = d.Set("command_parameter", action.CommandParameter); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting command_parameter: %s", err))
+		return fmt.Errorf("Error setting command_parameter: %s", err)
 	}
 	if _, ok := d.GetOk("bastion"); ok {
 		if action.Bastion != nil {
 			bastionMap := resourceIBMSchematicsActionTargetResourcesetToMap(*action.Bastion)
 			if err = d.Set("bastion", []map[string]interface{}{bastionMap}); err != nil {
-				return diag.FromErr(fmt.Errorf("Error setting bastion: %s", err))
+				return fmt.Errorf("Error setting bastion: %s", err)
 			}
 		}
 	}
 	if err = d.Set("targets_ini", action.TargetsIni); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting targets_ini: %s", err))
+		return fmt.Errorf("Error setting targets_ini: %s", err)
 	}
 	if action.Credentials != nil {
 		credentials := []map[string]interface{}{}
@@ -1294,7 +1294,7 @@ func resourceIBMSchematicsActionRead(context context.Context, d *schema.Resource
 			credentials = append(credentials, credentialsItemMap)
 		}
 		if err = d.Set("credentials", credentials); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting credentials: %s", err))
+			return fmt.Errorf("Error setting credentials: %s", err)
 		}
 	}
 	if action.Inputs != nil {
@@ -1304,7 +1304,7 @@ func resourceIBMSchematicsActionRead(context context.Context, d *schema.Resource
 			inputs = append(inputs, inputsItemMap)
 		}
 		if err = d.Set("action_inputs", inputs); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting action_inputs: %s", err))
+			return fmt.Errorf("Error setting action_inputs: %s", err)
 		}
 	}
 	if action.Outputs != nil {
@@ -1314,7 +1314,7 @@ func resourceIBMSchematicsActionRead(context context.Context, d *schema.Resource
 			outputs = append(outputs, outputsItemMap)
 		}
 		if err = d.Set("action_outputs", outputs); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting action_outputs: %s", err))
+			return fmt.Errorf("Error setting action_outputs: %s", err)
 		}
 	}
 	if action.Settings != nil {
@@ -1324,68 +1324,68 @@ func resourceIBMSchematicsActionRead(context context.Context, d *schema.Resource
 			settings = append(settings, settingsItemMap)
 		}
 		if err = d.Set("settings", settings); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting settings: %s", err))
+			return fmt.Errorf("Error setting settings: %s", err)
 		}
 	}
 	if err = d.Set("trigger_record_id", action.TriggerRecordID); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting trigger_record_id: %s", err))
+		return fmt.Errorf("Error setting trigger_record_id: %s", err)
 	}
 	if action.State != nil {
 		stateMap := resourceIBMSchematicsActionActionStateToMap(*action.State)
 		if err = d.Set("state", []map[string]interface{}{stateMap}); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting state: %s", err))
+			return fmt.Errorf("Error setting state: %s", err)
 		}
 	}
 	if action.SysLock != nil {
 		sysLockMap := resourceIBMSchematicsActionSystemLockToMap(*action.SysLock)
 		if err = d.Set("sys_lock", []map[string]interface{}{sysLockMap}); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting sys_lock: %s", err))
+			return fmt.Errorf("Error setting sys_lock: %s", err)
 		}
 	}
 	if err = d.Set("crn", action.Crn); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting crn: %s", err))
+		return fmt.Errorf("Error setting crn: %s", err)
 	}
 	if err = d.Set("account", action.Account); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting account: %s", err))
+		return fmt.Errorf("Error setting account: %s", err)
 	}
 	if action.SourceCreatedAt != nil {
 		if err = d.Set("source_created_at", action.SourceCreatedAt.String()); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting source_created_at: %s", err))
+			return fmt.Errorf("Error setting source_created_at: %s", err)
 		}
 	}
 	if err = d.Set("source_created_by", action.SourceCreatedBy); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting source_created_by: %s", err))
+		return fmt.Errorf("Error setting source_created_by: %s", err)
 	}
 	if action.SourceUpdatedAt != nil {
 		if err = d.Set("source_updated_at", action.SourceUpdatedAt.String()); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting source_updated_at: %s", err))
+			return fmt.Errorf("Error setting source_updated_at: %s", err)
 		}
 	}
 	if err = d.Set("source_updated_by", action.SourceUpdatedBy); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting source_updated_by: %s", err))
+		return fmt.Errorf("Error setting source_updated_by: %s", err)
 	}
 	if action.CreatedAt != nil {
 		if err = d.Set("created_at", action.CreatedAt.String()); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting created_at: %s", err))
+			return fmt.Errorf("Error setting created_at: %s", err)
 		}
 	}
 	if err = d.Set("created_by", action.CreatedBy); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting created_by: %s", err))
+		return fmt.Errorf("Error setting created_by: %s", err)
 	}
 	if action.UpdatedAt != nil {
 		if err = d.Set("updated_at", action.UpdatedAt.String()); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting updated_at: %s", err))
+			return fmt.Errorf("Error setting updated_at: %s", err)
 		}
 	}
 	if err = d.Set("updated_by", action.UpdatedBy); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting updated_by: %s", err))
+		return fmt.Errorf("Error setting updated_by: %s", err)
 	}
 	if err = d.Set("namespace", action.Namespace); err != nil {
-		return diag.FromErr(fmt.Errorf("Error setting namespace: %s", err))
+		return fmt.Errorf("Error setting namespace: %s", err)
 	}
 	if action.PlaybookNames != nil && len(action.PlaybookNames) > 0 {
 		if err = d.Set("playbook_names", action.PlaybookNames); err != nil {
-			return diag.FromErr(fmt.Errorf("Error setting playbook_names: %s", err))
+			return fmt.Errorf("Error setting playbook_names: %s", err)
 		}
 	} else {
 		d.Set("playbook_names", []string{})
@@ -1513,10 +1513,10 @@ func resourceIBMSchematicsActionActionStateToMap(actionState schematicsv1.Action
 	return actionStateMap
 }
 
-func resourceIBMSchematicsActionUpdate(context context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceIBMSchematicsActionUpdate(d *schema.ResourceData, meta interface{}) error {
 	schematicsClient, err := meta.(ClientSession).SchematicsV1()
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 
 	updateActionOptions := &schematicsv1.UpdateActionOptions{}
@@ -1647,30 +1647,30 @@ func resourceIBMSchematicsActionUpdate(context context.Context, d *schema.Resour
 	}
 
 	if hasChange {
-		_, response, err := schematicsClient.UpdateActionWithContext(context, updateActionOptions)
+		_, response, err := schematicsClient.UpdateActionWithContext(context.TODO(), updateActionOptions)
 		if err != nil {
 			log.Printf("[DEBUG] UpdateActionWithContext failed %s\n%s", err, response)
-			return diag.FromErr(err)
+			return err
 		}
 	}
 
-	return resourceIBMSchematicsActionRead(context, d, meta)
+	return resourceIBMSchematicsActionRead(d, meta)
 }
 
-func resourceIBMSchematicsActionDelete(context context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceIBMSchematicsActionDelete(d *schema.ResourceData, meta interface{}) error {
 	schematicsClient, err := meta.(ClientSession).SchematicsV1()
 	if err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 
 	deleteActionOptions := &schematicsv1.DeleteActionOptions{}
 
 	deleteActionOptions.SetActionID(d.Id())
 
-	response, err := schematicsClient.DeleteActionWithContext(context, deleteActionOptions)
+	response, err := schematicsClient.DeleteActionWithContext(context.TODO(), deleteActionOptions)
 	if err != nil {
 		log.Printf("[DEBUG] DeleteActionWithContext failed %s\n%s", err, response)
-		return diag.FromErr(err)
+		return err
 	}
 
 	d.SetId("")
